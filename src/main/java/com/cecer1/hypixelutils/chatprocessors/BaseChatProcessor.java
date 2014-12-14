@@ -20,7 +20,7 @@ public abstract class BaseChatProcessor
 	@SubscribeEvent
     public void internalChatHandled(ClientChatReceivedEvent event)
     {
-		if(enabled)
+		if(_enabled)
 			onChat(event);
 	}
 	

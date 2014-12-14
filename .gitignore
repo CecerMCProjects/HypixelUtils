@@ -1,7 +1,7 @@
 /build/
-/.gradle/
 /run/
-*.iml
-*.ipr
+/.gradle/
 *.iws
+*.ipr
+*.iml
 /out/

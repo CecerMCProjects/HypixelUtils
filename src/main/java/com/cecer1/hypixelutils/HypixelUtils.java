@@ -1,5 +1,6 @@
 package com.cecer1.hypixelutils;
 
+import com.cecer1.hypixelutils.chatprocessors.FilterGuildChatProcessor;
 import com.cecer1.hypixelutils.commands.GuildChatToggleCommand;
 
 import cpw.mods.fml.common.Mod;

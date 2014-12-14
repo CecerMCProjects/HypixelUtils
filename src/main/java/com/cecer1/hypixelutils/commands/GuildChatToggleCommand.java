@@ -49,14 +49,14 @@ public class GuildChatToggleCommand implements ICommand {
                 .appendSibling(new ChatComponentText("] ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA)))
                 .appendSibling(new ChatComponentText("Guild Chat is now ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 
-        if(HypixelUtils.filterGuildChatProcessor.isEnabled())
+        if(HypixelUtils.instance.filterGuildChatProcessor.isEnabled())
         {
-			HypixelUtils.filterGuildChatProcessor.setEnabled(false);
+			HypixelUtils.instance.filterGuildChatProcessor.setEnabled(false);
             commandReply.appendSibling(new ChatComponentText("SHOWN").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)));
         }
         else
         {
-			HypixelUtils.filterGuildChatProcessor.setEnabled(true);
+			HypixelUtils.instance.filterGuildChatProcessor.setEnabled(true);
             commandReply.appendSibling(new ChatComponentText("HIDDEN").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
         }
         commandReply.appendSibling(new ChatComponentText(".").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
