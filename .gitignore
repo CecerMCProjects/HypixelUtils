@@ -1,0 +1,7 @@
+/build/
+/.gradle/
+/run/
+*.iml
+*.ipr
+*.iws
+/out/

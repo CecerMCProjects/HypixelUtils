@@ -1,0 +1,16 @@
+[
+{
+  "modid": "hypixelutils",
+  "name": "Hypixel Utils",
+  "description": "A collection of commands and things that make it assist playing on Hypixel.",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["Cecer"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
