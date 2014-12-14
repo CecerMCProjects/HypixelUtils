@@ -6,32 +6,36 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.*;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuildChatToggleCommand implements ICommand {
+public class LobbyProtectionToggleCommand implements ICommand {
     private List<String> _aliases;
 
-    public GuildChatToggleCommand()
+    public LobbyProtectionToggleCommand()
     {
         _aliases = new ArrayList<String>();
-        _aliases.add("guildchattoggle");
-        _aliases.add("gchattoggle");
-        _aliases.add("gtoggle");
+        _aliases.add("lobbyprotectiontoggle");
+        _aliases.add("lobbylobbytoggle");
+        _aliases.add("lobbyprotection");
+        _aliases.add("lobbylobby");
     }
 
     @Override
     public String getCommandName()
     {
-        return "hypixelutils:guildchattoggle";
+        return "hypixelutils:lobbyprotectiontoggle";
     }
 
     @Override
     public String getCommandUsage(ICommandSender iCommandSender)
     {
-        return "<GUILD_CHAT_TOGGLE_USAGE>";
+        return "<LOBBY_PROTECTION_TOGGLE_USAGE>";
     }
 
     @Override
@@ -44,17 +48,17 @@ public class GuildChatToggleCommand implements ICommand {
     public void processCommand(ICommandSender iCommandSender, String[] strings) throws CommandException
     {
         IChatComponent commandReply = UtilityMethods.getHypixelUtilsChatComponentPrefix()
-                .appendSibling(new ChatComponentText("Guild Chat is now ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+                .appendSibling(new ChatComponentText("/lobby protection has been ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 
-        if(HypixelUtils.instance.filterGuildChatProcessor.isEnabled())
+        if(HypixelUtils.instance.antiLobbyCommandProtectionProcessor.isEnabled())
         {
-			HypixelUtils.instance.filterGuildChatProcessor.setEnabled(false);
-            commandReply.appendSibling(new ChatComponentText("SHOWN").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)));
+			HypixelUtils.instance.antiLobbyCommandProtectionProcessor.setEnabled(false);
+            commandReply.appendSibling(new ChatComponentText("ENABLED").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)));
         }
         else
         {
-			HypixelUtils.instance.filterGuildChatProcessor.setEnabled(true);
-            commandReply.appendSibling(new ChatComponentText("HIDDEN").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+			HypixelUtils.instance.antiLobbyCommandProtectionProcessor.setEnabled(true);
+            commandReply.appendSibling(new ChatComponentText("DISABLED").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
         }
         commandReply.appendSibling(new ChatComponentText(".").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 
