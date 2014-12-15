@@ -10,18 +10,25 @@ public abstract class BaseChatProcessor
 {
 	private Property _configProperty;
 	private boolean _enabled;
+    private int _enableBypasses;
 
 	public boolean isEnabled()
 	{
 		return _enabled;
 	}
-	public BaseChatProcessor setEnabled(boolean enabled)
-	{
-		_enabled = enabled;
+    public BaseChatProcessor enableOnce()
+    {
+        _enableBypasses++;
+        return this;
+    }
+
+    public BaseChatProcessor setEnabled(boolean enabled)
+    {
+        _enabled = enabled;
         _configProperty.set(_enabled);
         HypixelUtils.syncConfig();
-		return this;
-	}
+        return this;
+    }
 
     public BaseChatProcessor(Property configProperty, boolean enabledByDefault)
     {
@@ -32,7 +39,13 @@ public abstract class BaseChatProcessor
 	@SubscribeEvent
     public void internalOnChat(ClientChatReceivedEvent event)
     {
-		if(_enabled && UtilityMethods.isCurrentServerHypixel())
+		if(_enableBypasses > 0)
+        {
+            _enableBypasses--;
+            onChat(event);
+            return;
+        }
+        if(_enabled && UtilityMethods.isCurrentServerHypixel())
 			onChat(event);
 	}
 	

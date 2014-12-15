@@ -1,7 +1,6 @@
 package com.cecer1.hypixelutils.chatprocessors;
 
 import com.cecer1.hypixelutils.AbstractedSrgMethods;
-import com.cecer1.hypixelutils.UtilityMethods;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.config.Property;
 

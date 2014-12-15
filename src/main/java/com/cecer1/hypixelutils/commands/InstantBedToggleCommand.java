@@ -14,27 +14,25 @@ import net.minecraft.util.IChatComponent;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuildChatToggleCommand implements ICommand {
+public class InstantBedToggleCommand implements ICommand {
     private List<String> _aliases;
 
-    public GuildChatToggleCommand()
+    public InstantBedToggleCommand()
     {
         _aliases = new ArrayList<String>();
-        _aliases.add("guildchattoggle");
-        _aliases.add("gchattoggle");
-        _aliases.add("gtoggle");
+        _aliases.add("instantbed");
     }
 
     @Override
     public String getCommandName()
     {
-        return "hypixelutils:guildchattoggle";
+        return "hypixelutils:instantbed";
     }
 
     @Override
     public String getCommandUsage(ICommandSender iCommandSender)
     {
-        return "<GUILD_CHAT_TOGGLE_USAGE>";
+        return "<INSTANT_BED_TOGGLE_USAGE>";
     }
 
     @Override
@@ -47,17 +45,17 @@ public class GuildChatToggleCommand implements ICommand {
     public void processCommand(ICommandSender iCommandSender, String[] strings) throws CommandException
     {
         IChatComponent commandReply = UtilityMethods.getHypixelUtilsChatComponentPrefix()
-                .appendSibling(new ChatComponentText("Guild Chat is now ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+                .appendSibling(new ChatComponentText("Instant Bed is now ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 
-        if(HypixelUtils.instance.filterGuildChatProcessor.isEnabled())
+        if(HypixelUtils.instance.filterPartyChatProcessor.isEnabled())
         {
-			HypixelUtils.instance.filterGuildChatProcessor.setEnabled(false);
-            commandReply.appendSibling(new ChatComponentText("SHOWN").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)));
+			HypixelUtils.instance.filterPartyChatProcessor.setEnabled(false);
+            commandReply.appendSibling(new ChatComponentText("ENABLED").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)));
         }
         else
         {
-			HypixelUtils.instance.filterGuildChatProcessor.setEnabled(true);
-            commandReply.appendSibling(new ChatComponentText("HIDDEN").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+			HypixelUtils.instance.filterPartyChatProcessor.setEnabled(true);
+            commandReply.appendSibling(new ChatComponentText("DISABLED").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
         }
         commandReply.appendSibling(new ChatComponentText(".").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 

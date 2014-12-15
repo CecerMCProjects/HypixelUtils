@@ -1,22 +1,19 @@
 package com.cecer1.hypixelutils;
 
-import com.cecer1.hypixelutils.chatprocessors.AntiLobbyCommandProtectionProcessor;
-import com.cecer1.hypixelutils.chatprocessors.DebugChatProcessor;
-import com.cecer1.hypixelutils.chatprocessors.FilterGuildChatProcessor;
-import com.cecer1.hypixelutils.chatprocessors.FilterPartyChatProcessor;
+import com.cecer1.hypixelutils.chatprocessors.*;
 import com.cecer1.hypixelutils.commands.GuildChatToggleCommand;
-
+import com.cecer1.hypixelutils.commands.InstantBedToggleCommand;
+import com.cecer1.hypixelutils.commands.LobbyProtectionToggleCommand;
+import com.cecer1.hypixelutils.commands.PartyChatToggleCommand;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
-
-import java.io.File;
 
 @Mod(modid = HypixelUtils.MODID, version = HypixelUtils.VERSION, guiFactory = "com.cecer1.hypixelutils.HypixelUtilsGuiFactory")
 public class HypixelUtils
@@ -37,6 +34,7 @@ public class HypixelUtils
 	public FilterGuildChatProcessor filterGuildChatProcessor;
 	public FilterPartyChatProcessor filterPartyChatProcessor;
 	public AntiLobbyCommandProtectionProcessor antiLobbyCommandProtectionProcessor;
+	public InstantBedChatProcessor instantBedChatProcessor;
 
     public HypixelUtils()
     {
@@ -54,6 +52,7 @@ public class HypixelUtils
         filterGuildChatProcessor = new FilterGuildChatProcessor(config.get(config.CATEGORY_GENERAL, "Hide guild chat", false, "If true then guild chat will be hidden."), false);
         filterPartyChatProcessor = new FilterPartyChatProcessor(config.get(config.CATEGORY_GENERAL, "Hide party chat", false, "If true then party chat will be hidden."), false);
         antiLobbyCommandProtectionProcessor = new AntiLobbyCommandProtectionProcessor(config.get(config.CATEGORY_GENERAL, "Disable /lobby protection", false, "If true then /lobby will not have to be confirmed."), false);
+        instantBedChatProcessor = new InstantBedChatProcessor(config.get(config.CATEGORY_GENERAL, "Disable bed delay", false, "If true then clicking the bed in spectator mode will not wait 3 seconds before sending you to the lobby."), false);
 
         syncConfig();
     }
@@ -67,8 +66,12 @@ public class HypixelUtils
         MinecraftForge.EVENT_BUS.register(filterGuildChatProcessor);
         MinecraftForge.EVENT_BUS.register(filterPartyChatProcessor);
         MinecraftForge.EVENT_BUS.register(antiLobbyCommandProtectionProcessor);
+        MinecraftForge.EVENT_BUS.register(instantBedChatProcessor);
 
 		ClientCommandHandler.instance.registerCommand(new GuildChatToggleCommand());
+		ClientCommandHandler.instance.registerCommand(new PartyChatToggleCommand());
+		ClientCommandHandler.instance.registerCommand(new LobbyProtectionToggleCommand());
+		ClientCommandHandler.instance.registerCommand(new InstantBedToggleCommand());
     }
 
     @SubscribeEvent
