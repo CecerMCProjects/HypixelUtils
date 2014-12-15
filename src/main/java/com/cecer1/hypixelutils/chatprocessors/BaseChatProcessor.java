@@ -19,6 +19,7 @@ public abstract class BaseChatProcessor
 	{
 		_enabled = enabled;
         _configProperty.set(_enabled);
+        HypixelUtils.syncConfig();
 		return this;
 	}
 
