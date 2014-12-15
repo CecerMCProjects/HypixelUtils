@@ -1,19 +1,25 @@
 package com.cecer1.hypixelutils.chatprocessors;
 
-import com.cecer1.hypixelutils.UtilityMethods;
+import com.cecer1.hypixelutils.Utility;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.config.Property;
 
 public class FilterGuildChatProcessor extends BaseChatProcessor
 {
-    public FilterGuildChatProcessor(Property property, boolean enabledByDefault) {
-        super(property, enabledByDefault);
+    public FilterGuildChatProcessor()
+    {
+        super();
+    }
+
+    public FilterGuildChatProcessor(Property configProperty, boolean enabledByDefault)
+    {
+        super(configProperty, enabledByDefault);
     }
 
     @Override
     public void onChat(ClientChatReceivedEvent event)
     {
-        if (UtilityMethods.compareChatComponent(UtilityMethods.getRootChatComponent(event.message), "{\"color\":\"dark_green\",\"text\":\"Guild \\u003e \"}"))
+        if (Utility.compareChatComponent(Utility.getRootChatComponent(event.message), "{\"color\":\"dark_green\",\"text\":\"Guild \\u003e \"}"))
             event.setCanceled(true);
     }
 }

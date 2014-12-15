@@ -5,7 +5,9 @@ import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
-public class UtilityMethods
+import java.util.concurrent.TimeUnit;
+
+public class Utility
 {
     public static boolean isCurrentServerHypixel()
     {
@@ -34,5 +36,20 @@ public class UtilityMethods
                 .appendSibling(new ChatComponentText("[").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA)))
                 .appendSibling(new ChatComponentText("HypixelUtils").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.WHITE)))
                 .appendSibling(new ChatComponentText("] ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.DARK_AQUA)));
+    }
+
+    public static class MethodCallTimer {
+        private long lastTick = Long.MAX_VALUE;
+
+        public MethodCallTimer() {
+        }
+
+        public long call() {
+            long now = System.nanoTime();
+            long diffNanos = now - lastTick;
+            if(diffNanos < 0)
+                return 0;
+            return TimeUnit.NANOSECONDS.toMillis(diffNanos);
+        }
     }
 }

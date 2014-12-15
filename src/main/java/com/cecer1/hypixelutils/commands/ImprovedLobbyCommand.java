@@ -10,31 +10,38 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
+import scala.actors.threadpool.Arrays;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class PartyChatToggleCommand implements ICommand {
+public class ImprovedLobbyCommand implements ICommand {
     private List<String> _aliases;
 
-    public PartyChatToggleCommand()
+    private final String _commandName;
+
+    public ImprovedLobbyCommand(String commandName)
     {
+        _commandName = commandName; // Can't use aliases because it breaks tab complete
         _aliases = new ArrayList<String>();
-        _aliases.add("partychattoggle");
-        _aliases.add("pchattoggle");
-        _aliases.add("ptoggle");
+        //_aliases.add("hub");
+        //_aliases.add("leave");
+
+        Collections.sort(_lobbyTypes);
     }
 
     @Override
     public String getCommandName()
     {
-        return "hypixelutils:partychattoggle";
+        //return "hypixelutils:lobby";
+        return _commandName;
     }
 
     @Override
     public String getCommandUsage(ICommandSender iCommandSender)
     {
-        return "<PARTY_CHAT_TOGGLE_USAGE>";
+        return "<IMPROVED_LOBBY_USAGE>";
     }
 
     @Override
@@ -46,22 +53,17 @@ public class PartyChatToggleCommand implements ICommand {
     @Override
     public void processCommand(ICommandSender iCommandSender, String[] strings) throws CommandException
     {
-        IChatComponent commandReply = Utility.getHypixelUtilsChatComponentPrefix()
-                .appendSibling(new ChatComponentText("Party Chat is now ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
-
-        if(HypixelUtils.instance.filterPartyChatProcessor.isEnabled())
+        if(strings.length == 0)
         {
-			HypixelUtils.instance.filterPartyChatProcessor.setEnabled(false);
-            commandReply.appendSibling(new ChatComponentText("SHOWN").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)));
+            Minecraft.getMinecraft().thePlayer.sendChatMessage("/lobby");
+            return;
         }
-        else
-        {
-			HypixelUtils.instance.filterPartyChatProcessor.setEnabled(true);
-            commandReply.appendSibling(new ChatComponentText("HIDDEN").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
-        }
-        commandReply.appendSibling(new ChatComponentText(".").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 
-        Minecraft.getMinecraft().thePlayer.addChatMessage(commandReply);
+        if(strings.length == 2)
+        {
+            HypixelUtils.instance.lobbyAutoSwapProcessor.setDesiredLobbyNumber(Integer.parseInt(strings[1]));
+        }
+        Minecraft.getMinecraft().thePlayer.sendChatMessage("/lobby " + strings[0]);
     }
 
     @Override
@@ -72,10 +74,23 @@ public class PartyChatToggleCommand implements ICommand {
         return true;
     }
 
+    private static final List<String> _lobbyTypes = Arrays.asList(new String[] {"arcade","arena","blitz","cops","main","megawalls","paintball","quake","tnt","vampirez","walls"});
+
     @Override
     public List addTabCompletionOptions(ICommandSender iCommandSender, String[] strings)
     {
-        return null;
+        List<String> results = new ArrayList<String>();
+        if(strings.length == 1)
+        {
+            for(String lobbyType : _lobbyTypes)
+            {
+                if(lobbyType.startsWith(strings[0]))
+                    results.add(lobbyType);
+            }
+        }
+        if(results.isEmpty())
+            return null;
+        return results;
     }
 
     @Override

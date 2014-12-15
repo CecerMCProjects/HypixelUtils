@@ -1,7 +1,7 @@
 package com.cecer1.hypixelutils.commands;
 
 import com.cecer1.hypixelutils.HypixelUtils;
-import com.cecer1.hypixelutils.UtilityMethods;
+import com.cecer1.hypixelutils.Utility;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
@@ -47,7 +47,7 @@ public class LobbyProtectionToggleCommand implements ICommand {
     @Override
     public void processCommand(ICommandSender iCommandSender, String[] strings) throws CommandException
     {
-        IChatComponent commandReply = UtilityMethods.getHypixelUtilsChatComponentPrefix()
+        IChatComponent commandReply = Utility.getHypixelUtilsChatComponentPrefix()
                 .appendSibling(new ChatComponentText("/lobby protection has been ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 
         if(HypixelUtils.instance.antiLobbyCommandProtectionProcessor.isEnabled())
@@ -68,7 +68,7 @@ public class LobbyProtectionToggleCommand implements ICommand {
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender iCommandSender)
     {
-        if(!UtilityMethods.isCurrentServerHypixel())
+        if(!Utility.isCurrentServerHypixel())
             return false;
         return true;
     }

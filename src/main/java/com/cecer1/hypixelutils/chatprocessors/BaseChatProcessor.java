@@ -1,51 +1,27 @@
 package com.cecer1.hypixelutils.chatprocessors;
 
 import com.cecer1.hypixelutils.HypixelUtils;
-import com.cecer1.hypixelutils.UtilityMethods;
+import com.cecer1.hypixelutils.Utility;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.config.Property;
 
-public abstract class BaseChatProcessor
+public abstract class BaseChatProcessor extends BaseProcessor
 {
-	private Property _configProperty;
-	private boolean _enabled;
-    private int _enableBypasses;
-
-	public boolean isEnabled()
-	{
-		return _enabled;
-	}
-    public BaseChatProcessor enableOnce()
+    public BaseChatProcessor()
     {
-        _enableBypasses++;
-        return this;
-    }
-
-    public BaseChatProcessor setEnabled(boolean enabled)
-    {
-        _enabled = enabled;
-        _configProperty.set(_enabled);
-        HypixelUtils.syncConfig();
-        return this;
+        super();
     }
 
     public BaseChatProcessor(Property configProperty, boolean enabledByDefault)
     {
-        _configProperty = configProperty;
-        _enabled = _configProperty.getBoolean(enabledByDefault);
+        super(configProperty, enabledByDefault);
     }
-	
+
 	@SubscribeEvent
     public void internalOnChat(ClientChatReceivedEvent event)
     {
-		if(_enableBypasses > 0)
-        {
-            _enableBypasses--;
-            onChat(event);
-            return;
-        }
-        if(_enabled && UtilityMethods.isCurrentServerHypixel())
+		if(isEnabledAtAll())
 			onChat(event);
 	}
 	
