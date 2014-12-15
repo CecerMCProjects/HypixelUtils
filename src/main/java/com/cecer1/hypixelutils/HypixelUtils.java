@@ -35,6 +35,7 @@ public class HypixelUtils
 	public AntiLobbyCommandProtectionProcessor antiLobbyCommandProtectionProcessor;
 	public InstantBedChatProcessor instantBedChatProcessor;
 	public LobbyAutoSwapProcessor lobbyAutoSwapProcessor;
+	public PartyAutoRemoveChatProcessor partyAutoRemoveChatProcessor;
 
     public HypixelUtils()
     {
@@ -56,6 +57,7 @@ public class HypixelUtils
         antiLobbyCommandProtectionProcessor = new AntiLobbyCommandProtectionProcessor(config.get(config.CATEGORY_GENERAL, "Disable /lobby protection", false, "If true then /lobby will not have to be confirmed."), false);
         instantBedChatProcessor = new InstantBedChatProcessor(config.get(config.CATEGORY_GENERAL, "Disable bed delay", false, "If true then clicking the bed in spectator mode will not wait 3 seconds before sending you to the lobby."), false);
         lobbyAutoSwapProcessor = new LobbyAutoSwapProcessor();
+        partyAutoRemoveChatProcessor = new PartyAutoRemoveChatProcessor(config.get(config.CATEGORY_GENERAL, "Auto remove offline party members", false, "If true then offline party members will be automatically removed when they stop the party from joining a game."), false);
 
         syncConfig();
     }
@@ -72,6 +74,7 @@ public class HypixelUtils
         MinecraftForge.EVENT_BUS.register(antiLobbyCommandProtectionProcessor);
         MinecraftForge.EVENT_BUS.register(instantBedChatProcessor);
         MinecraftForge.EVENT_BUS.register(lobbyAutoSwapProcessor);
+        MinecraftForge.EVENT_BUS.register(partyAutoRemoveChatProcessor);
 
 		ClientCommandHandler.instance.registerCommand(new GuildChatToggleCommand());
 		ClientCommandHandler.instance.registerCommand(new PartyChatToggleCommand());
@@ -80,6 +83,7 @@ public class HypixelUtils
 		ClientCommandHandler.instance.registerCommand(new ImprovedLobbyCommand("hypixelutils:lobby"));
 		ClientCommandHandler.instance.registerCommand(new ImprovedLobbyCommand("hypixelutils:ilobby"));
 		ClientCommandHandler.instance.registerCommand(new ImprovedLobbyCommand("ilobby"));
+		ClientCommandHandler.instance.registerCommand(new PartyAutoRemoveToggleCommand());
 
         // Disabled due to tab sending command bug. Need to find a way to not send the tab request to the server.
 		//ClientCommandHandler.instance.registerCommand(new ImprovedLobbyCommand("lobby"));
