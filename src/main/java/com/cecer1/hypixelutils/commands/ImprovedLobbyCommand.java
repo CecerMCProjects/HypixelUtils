@@ -6,13 +6,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
-import scala.actors.threadpool.Arrays;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -74,7 +70,7 @@ public class ImprovedLobbyCommand implements ICommand {
         return true;
     }
 
-    private static final List<String> _lobbyTypes = Arrays.asList(new String[] {"arcade","arena","blitz","cops","main","megawalls","paintball","quake","tnt","vampirez","walls"});
+    private static final List<String> _lobbyTypes = Arrays.asList("arcade", "arena", "blitz", "cops", "main", "megawalls", "paintball", "quake", "tnt", "vampirez", "walls");
 
     @Override
     public List addTabCompletionOptions(ICommandSender iCommandSender, String[] strings)

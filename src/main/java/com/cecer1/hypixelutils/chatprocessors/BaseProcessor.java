@@ -2,8 +2,6 @@ package com.cecer1.hypixelutils.chatprocessors;
 
 import com.cecer1.hypixelutils.HypixelUtils;
 import com.cecer1.hypixelutils.Utility;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.config.Property;
 
 public abstract class BaseProcessor

@@ -1,9 +1,6 @@
 package com.cecer1.hypixelutils.chatprocessors;
 
-import com.cecer1.hypixelutils.AbstractedSrgMethods;
-import com.cecer1.hypixelutils.HypixelUtils;
 import com.cecer1.hypixelutils.Utility;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
@@ -11,7 +8,6 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.common.config.Property;
-import net.minecraftforge.event.world.WorldEvent;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
