@@ -30,10 +30,6 @@ public class LobbyAutoSwapProcessor extends BaseBungeeMoveServerProcessor {
 
     public void setDesiredLobbyNumber(int desiredLobbyNumber) {
         _desiredLobbyNumber = desiredLobbyNumber;
-        IChatComponent commandReply = Utility.getHypixelUtilsChatComponentPrefix()
-                .appendSibling(new ChatComponentText("[DEBUG] Desired Lobby set to " + _desiredLobbyNumber).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
-
-        Minecraft.getMinecraft().thePlayer.addChatMessage(commandReply);
     }
 
     @SubscribeEvent
