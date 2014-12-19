@@ -1,60 +1,38 @@
 package com.cecer1.hypixelutils.commands;
 
-import com.cecer1.hypixelutils.HypixelUtils;
-import com.cecer1.hypixelutils.Utility;
+import com.cecer1.hypixelutils.HypixelUtilsCore;
+import com.cecer1.hypixelutils.UtilityMethods;
+import com.cecer1.modframework.common.commands.AbstractedCommand;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class InstantBedToggleCommand implements ICommand {
-    private List<String> _aliases;
+public class InstantBedToggleCommand extends AbstractedCommand {
 
-    public InstantBedToggleCommand()
-    {
-        _aliases = new ArrayList<String>();
-        _aliases.add("instantbed");
-    }
-
-    @Override
-    public String getCommandName()
-    {
-        return "hypixelutils:instantbed";
-    }
-
-    @Override
-    public String getCommandUsage(ICommandSender iCommandSender)
-    {
-        return "<INSTANT_BED_TOGGLE_USAGE>";
-    }
-
-    @Override
-    public List getCommandAliases()
-    {
-        return _aliases;
+    public InstantBedToggleCommand(String commandName) {
+        super(commandName);
     }
 
     @Override
     public void processCommand(ICommandSender iCommandSender, String[] strings) throws CommandException
     {
-        IChatComponent commandReply = Utility.getHypixelUtilsChatComponentPrefix()
+        IChatComponent commandReply = UtilityMethods.getHypixelUtilsChatComponentPrefix()
                 .appendSibling(new ChatComponentText("Instant Bed is now ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 
-        if(HypixelUtils.instance.filterPartyChatProcessor.isEnabled())
+        if(HypixelUtilsCore.config.isInstantBedEnabled())
         {
-			HypixelUtils.instance.filterPartyChatProcessor.setEnabled(false);
+			HypixelUtilsCore.config.setInstantBedEnabled(false);
             commandReply.appendSibling(new ChatComponentText("ENABLED").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)));
         }
         else
         {
-			HypixelUtils.instance.filterPartyChatProcessor.setEnabled(true);
+            HypixelUtilsCore.config.setInstantBedEnabled(true);
             commandReply.appendSibling(new ChatComponentText("DISABLED").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
         }
         commandReply.appendSibling(new ChatComponentText(".").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
@@ -65,7 +43,7 @@ public class InstantBedToggleCommand implements ICommand {
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender iCommandSender)
     {
-        if(!Utility.isCurrentServerHypixel())
+        if(!UtilityMethods.isCurrentServerHypixel())
             return false;
         return true;
     }

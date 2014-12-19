@@ -1,49 +1,20 @@
 package com.cecer1.hypixelutils.commands;
 
-import com.cecer1.hypixelutils.HypixelUtils;
-import com.cecer1.hypixelutils.Utility;
+import com.cecer1.hypixelutils.HypixelUtilsCore;
+import com.cecer1.hypixelutils.UtilityMethods;
+import com.cecer1.modframework.common.commands.AbstractedCommand;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-public class ImprovedLobbyCommand implements ICommand {
-    private List<String> _aliases;
+public class ImprovedLobbyCommand extends AbstractedCommand {
 
-    private final String _commandName;
-
-    public ImprovedLobbyCommand(String commandName)
-    {
-        _commandName = commandName; // Can't use aliases because it breaks tab complete
-        _aliases = new ArrayList<String>();
-        //_aliases.add("hub");
-        //_aliases.add("leave");
-
-        Collections.sort(_lobbyTypes);
-    }
-
-    @Override
-    public String getCommandName()
-    {
-        //return "hypixelutils:lobby";
-        return _commandName;
-    }
-
-    @Override
-    public String getCommandUsage(ICommandSender iCommandSender)
-    {
-        return "<IMPROVED_LOBBY_USAGE>";
-    }
-
-    @Override
-    public List getCommandAliases()
-    {
-        return _aliases;
+    public ImprovedLobbyCommand(String commandName) {
+        super(commandName);
     }
 
     @Override
@@ -57,7 +28,7 @@ public class ImprovedLobbyCommand implements ICommand {
 
         if(strings.length == 2)
         {
-            HypixelUtils.instance.lobbyAutoSwapProcessor.setDesiredLobbyNumber(Integer.parseInt(strings[1]));
+            HypixelUtilsCore.improvedLobbyCommandProcessor.setDesiredLobbyNumber(Integer.parseInt(strings[1]));
         }
         Minecraft.getMinecraft().thePlayer.sendChatMessage("/lobby " + strings[0]);
     }
@@ -65,7 +36,7 @@ public class ImprovedLobbyCommand implements ICommand {
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender iCommandSender)
     {
-        if(!Utility.isCurrentServerHypixel())
+        if(!UtilityMethods.isCurrentServerHypixel())
             return false;
         return true;
     }

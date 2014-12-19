@@ -1,18 +1,18 @@
-package com.cecer1.hypixelutils;
+package com.cecer1.modframework.common;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import com.cecer1.modframework.common.events.IOnTickEventHandler;
 import cpw.mods.fml.common.gameevent.TickEvent;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-public class Scheduler
+public class Scheduler implements IOnTickEventHandler
 {
-    private List<Task> _tasks;
+    private Set<Task> _tasks;
 
     public Scheduler()
     {
-        _tasks = new ArrayList<Task>();
+        _tasks = new HashSet<Task>();
     }
     public Scheduler scheduleTask(Runnable runnable, long delayInTicks)
     {
@@ -25,13 +25,11 @@ public class Scheduler
         return this;
     }
 
-    @SubscribeEvent
-    public void tick(TickEvent.ClientTickEvent event)
-    {
-        if(event.phase == TickEvent.Phase.START)
-            return;
 
-        List<Task> expiredTasks = new ArrayList<Task>();
+    @Override
+    public void onTick(IOnTickEventData event) {
+        Set<Task> expiredTasks = new HashSet<Task>();
+
         for(Task task : _tasks)
         {
             task.tick();
@@ -45,7 +43,7 @@ public class Scheduler
         }
     }
 
-    private static class Task
+    private class Task
     {
         private Runnable _runnable;
         private long _remainingTicks;
