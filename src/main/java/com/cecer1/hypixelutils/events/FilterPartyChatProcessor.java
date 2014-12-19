@@ -1,6 +1,5 @@
 package com.cecer1.hypixelutils.events;
 
-import com.cecer1.hypixelutils.HypixelUtils;
 import com.cecer1.hypixelutils.HypixelUtilsCore;
 import com.cecer1.modframework.common.events.IOnChatEventHandler;
 import com.cecer1.modframework.common.utils.ChatUtilities;

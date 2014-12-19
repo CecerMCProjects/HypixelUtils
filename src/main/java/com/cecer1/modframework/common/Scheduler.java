@@ -1,7 +1,6 @@
 package com.cecer1.modframework.common;
 
 import com.cecer1.modframework.common.events.IOnTickEventHandler;
-import cpw.mods.fml.common.gameevent.TickEvent;
 
 import java.util.HashSet;
 import java.util.Set;
