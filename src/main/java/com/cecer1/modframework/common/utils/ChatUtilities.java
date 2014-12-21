@@ -30,13 +30,13 @@ public class ChatUtilities {
      * This method is for MC 1.7.10 only.
      */
     public static String convertChatComponentToJson(IChatComponent component) {
-        return IChatComponent.Serializer.func_150696_a(component);
+        return IChatComponent.Serializer.componentToJson(component);
     }
 
     /**
      * This method is for MC 1.7.10 only.
       */
     public static IChatComponent convertJsonToChatComponent(String json) {
-        return IChatComponent.Serializer.func_150699_a(json);
+        return IChatComponent.Serializer.jsonToComponent(json);
     }
 }

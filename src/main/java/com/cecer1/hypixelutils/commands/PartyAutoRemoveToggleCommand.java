@@ -47,22 +47,4 @@ public class PartyAutoRemoveToggleCommand extends AbstractedCommand {
             return false;
         return true;
     }
-
-    @Override
-    public List addTabCompletionOptions(ICommandSender iCommandSender, String[] strings)
-    {
-        return null;
-    }
-
-    @Override
-    public boolean isUsernameIndex(String[] strings, int i)
-    {
-        return false;
-    }
-
-    @Override
-    public int compareTo(Object o)
-    {
-        return 0;
-    }
 }

@@ -6,10 +6,7 @@ import com.cecer1.modframework.common.commands.AbstractedCommand;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.*;
 
 import java.util.List;
 
@@ -46,23 +43,5 @@ public class InstantBedToggleCommand extends AbstractedCommand {
         if(!UtilityMethods.isCurrentServerHypixel())
             return false;
         return true;
-    }
-
-    @Override
-    public List addTabCompletionOptions(ICommandSender iCommandSender, String[] strings)
-    {
-        return null;
-    }
-
-    @Override
-    public boolean isUsernameIndex(String[] strings, int i)
-    {
-        return false;
-    }
-
-    @Override
-    public int compareTo(Object o)
-    {
-        return 0;
     }
 }

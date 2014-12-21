@@ -6,6 +6,7 @@ import com.cecer1.modframework.common.commands.AbstractedCommand;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.BlockPos;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +45,7 @@ public class ImprovedLobbyCommand extends AbstractedCommand {
     private static final List<String> _lobbyTypes = Arrays.asList("arcade", "arena", "blitz", "cops", "main", "megawalls", "paintball", "quake", "tnt", "vampirez", "walls");
 
     @Override
-    public List addTabCompletionOptions(ICommandSender iCommandSender, String[] strings)
+    public List addTabCompletionOptions(ICommandSender iCommandSender, String[] strings, BlockPos pos)
     {
         List<String> results = new ArrayList<String>();
         if(strings.length == 1)
@@ -58,17 +59,5 @@ public class ImprovedLobbyCommand extends AbstractedCommand {
         if(results.isEmpty())
             return null;
         return results;
-    }
-
-    @Override
-    public boolean isUsernameIndex(String[] strings, int i)
-    {
-        return false;
-    }
-
-    @Override
-    public int compareTo(Object o)
-    {
-        return 0;
     }
 }
