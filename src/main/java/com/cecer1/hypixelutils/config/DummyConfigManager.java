@@ -106,4 +106,8 @@ public class DummyConfigManager implements IConfigManager {
     public String[] getPartyChatToggleCommands() {
         return new String[] {"partychattoggle", "pchattoggle", "ptoggle"};
     }
+
+    public String[] getLobbyTypes() {
+        return new String[] {"arcade", "arena", "blitz", "cops", "main", "megawalls", "paintball", "quake", "tnt", "uhc", "vampirez", "walls", "xmas"};
+    }
 }

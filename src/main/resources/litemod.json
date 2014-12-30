@@ -1,9 +1,9 @@
 {
   "mcversion": "1.8",
   "name": "hypixelutils",
-  "revision": "4",
+  "revision": "5",
   "author": "Cecer",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "description": "A collection of commands and things that make it assist playing on Hypixel.",
   "url": "http://www.cecer1.com/hypixelutils/"
 }

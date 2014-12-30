@@ -9,7 +9,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class ImprovedLobbyCommand extends AbstractedCommand {
@@ -19,45 +18,48 @@ public class ImprovedLobbyCommand extends AbstractedCommand {
     }
 
     @Override
-    public void processCommand(ICommandSender iCommandSender, String[] strings) throws CommandException
+    public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
-        if(strings.length == 0)
+        if(args.length == 0)
         {
             Minecraft.getMinecraft().thePlayer.sendChatMessage("/lobby");
             return;
         }
 
-        if(strings.length == 2)
+        if(args.length >= 2)
         {
-            HypixelUtilsCore.improvedLobbyCommandProcessor.setDesiredLobbyNumber(Integer.parseInt(strings[1]));
+            HypixelUtilsCore.improvedLobbyCommandProcessor.setDesiredLobbyNumber(Integer.parseInt(args[1]));
         }
-        Minecraft.getMinecraft().thePlayer.sendChatMessage("/lobby " + strings[0]);
+        Minecraft.getMinecraft().thePlayer.sendChatMessage("/lobby " + args[0]);
     }
 
     @Override
-    public boolean canCommandSenderUseCommand(ICommandSender iCommandSender)
+    public boolean canCommandSenderUseCommand(ICommandSender sender)
     {
         if(!UtilityMethods.isHypixel())
             return false;
         return true;
     }
 
-    private static final List<String> _lobbyTypes = Arrays.asList("arcade", "arena", "blitz", "cops", "main", "megawalls", "paintball", "quake", "tnt", "vampirez", "walls");
-
     @Override
-    public List addTabCompletionOptions(ICommandSender iCommandSender, String[] strings, BlockPos pos)
+    public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
     {
         List<String> results = new ArrayList<String>();
-        if(strings.length == 1)
+        if(args.length == 1)
         {
-            for(String lobbyType : _lobbyTypes)
+            for(String lobbyType : HypixelUtilsCore.config.getLobbyTypes())
             {
-                if(lobbyType.startsWith(strings[0]))
+                if(lobbyType.startsWith(args[0]))
                     results.add(lobbyType);
             }
         }
         if(results.isEmpty())
             return null;
         return results;
+    }
+
+    @Override
+    public int getMaximumArgumentCount() {
+        return 2;
     }
 }

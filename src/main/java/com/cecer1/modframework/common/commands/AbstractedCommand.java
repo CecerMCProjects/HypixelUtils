@@ -1,12 +1,12 @@
 package com.cecer1.modframework.common.commands;
 
-import net.minecraft.command.ICommand;
+import com.cecer1.modframework.liteloader.commands.ICecerCommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 
 import java.util.List;
 
-public abstract class AbstractedCommand implements ICommand {
+public abstract class AbstractedCommand implements ICecerCommand {
 
     private String _commandName;
 

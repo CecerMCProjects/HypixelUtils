@@ -6,13 +6,21 @@ import com.cecer1.hypixelutils.events.*;
 import com.cecer1.modframework.common.Scheduler;
 import com.cecer1.modframework.common.commands.ICommandRegister;
 import com.cecer1.modframework.common.events.EventManager;
-import net.minecraft.command.ICommand;
+import com.cecer1.modframework.liteloader.commands.ICecerCommand;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.UUID;
 
 public class HypixelUtilsCore {
     public static final String MODID = "hypixelutils";
-    public static final String VERSION = "1.1.0";
+    public static final String VERSION = "1.2.0";
+    public static final String CONFIG_SERVER = "http://hypixelutils.cecer1.com:8014";
+    //public static final String CONFIG_SERVER = "http://localhost:8014";
 
     public static IConfigManager config;
+    private static Path _configKeyPath;
     public static Scheduler scheduler;
     public static EventManager eventManager;
 
@@ -25,7 +33,7 @@ public class HypixelUtilsCore {
     public static PartyAutoRemoveOfflineProcessor partyAutoRemoveOfflineProcessor;
 
     public static ICommandRegister commandRegister;
-    public static void registerCommand(ICommand command) {
+    public static void registerCommand(ICecerCommand command) {
         commandRegister.registerCommand(command);
     }
 
@@ -39,41 +47,64 @@ public class HypixelUtilsCore {
         instantBedProcessor = new InstantBedProcessor();
         improvedLobbyCommandProcessor = new ImprovedLobbyCommandProcessor();
         partyAutoRemoveOfflineProcessor = new PartyAutoRemoveOfflineProcessor();
-
         registerEvents();
         registerCommands();
+    }
+
+    public static void setSavedConfigKey(UUID key) {
+        try {
+            Files.write(_configKeyPath, key.toString().getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static UUID getSavedConfigKey() {
+        try {
+            return UUID.fromString(new String(Files.readAllBytes(_configKeyPath)));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     private static void registerCommands() {
         for(String commandName : config.getGuildChatToggleCommands()) {
             registerCommand(new GuildChatToggleCommand(commandName));
-            registerCommand(new GuildChatToggleCommand("hypixeutils:" + commandName));
+            registerCommand(new GuildChatToggleCommand("hypixelutils:" + commandName));
         }
 
         for(String commandName : config.getImprovedLobbyCommands()) {
             registerCommand(new ImprovedLobbyCommand(commandName));
-            registerCommand(new ImprovedLobbyCommand("hypixeutils:" + commandName));
+            registerCommand(new ImprovedLobbyCommand("hypixelutils:" + commandName));
         }
 
         for(String commandName : config.getInstantBedCommands()) {
             registerCommand(new InstantBedToggleCommand(commandName));
-            registerCommand(new InstantBedToggleCommand("hypixeutils:" + commandName));
+            registerCommand(new InstantBedToggleCommand("hypixelutils:" + commandName));
         }
 
         for(String commandName : config.getLobbyProtectionCommands()) {
             registerCommand(new LobbyProtectionToggleCommand(commandName));
-            registerCommand(new LobbyProtectionToggleCommand("hypixeutils:" + commandName));
+            registerCommand(new LobbyProtectionToggleCommand("hypixelutils:" + commandName));
         }
 
         for(String commandName : config.getPartyAutoRemoveCommands()) {
             registerCommand(new PartyAutoRemoveToggleCommand(commandName));
-            registerCommand(new PartyAutoRemoveToggleCommand("hypixeutils:" + commandName));
+            registerCommand(new PartyAutoRemoveToggleCommand("hypixelutils:" + commandName));
         }
 
         for(String commandName : config.getPartyChatToggleCommands()) {
             registerCommand(new PartyChatToggleCommand(commandName));
-            registerCommand(new PartyChatToggleCommand("hypixeutils:" + commandName));
+            registerCommand(new PartyChatToggleCommand("hypixelutils:" + commandName));
         }
+
+        registerCommand(new LoadConfigCommand("hypixelutils:loadconfig"));
+        registerCommand(new SaveConfigCommand("hypixelutils:saveconfig"));
+        registerCommand(new ConfigKeyCommand("hypixelutils:configkey"));
+        registerCommand(new DebugCommand("hypixelutils:debug"));
     }
 
     private static void registerEvents() {
@@ -86,5 +117,15 @@ public class HypixelUtilsCore {
         eventManager.registerEventHandlers(instantBedProcessor);
         eventManager.registerEventHandlers(improvedLobbyCommandProcessor);
         eventManager.registerEventHandlers(partyAutoRemoveOfflineProcessor);
+    }
+
+    public static void initCloudConfig(Path path) {
+        _configKeyPath = path;
+
+        UUID configKey = HypixelUtilsCore.getSavedConfigKey();
+        if(configKey == null) {
+            configKey = UUID.randomUUID();
+            HypixelUtilsCore.setSavedConfigKey(configKey);
+        }
     }
 }

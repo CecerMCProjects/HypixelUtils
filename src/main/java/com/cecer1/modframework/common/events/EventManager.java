@@ -7,11 +7,15 @@ public class EventManager {
     private Set<IOnChatEventHandler> _onChatEventHandlers;
     private Set<IOnBungeeServerChangeEventHandler> _onBungeeServerChangeEventHandlers;
     private Set<IOnTickEventHandler> _onTickEventHandlers;
+    private Set<IOnRenderEventHandler> _onRenderEventHandlers;
+    private Set<IOnConnectEventHandler> _onConnectEventHandlers;
 
     public EventManager() {
         _onChatEventHandlers = new HashSet<IOnChatEventHandler>();
         _onBungeeServerChangeEventHandlers = new HashSet<IOnBungeeServerChangeEventHandler>();
         _onTickEventHandlers = new HashSet<IOnTickEventHandler>();
+        _onRenderEventHandlers = new HashSet<IOnRenderEventHandler>();
+        _onConnectEventHandlers = new HashSet<IOnConnectEventHandler>();
     }
 
     public EventManager registerEventHandlers(IEventHandler eventHandler) {
@@ -24,6 +28,12 @@ public class EventManager {
         if(eventHandler instanceof IOnTickEventHandler)
             _onTickEventHandlers.add((IOnTickEventHandler) eventHandler);
 
+        if(eventHandler instanceof IOnRenderEventHandler)
+            _onRenderEventHandlers.add((IOnRenderEventHandler) eventHandler);
+
+        if(eventHandler instanceof IOnConnectEventHandler)
+            _onConnectEventHandlers.add((IOnConnectEventHandler) eventHandler);
+
         return this;
     }
     public EventManager deregisterEventHandlers(IEventHandler eventHandler) {
@@ -35,6 +45,12 @@ public class EventManager {
 
         if(_onTickEventHandlers.contains(eventHandler))
             _onTickEventHandlers.remove(eventHandler);
+
+        if(_onRenderEventHandlers.contains(eventHandler))
+            _onRenderEventHandlers.remove(eventHandler);
+
+        if(_onConnectEventHandlers.contains(eventHandler))
+            _onConnectEventHandlers.remove(eventHandler);
 
         return this;
     }
@@ -58,6 +74,20 @@ public class EventManager {
             IOnTickEventHandler.IOnTickEventData castedEventData = (IOnTickEventHandler.IOnTickEventData) eventData;
             for(IOnTickEventHandler handler : _onTickEventHandlers) {
                 handler.onTick(castedEventData);
+            }
+        }
+
+        if(eventData instanceof IOnRenderEventHandler.IOnRenderEventData) {
+            IOnRenderEventHandler.IOnRenderEventData castedEventData = (IOnRenderEventHandler.IOnRenderEventData) eventData;
+            for(IOnRenderEventHandler handler : _onRenderEventHandlers) {
+                handler.onRender(castedEventData);
+            }
+        }
+
+        if(eventData instanceof IOnConnectEventHandler.IOnConnectEventData) {
+            IOnConnectEventHandler.IOnConnectEventData castedEventData = (IOnConnectEventHandler.IOnConnectEventData) eventData;
+            for(IOnConnectEventHandler handler : _onConnectEventHandlers) {
+                handler.onConnect(castedEventData);
             }
         }
 

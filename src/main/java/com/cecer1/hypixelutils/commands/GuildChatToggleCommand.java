@@ -45,4 +45,9 @@ public class GuildChatToggleCommand extends AbstractedCommand {
             return false;
         return true;
     }
+
+    @Override
+    public int getMaximumArgumentCount() {
+        return 0;
+    }
 }

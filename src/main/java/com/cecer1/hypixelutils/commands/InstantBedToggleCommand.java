@@ -44,4 +44,9 @@ public class InstantBedToggleCommand extends AbstractedCommand {
             return false;
         return true;
     }
+
+    @Override
+    public int getMaximumArgumentCount() {
+        return 0;
+    }
 }

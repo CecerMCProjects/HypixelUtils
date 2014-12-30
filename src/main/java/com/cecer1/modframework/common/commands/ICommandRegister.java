@@ -1,7 +1,7 @@
 package com.cecer1.modframework.common.commands;
 
-import net.minecraft.command.ICommand;
+import com.cecer1.modframework.liteloader.commands.ICecerCommand;
 
 public interface ICommandRegister {
-    public ICommandRegister registerCommand(ICommand command);
+    public ICommandRegister registerCommand(ICecerCommand command);
 }

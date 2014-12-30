@@ -1,6 +1,6 @@
 package com.cecer1.hypixelutils;
 
-import com.cecer1.modframework.common.utils.MiscUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
@@ -9,10 +9,10 @@ import net.minecraft.util.IChatComponent;
 public class UtilityMethods {
 
     public static boolean isHypixel() {
-        String lastServer = MiscUtils.getLastServer();
-        if(lastServer.endsWith(".hypixel.net"))
+        String currentServer = Minecraft.getMinecraft().getCurrentServerData().serverIP;
+        if(currentServer.endsWith(".hypixel.net"))
             return true;
-        if(lastServer.contains(".hypixel.net:"))
+        if(currentServer.contains(".hypixel.net:"))
             return true;
         return false;
     }

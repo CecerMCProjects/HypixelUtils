@@ -47,4 +47,9 @@ public class PartyChatToggleCommand extends AbstractedCommand {
             return false;
         return true;
     }
+
+    @Override
+    public int getMaximumArgumentCount() {
+        return 0;
+    }
 }

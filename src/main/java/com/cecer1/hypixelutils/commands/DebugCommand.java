@@ -11,35 +11,35 @@ import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
-public class LobbyProtectionToggleCommand extends AbstractedCommand {
+public class DebugCommand extends AbstractedCommand {
 
-    public LobbyProtectionToggleCommand(String commandName) {
+    public DebugCommand(String commandName) {
         super(commandName);
     }
 
     @Override
-    public void processCommand(ICommandSender iCommandSender, String[] strings) throws CommandException
+    public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
-        IChatComponent commandReply = UtilityMethods.getHypixelUtilsChatComponentPrefix()
-                .appendSibling(new ChatComponentText("Bypassing /lobby protection has been ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+        IChatComponent commandReply = UtilityMethods.getHypixelUtilsChatComponentDebugPrefix()
+                .appendSibling(new ChatComponentText("Debug mode ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY)));
 
-        if(HypixelUtilsCore.config.isBypassLobbyProtectionEnabled())
+        if(HypixelUtilsCore.config.isDebugModeEnabled())
         {
-            HypixelUtilsCore.config.setBypassLobbyProtectionEnabled(false);
             commandReply.appendSibling(new ChatComponentText("DISABLED").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+            HypixelUtilsCore.config.setDebugModeEnabled(false);
         }
         else
         {
-            HypixelUtilsCore.config.setBypassLobbyProtectionEnabled(true);
             commandReply.appendSibling(new ChatComponentText("ENABLED").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)));
+            HypixelUtilsCore.config.setDebugModeEnabled(true);
         }
-        commandReply.appendSibling(new ChatComponentText(".").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+        commandReply.appendSibling(new ChatComponentText(".").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY)));
 
         Minecraft.getMinecraft().thePlayer.addChatMessage(commandReply);
     }
 
     @Override
-    public boolean canCommandSenderUseCommand(ICommandSender iCommandSender)
+    public boolean canCommandSenderUseCommand(ICommandSender sender)
     {
         if(!UtilityMethods.isHypixel())
             return false;
