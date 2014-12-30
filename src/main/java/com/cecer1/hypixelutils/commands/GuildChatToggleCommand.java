@@ -6,9 +6,10 @@ import com.cecer1.modframework.common.commands.AbstractedCommand;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.*;
-
-import java.util.List;
+import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 
 public class GuildChatToggleCommand extends AbstractedCommand {
 
@@ -40,7 +41,7 @@ public class GuildChatToggleCommand extends AbstractedCommand {
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender iCommandSender)
     {
-        if(!UtilityMethods.isCurrentServerHypixel())
+        if(!UtilityMethods.isHypixel())
             return false;
         return true;
     }

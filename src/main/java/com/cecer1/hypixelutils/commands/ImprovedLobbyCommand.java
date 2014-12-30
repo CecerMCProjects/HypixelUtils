@@ -37,7 +37,7 @@ public class ImprovedLobbyCommand extends AbstractedCommand {
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender iCommandSender)
     {
-        if(!UtilityMethods.isCurrentServerHypixel())
+        if(!UtilityMethods.isHypixel())
             return false;
         return true;
     }

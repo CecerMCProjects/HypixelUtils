@@ -12,7 +12,7 @@ public class BypassLobbyCommandProtectionProcessor implements IOnChatEventHandle
 
     private boolean isEnabled()
     {
-        if(!UtilityMethods.isCurrentServerHypixel())
+        if(!UtilityMethods.isHypixel())
             return false;
 
         if(_enableBypasses > 0)
@@ -20,7 +20,7 @@ public class BypassLobbyCommandProtectionProcessor implements IOnChatEventHandle
             _enableBypasses--;
             return true;
         }
-        return HypixelUtilsCore.config.isLobbyProtectionEnabled();
+        return HypixelUtilsCore.config.isBypassLobbyProtectionEnabled();
     }
     public BypassLobbyCommandProtectionProcessor enableOnce()
     {

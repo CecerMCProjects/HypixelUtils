@@ -12,12 +12,12 @@ public class DummyConfigManager implements IConfigManager {
     private boolean _isDebugModeEnabled;
 
     @Override
-    public boolean isLobbyProtectionEnabled() {
+    public boolean isBypassLobbyProtectionEnabled() {
         return _isLobbyProtectionDisabled;
     }
 
     @Override
-    public IConfigManager setLobbyProtectionEnabled(boolean disabled) {
+    public IConfigManager setBypassLobbyProtectionEnabled(boolean disabled) {
         _isLobbyProtectionDisabled = disabled;
         return this;
     }

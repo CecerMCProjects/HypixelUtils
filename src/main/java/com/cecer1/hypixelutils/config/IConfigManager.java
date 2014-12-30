@@ -1,8 +1,8 @@
 package com.cecer1.hypixelutils.config;
 
 public interface IConfigManager {
-    public boolean isLobbyProtectionEnabled();
-    public IConfigManager setLobbyProtectionEnabled(boolean enabled);
+    public boolean isBypassLobbyProtectionEnabled();
+    public IConfigManager setBypassLobbyProtectionEnabled(boolean enabled);
 
     public boolean isFilterGuildChatEnabled();
     public IConfigManager setFilterGuildChatEnabled(boolean enabled);

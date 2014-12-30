@@ -11,8 +11,6 @@ import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
-import java.util.List;
-
 public class LobbyProtectionToggleCommand extends AbstractedCommand {
 
     public LobbyProtectionToggleCommand(String commandName) {
@@ -23,16 +21,16 @@ public class LobbyProtectionToggleCommand extends AbstractedCommand {
     public void processCommand(ICommandSender iCommandSender, String[] strings) throws CommandException
     {
         IChatComponent commandReply = UtilityMethods.getHypixelUtilsChatComponentPrefix()
-                .appendSibling(new ChatComponentText("/lobby protection has been ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+                .appendSibling(new ChatComponentText("Bypassing /lobby protection has been ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
 
-        if(HypixelUtilsCore.config.isLobbyProtectionEnabled())
+        if(HypixelUtilsCore.config.isBypassLobbyProtectionEnabled())
         {
-            HypixelUtilsCore.config.setLobbyProtectionEnabled(false);
+            HypixelUtilsCore.config.setBypassLobbyProtectionEnabled(false);
             commandReply.appendSibling(new ChatComponentText("ENABLED").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)));
         }
         else
         {
-            HypixelUtilsCore.config.setLobbyProtectionEnabled(true);
+            HypixelUtilsCore.config.setBypassLobbyProtectionEnabled(true);
             commandReply.appendSibling(new ChatComponentText("DISABLED").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
         }
         commandReply.appendSibling(new ChatComponentText(".").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
@@ -43,7 +41,7 @@ public class LobbyProtectionToggleCommand extends AbstractedCommand {
     @Override
     public boolean canCommandSenderUseCommand(ICommandSender iCommandSender)
     {
-        if(!UtilityMethods.isCurrentServerHypixel())
+        if(!UtilityMethods.isHypixel())
             return false;
         return true;
     }
