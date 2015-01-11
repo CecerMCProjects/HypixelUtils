@@ -2,11 +2,10 @@ package com.cecer1.hypixelutils.commands;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
 import com.cecer1.hypixelutils.chat.ChatMessage;
-import com.cecer1.modframework.common.utils.ChatUtilities;
-import net.minecraft.util.IChatComponent;
 
-// TODO: Make this backgroundable.
+// TODO: Make this backgroundable and confirm it actually had a successful result.
 public class HypixelCommandJobTip extends HypixelCommandJob {
+    private boolean _started = false;
     private boolean _done = false;
     private String _playerName = null;
 
@@ -27,7 +26,13 @@ public class HypixelCommandJobTip extends HypixelCommandJob {
     @Override
     public void trigger() {
         HypixelUtilsCore.sendChatMessage("/tip " + _playerName);
+        _started = true;
         _done = true;
+    }
+
+    @Override
+    public boolean isStarted() {
+        return _started;
     }
 
     @Override

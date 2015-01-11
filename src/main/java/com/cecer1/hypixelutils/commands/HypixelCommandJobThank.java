@@ -5,6 +5,7 @@ import com.cecer1.hypixelutils.chat.ChatMessage;
 
 // TODO: Make this backgroundable.
 public class HypixelCommandJobThank extends HypixelCommandJob {
+    private boolean _started = false;
     private boolean _done = false;
     private String _playerName = null;
 
@@ -25,9 +26,16 @@ public class HypixelCommandJobThank extends HypixelCommandJob {
     @Override
     public void trigger() {
         HypixelUtilsCore.sendChatMessage("/thank " + _playerName);
+        _started = true;
         _done = true;
     }
 
+
+    @Override
+    public boolean isStarted() {
+        return _started;
+    }
+    
     @Override
     public boolean isDone() {
         return _done;

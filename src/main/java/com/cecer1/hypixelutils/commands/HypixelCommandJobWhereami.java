@@ -6,6 +6,7 @@ import com.cecer1.modframework.common.utils.ChatUtilities;
 import net.minecraft.util.IChatComponent;
 
 public class HypixelCommandJobWhereami extends HypixelCommandJob {
+    private boolean _started = false;
     private boolean _done = false;
     private String _result = null;
     private IHypixelCommandCallbackWhereami _callback;
@@ -37,8 +38,14 @@ public class HypixelCommandJobWhereami extends HypixelCommandJob {
     @Override
     public void trigger() {
         HypixelUtilsCore.sendChatMessage("/whereami");
+        _started = true;
     }
 
+
+    @Override
+    public boolean isStarted() {
+        return _started;
+    }
     @Override
     public boolean isDone() {
         return _done;

@@ -8,6 +8,7 @@ import net.minecraft.util.IChatComponent;
 import java.util.regex.Pattern;
 
 public class HypixelCommandJobProxy extends HypixelCommandJob {
+    private boolean _started = false;
     private boolean _done = false;
     private String _result = null;
     private IHypixelCommandCallbackProxy _callback;
@@ -40,8 +41,14 @@ public class HypixelCommandJobProxy extends HypixelCommandJob {
     @Override
     public void trigger() {
         HypixelUtilsCore.sendChatMessage("/proxy");
+        _started = true;
     }
 
+
+    @Override
+    public boolean isStarted() {
+        return _started;
+    }
     @Override
     public boolean isDone() {
         return _done;

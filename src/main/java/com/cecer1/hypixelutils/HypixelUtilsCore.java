@@ -3,6 +3,8 @@ package com.cecer1.hypixelutils;
 import com.cecer1.hypixelutils.chat.ChatManager;
 import com.cecer1.hypixelutils.commands.HypixelCommandManager;
 import com.cecer1.hypixelutils.config.IConfigManager;
+import com.cecer1.hypixelutils.features.boosters.TipAndThankChatModifier;
+import com.cecer1.hypixelutils.features.boosters.TipAndThankCommand;
 import com.cecer1.hypixelutils.features.bypasslobbyprotection.BypassLobbyProtectionCommand;
 import com.cecer1.hypixelutils.features.bypasslobbyprotection.BypassLobbyProtectionProcessor;
 import com.cecer1.hypixelutils.features.cloudconfig.ConfigKeyCommand;
@@ -54,6 +56,7 @@ public class HypixelUtilsCore {
     public static InstantBedProcessor instantBedProcessor;
     public static ImprovedLobbyCommandProcessor improvedLobbyCommandProcessor;
     public static PartyAutoRemoveProcessor partyAutoRemoveOfflineProcessor;
+    public static TipAndThankChatModifier tipAndThankChatModifier;
 
     public static ICommandRegister commandRegister;
 
@@ -69,6 +72,7 @@ public class HypixelUtilsCore {
         instantBedProcessor = new InstantBedProcessor();
         improvedLobbyCommandProcessor = new ImprovedLobbyCommandProcessor();
         partyAutoRemoveOfflineProcessor = new PartyAutoRemoveProcessor();
+        tipAndThankChatModifier = new TipAndThankChatModifier();
 
 
         chatManager = new ChatManager();
@@ -133,6 +137,11 @@ public class HypixelUtilsCore {
             commandRegister.registerCommand(new FilterPartyChatCommand("hypixelutils:" + commandName));
         }
 
+        for(String commandName : config.getTipAndThankCommands()) {
+            commandRegister.registerCommand(new TipAndThankCommand(commandName));
+            commandRegister.registerCommand(new FilterPartyChatCommand("hypixelutils:" + commandName));
+        }
+
         commandRegister.registerCommand(new LoadConfigCommand("hypixelutils:loadconfig"));
         commandRegister.registerCommand(new SaveConfigCommand("hypixelutils:saveconfig"));
         commandRegister.registerCommand(new ConfigKeyCommand("hypixelutils:configkey"));
@@ -147,6 +156,7 @@ public class HypixelUtilsCore {
         eventManager.registerEventHandlers(instantBedProcessor);
         eventManager.registerEventHandlers(improvedLobbyCommandProcessor);
         eventManager.registerEventHandlers(partyAutoRemoveOfflineProcessor);
+        eventManager.registerEventHandlers(tipAndThankChatModifier);
 
         chatManager.subscribe(filterGuildChatProcessor);
         chatManager.subscribe(filterPartyChatProcessor);

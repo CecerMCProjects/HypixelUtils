@@ -6,6 +6,7 @@ import com.cecer1.modframework.common.utils.ChatUtilities;
 import net.minecraft.util.IChatComponent;
 
 public class HypixelCommandJobWtfmap extends HypixelCommandJob {
+    private boolean _started = false;
     private boolean _done = false;
     private String _result = null;
     private IHypixelCommandCallbackWtfmap _callback;
@@ -34,8 +35,14 @@ public class HypixelCommandJobWtfmap extends HypixelCommandJob {
     @Override
     public void trigger() {
         HypixelUtilsCore.sendChatMessage("/wtfmap");
+        _started = true;
     }
 
+
+    @Override
+    public boolean isStarted() {
+        return _started;
+    }
     @Override
     public boolean isDone() {
         return _done;

@@ -9,8 +9,8 @@ import java.util.ArrayDeque;
 import java.util.Queue;
 
 public class HypixelCommandManager implements IChatMessageSubscriber, IOnChatEventHandler, IOnTickEventHandler {
-    private static final int BOOSTER_COMMAND_COOLDOWN = 1000;
-    private static final int MSG_COMMAND_COOLDOWN = 600;
+    private static final int BOOSTER_COMMAND_COOLDOWN = 20;
+    private static final int MSG_COMMAND_COOLDOWN = 12;
 
     
     public Cooldown boosterCommandCooldown;
@@ -37,7 +37,8 @@ public class HypixelCommandManager implements IChatMessageSubscriber, IOnChatEve
             if (_jobQueue.size() == 0)
                 return;
             _currentJob = _jobQueue.remove();
-
+        }
+        if(!_currentJob.isStarted()) {
             Cooldown jobCooldown = _currentJob.getCooldown();
             if (jobCooldown != null && jobCooldown.isCooling())
                 return;

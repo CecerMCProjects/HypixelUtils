@@ -196,12 +196,17 @@ public class CloudConfigManager implements IConfigManager {
 
     @Override
     public String[] getPartyAutoRemoveCommands() {
-        return new String[] {"partyautoremovetoggle", "pautoremovetoggle"};
+        return new String[] {"partyautoremovetoggle", "pautoremovetoggle", "partyautoremoveofflinetoggle", "pautoremoveofflinetoggle", "partyautoremove", "pautoremove", "partyautoremoveoffline", "pautoremoveoffline"};
     }
 
     @Override
     public String[] getPartyChatToggleCommands() {
         return new String[] {"partychattoggle", "pchattoggle", "ptoggle"};
+    }
+
+    @Override
+    public String[] getTipAndThankCommands() {
+        return new String[] {"tipandthank"};
     }
 
     @Override

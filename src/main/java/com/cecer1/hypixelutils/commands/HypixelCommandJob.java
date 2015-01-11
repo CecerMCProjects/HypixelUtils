@@ -18,4 +18,6 @@ public abstract class HypixelCommandJob implements IChatMessageSubscriber, IOnCh
     public abstract void complete();
     
     public abstract Cooldown getCooldown();
+
+    public abstract boolean isStarted();
 }
