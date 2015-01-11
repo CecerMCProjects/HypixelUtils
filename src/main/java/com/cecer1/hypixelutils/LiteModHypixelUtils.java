@@ -1,6 +1,6 @@
 package com.cecer1.hypixelutils;
 
-import com.cecer1.hypixelutils.config.CloudConfigManager;
+import com.cecer1.hypixelutils.features.cloudconfig.CloudConfigManager;
 import com.cecer1.modframework.common.Scheduler;
 import com.cecer1.modframework.common.events.EventManager;
 import com.cecer1.modframework.common.utils.WorldDimension;

@@ -1,0 +1,21 @@
+package com.cecer1.hypixelutils.features.instantbed;
+
+import com.cecer1.hypixelutils.HypixelUtilsCore;
+import com.cecer1.modframework.common.events.IOnChatEventHandler;
+import com.cecer1.modframework.common.utils.ChatUtilities;
+
+public class InstantBedProcessor implements IOnChatEventHandler
+{
+    @Override
+    public void onChat(IOnChatEventData event) {
+        if(!HypixelUtilsCore.config.isInstantBedEnabled())
+            return;
+
+        if (ChatUtilities.compareChatComponent(event.getMessage(), "{\"extra\":[{\"bold\":true,\"color\":\"green\",\"text\":\"Teleporting you to the lobby in 3 seconds... Right-click again to cancel the teleport!\"}],\"text\":\"\"}"))
+        {
+            HypixelUtilsCore.bypassLobbyCommandProtectionProcessor.enableOnce();
+            HypixelUtilsCore.sendChatMessage("/lobby");
+            event.setCanceled(true);
+        }
+    }
+}

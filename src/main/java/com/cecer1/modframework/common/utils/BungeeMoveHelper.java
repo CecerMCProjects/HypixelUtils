@@ -15,8 +15,7 @@ public class BungeeMoveHelper {
     private static final long MAXIMUM_BUNGEE_WORLDLOADTYPES_DELAY = 500;
     private static final WorldDimension[] EXPECTED_BUNGEE_MOVE_ORDER = new WorldDimension[] {
         WorldDimension.END,
-        WorldDimension.NETHER,
-        WorldDimension.OVERWORLD
+        WorldDimension.NETHER
     };
     private MethodCallTimer _timer;
     private int _stage; // -1 = None
@@ -48,7 +47,30 @@ public class BungeeMoveHelper {
                 .appendSibling(new ChatComponentText(Integer.toString(EXPECTED_BUNGEE_MOVE_ORDER.length - 1)).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN)));
         }
 
-        if(_stage+1 >= EXPECTED_BUNGEE_MOVE_ORDER.length) { // Something has gone wrong as this should never be this high! Reset _stage to -1 and move on.
+        if(_stage+1 == EXPECTED_BUNGEE_MOVE_ORDER.length) { // We have reached are destination.
+            _stage = -1;
+
+            if(HypixelUtilsCore.config.isDebugModeEnabled()) {
+                debugChatComponent
+                        .appendSibling(new ChatComponentText(";").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.WHITE)))
+                        .appendSibling(new ChatComponentText("Destination Reached: ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
+                if(dimension == WorldDimension.OVERWORLD) {
+                    debugChatComponent.appendSibling(new ChatComponentText("OVERWORLD").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE)));
+                } else if(dimension == WorldDimension.NETHER) {
+                    debugChatComponent.appendSibling(new ChatComponentText("NETHER").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE)));
+                } else if(dimension == WorldDimension.END) {
+                    debugChatComponent.appendSibling(new ChatComponentText("END").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.LIGHT_PURPLE)));
+                } else {
+                    debugChatComponent.appendSibling(new ChatComponentText("UNKNOWN").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+                }
+
+                Minecraft.getMinecraft().thePlayer.addChatComponentMessage(debugChatComponent);
+            }
+
+            return true;
+        }
+
+        if(_stage+1 > EXPECTED_BUNGEE_MOVE_ORDER.length) { // Something has gone wrong as this should never be this high! Reset _stage to -1 and move on.
             _stage = -1;
         }
 
@@ -79,10 +101,6 @@ public class BungeeMoveHelper {
             Minecraft.getMinecraft().thePlayer.addChatComponentMessage(debugChatComponent);
         }
 
-        if(_stage+1 == EXPECTED_BUNGEE_MOVE_ORDER.length) {
-            _stage = -1;
-            return true;
-        }
         return false;
     }
 }

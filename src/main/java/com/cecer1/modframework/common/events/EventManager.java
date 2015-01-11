@@ -1,5 +1,7 @@
 package com.cecer1.modframework.common.events;
 
+import com.cecer1.hypixelutils.features.general.IOnHypixelStateUpdatedEventHandler;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -9,6 +11,7 @@ public class EventManager {
     private Set<IOnTickEventHandler> _onTickEventHandlers;
     private Set<IOnRenderEventHandler> _onRenderEventHandlers;
     private Set<IOnConnectEventHandler> _onConnectEventHandlers;
+    private Set<IOnHypixelStateUpdatedEventHandler> _onHypixelStateUpdateEventHandlers;
 
     public EventManager() {
         _onChatEventHandlers = new HashSet<IOnChatEventHandler>();
@@ -16,6 +19,7 @@ public class EventManager {
         _onTickEventHandlers = new HashSet<IOnTickEventHandler>();
         _onRenderEventHandlers = new HashSet<IOnRenderEventHandler>();
         _onConnectEventHandlers = new HashSet<IOnConnectEventHandler>();
+        _onHypixelStateUpdateEventHandlers = new HashSet<IOnHypixelStateUpdatedEventHandler>();
     }
 
     public EventManager registerEventHandlers(IEventHandler eventHandler) {
@@ -34,6 +38,9 @@ public class EventManager {
         if(eventHandler instanceof IOnConnectEventHandler)
             _onConnectEventHandlers.add((IOnConnectEventHandler) eventHandler);
 
+        if(eventHandler instanceof IOnHypixelStateUpdatedEventHandler)
+            _onHypixelStateUpdateEventHandlers.add((IOnHypixelStateUpdatedEventHandler) eventHandler);
+
         return this;
     }
     public EventManager deregisterEventHandlers(IEventHandler eventHandler) {
@@ -51,6 +58,9 @@ public class EventManager {
 
         if(_onConnectEventHandlers.contains(eventHandler))
             _onConnectEventHandlers.remove(eventHandler);
+
+        if(_onHypixelStateUpdateEventHandlers.contains(eventHandler))
+            _onHypixelStateUpdateEventHandlers.remove(eventHandler);
 
         return this;
     }
@@ -88,6 +98,13 @@ public class EventManager {
             IOnConnectEventHandler.IOnConnectEventData castedEventData = (IOnConnectEventHandler.IOnConnectEventData) eventData;
             for(IOnConnectEventHandler handler : _onConnectEventHandlers) {
                 handler.onConnect(castedEventData);
+            }
+        }
+
+        if(eventData instanceof IOnHypixelStateUpdatedEventHandler.IOnHypixelStateUpdatedEventData) {
+            IOnHypixelStateUpdatedEventHandler.IOnHypixelStateUpdatedEventData castedEventData = (IOnHypixelStateUpdatedEventHandler.IOnHypixelStateUpdatedEventData) eventData;
+            for(IOnHypixelStateUpdatedEventHandler handler : _onHypixelStateUpdateEventHandlers) {
+                handler.onHypixelStateUpdated(castedEventData);
             }
         }
 
