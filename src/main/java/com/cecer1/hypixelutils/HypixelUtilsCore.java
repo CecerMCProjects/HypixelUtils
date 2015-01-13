@@ -3,6 +3,7 @@ package com.cecer1.hypixelutils;
 import com.cecer1.hypixelutils.chat.ChatManager;
 import com.cecer1.hypixelutils.commands.HypixelCommandManager;
 import com.cecer1.hypixelutils.config.IConfigManager;
+import com.cecer1.hypixelutils.features.boosters.BoosterQueueChatModifier;
 import com.cecer1.hypixelutils.features.boosters.TipAndThankChatModifier;
 import com.cecer1.hypixelutils.features.boosters.TipAndThankCommand;
 import com.cecer1.hypixelutils.features.bypasslobbyprotection.BypassLobbyProtectionCommand;
@@ -57,6 +58,7 @@ public class HypixelUtilsCore {
     public static ImprovedLobbyCommandProcessor improvedLobbyCommandProcessor;
     public static PartyAutoRemoveProcessor partyAutoRemoveOfflineProcessor;
     public static TipAndThankChatModifier tipAndThankChatModifier;
+    public static BoosterQueueChatModifier boosterQueueChatModifier;
 
     public static ICommandRegister commandRegister;
 
@@ -73,6 +75,7 @@ public class HypixelUtilsCore {
         improvedLobbyCommandProcessor = new ImprovedLobbyCommandProcessor();
         partyAutoRemoveOfflineProcessor = new PartyAutoRemoveProcessor();
         tipAndThankChatModifier = new TipAndThankChatModifier();
+        boosterQueueChatModifier = new BoosterQueueChatModifier();
 
 
         chatManager = new ChatManager();
@@ -157,6 +160,7 @@ public class HypixelUtilsCore {
         eventManager.registerEventHandlers(improvedLobbyCommandProcessor);
         eventManager.registerEventHandlers(partyAutoRemoveOfflineProcessor);
         eventManager.registerEventHandlers(tipAndThankChatModifier);
+        eventManager.registerEventHandlers(boosterQueueChatModifier);
 
         chatManager.subscribe(filterGuildChatProcessor);
         chatManager.subscribe(filterPartyChatProcessor);

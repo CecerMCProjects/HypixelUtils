@@ -36,7 +36,7 @@ public class TipAndThankChatModifier implements IOnChatEventHandler
         }
     }
 
-    private IChatComponent[] _hoverEventChatComponents = new IChatComponent[] {
+    private static IChatComponent[] _hoverEventChatComponents = new IChatComponent[] {
             new ChatComponentText("Click to ").setChatStyle(ChatUtilities.ChatPresets.YELLOW),
             new ChatComponentText("tip").setChatStyle(ChatUtilities.ChatPresets.GREEN),
             new ChatComponentText(" and ").setChatStyle(ChatUtilities.ChatPresets.YELLOW),
@@ -44,7 +44,7 @@ public class TipAndThankChatModifier implements IOnChatEventHandler
             new ChatComponentText(" for their booster!").setChatStyle(ChatUtilities.ChatPresets.YELLOW)
     };
     
-    private IChatComponent getClickableStartBoosterMessage(String name) {
+    public static ChatStyle getClickableTipAndThankChatStyle(String name) {
         ClickEvent clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tipandthank " + name);
         IChatComponent hoverChatComponent = new ChatComponentText("")
                 .appendSibling(_hoverEventChatComponents[0])
@@ -54,7 +54,12 @@ public class TipAndThankChatModifier implements IOnChatEventHandler
                 .appendSibling(new ChatComponentText(name).setChatStyle(ChatUtilities.ChatPresets.GOLD))
                 .appendSibling(_hoverEventChatComponents[4]);
         HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverChatComponent);
-        ChatStyle parentStyle = new ChatStyle().setChatClickEvent(clickEvent).setChatHoverEvent(hoverEvent);
+        
+        return new ChatStyle().setChatClickEvent(clickEvent).setChatHoverEvent(hoverEvent);
+    }
+    
+    private IChatComponent getClickableStartBoosterMessage(String name) {
+        ChatStyle parentStyle = getClickableTipAndThankChatStyle(name);
 
         return new ChatComponentText("")
                 .appendSibling(new ChatComponentText(name)).setChatStyle(ChatUtilities.ChatPresets.GOLD.createShallowCopy().setParentStyle(parentStyle))
@@ -63,16 +68,7 @@ public class TipAndThankChatModifier implements IOnChatEventHandler
                 .appendSibling(new ChatComponentText(" is active for this game!").setChatStyle(ChatUtilities.ChatPresets.DARK_AQUA.createShallowCopy().setParentStyle(parentStyle)));
     }
     private IChatComponent getClickableEndBoosterMessage(String name) {
-        ClickEvent clickEvent = new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tipandthank " + name);
-        IChatComponent hoverChatComponent = new ChatComponentText("")
-                .appendSibling(_hoverEventChatComponents[0])
-                .appendSibling(_hoverEventChatComponents[1])
-                .appendSibling(_hoverEventChatComponents[2])
-                .appendSibling(_hoverEventChatComponents[3])
-                .appendSibling(new ChatComponentText(name).setChatStyle(ChatUtilities.ChatPresets.GOLD))
-                .appendSibling(_hoverEventChatComponents[4]);
-        HoverEvent hoverEvent = new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverChatComponent);
-        ChatStyle parentStyle = new ChatStyle().setChatClickEvent(clickEvent).setChatHoverEvent(hoverEvent);
+        ChatStyle parentStyle = getClickableTipAndThankChatStyle(name);
 
         return new ChatComponentText("")
                 .appendSibling(new ChatComponentText("Your game was boosted by ").setChatStyle(ChatUtilities.ChatPresets.DARK_AQUA.createShallowCopy().setParentStyle(parentStyle)))
