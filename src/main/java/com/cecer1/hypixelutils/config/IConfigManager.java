@@ -27,6 +27,7 @@ public interface IConfigManager {
     public String[] getPartyAutoRemoveCommands();
     public String[] getPartyChatToggleCommands();
     public String[] getTipAndThankCommands();
+    public String[] getRageQuitCommands();
 
     public String[] getLobbyTypes();
 }

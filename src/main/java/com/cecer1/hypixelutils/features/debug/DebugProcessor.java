@@ -26,7 +26,7 @@ public class DebugProcessor implements IOnChatEventHandler, IOnHypixelStateUpdat
         if(eventData.getUpdateType() == HypixelStateUpdateType.SERVER_NAME) {
             Minecraft.getMinecraft().thePlayer.addChatComponentMessage(UtilityMethods.getHypixelUtilsChatComponentDebugPrefix()
                     .appendSibling(new ChatComponentText("Server Name set to ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)))
-                    .appendSibling(new ChatComponentText(HypixelUtilsCore.currentState.getCurrentMapName()).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN))));
+                    .appendSibling(new ChatComponentText(HypixelUtilsCore.currentState.getCurrentServerName()).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN))));
         } else if(eventData.getUpdateType() == HypixelStateUpdateType.MAP_NAME) {
             Minecraft.getMinecraft().thePlayer.addChatComponentMessage(UtilityMethods.getHypixelUtilsChatComponentDebugPrefix()
                     .appendSibling(new ChatComponentText("Map Name set to ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)))
@@ -34,7 +34,7 @@ public class DebugProcessor implements IOnChatEventHandler, IOnHypixelStateUpdat
         } else if(eventData.getUpdateType() == HypixelStateUpdateType.PROXY_NAME) {
             Minecraft.getMinecraft().thePlayer.addChatComponentMessage(UtilityMethods.getHypixelUtilsChatComponentDebugPrefix()
                     .appendSibling(new ChatComponentText("Proxy set to ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)))
-                    .appendSibling(new ChatComponentText(HypixelUtilsCore.currentState.getCurrentMapName()).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN))));
+                    .appendSibling(new ChatComponentText(HypixelUtilsCore.currentState.getCurrentProxyName()).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GREEN))));
         }
     }
 }

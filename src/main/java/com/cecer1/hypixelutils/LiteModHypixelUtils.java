@@ -44,6 +44,10 @@ public class LiteModHypixelUtils implements ChatFilter, Tickable, OutboundChatFi
 
     @Override
     public boolean onSendChatMessage(String message) {
+        if(HypixelUtilsCore.skipEventProcessingChatMessages.contains(message)) {
+            HypixelUtilsCore.skipEventProcessingChatMessages.remove(message);
+            return true;
+        }
         return liteloaderCommandRegister.trigger(message);
     }
 

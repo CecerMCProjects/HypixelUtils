@@ -2,7 +2,7 @@ package com.cecer1.hypixelutils.commands;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
 import com.cecer1.hypixelutils.chat.ChatMessage;
-import com.cecer1.modframework.common.utils.ChatUtilities;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
 import java.util.regex.Pattern;
@@ -12,7 +12,7 @@ public class HypixelCommandJobProxy extends HypixelCommandJob {
     private boolean _done = false;
     private String _result = null;
     private IHypixelCommandCallbackProxy _callback;
-    private static final Pattern _pattern = Pattern.compile("^\\S++-hp-\\S+$");
+    private static final Pattern _pattern = Pattern.compile("^\\S+-hp-\\S+$");
 
     public HypixelCommandJobProxy(IHypixelCommandCallbackProxy callback) {
         _callback = callback;
@@ -31,7 +31,7 @@ public class HypixelCommandJobProxy extends HypixelCommandJob {
         if(!_pattern.matcher(message.getUnformattedText()).matches())
             return;
 
-        if (ChatUtilities.compareChatComponent(message, "{\"color\":\"white\",\"text\":\"" + message.getUnformattedText() + "\"}")) {
+        if (message.getChatStyle().getColor() == EnumChatFormatting.WHITE) {
             _result = message.getUnformattedText();
             _done = true;
             event.setCanceled(true);

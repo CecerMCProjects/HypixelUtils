@@ -3,7 +3,6 @@ package com.cecer1.hypixelutils.features.bypasslobbyprotection;
 import com.cecer1.hypixelutils.HypixelUtilsCore;
 import com.cecer1.modframework.common.events.IOnChatEventHandler;
 import com.cecer1.modframework.common.utils.ChatUtilities;
-import net.minecraft.client.Minecraft;
 
 public class BypassLobbyProtectionProcessor implements IOnChatEventHandler
 {

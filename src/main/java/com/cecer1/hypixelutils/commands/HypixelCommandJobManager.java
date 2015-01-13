@@ -8,7 +8,7 @@ import com.cecer1.modframework.common.events.IOnTickEventHandler;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-public class HypixelCommandManager implements IChatMessageSubscriber, IOnChatEventHandler, IOnTickEventHandler {
+public class HypixelCommandJobManager implements IChatMessageSubscriber, IOnChatEventHandler, IOnTickEventHandler {
     private static final int BOOSTER_COMMAND_COOLDOWN = 20;
     private static final int MSG_COMMAND_COOLDOWN = 12;
 
@@ -20,13 +20,17 @@ public class HypixelCommandManager implements IChatMessageSubscriber, IOnChatEve
     private HypixelCommandJob _currentJob;
     private Queue<HypixelCommandJob> _jobQueue;
 
-    public HypixelCommandManager() {
+    public HypixelCommandJobManager() {
+        reset();
+    }
+    
+    public void reset() {
         _currentJob = null;
         _jobQueue = new ArrayDeque<HypixelCommandJob>();
         boosterCommandCooldown = new Cooldown(BOOSTER_COMMAND_COOLDOWN);
         msgCommandCooldown = new Cooldown(MSG_COMMAND_COOLDOWN);
     }
-
+    
     public void queueJob(HypixelCommandJob job) {
         _jobQueue.add(job);
     }
@@ -47,7 +51,9 @@ public class HypixelCommandManager implements IChatMessageSubscriber, IOnChatEve
             
             if (jobCooldown != null)
                 jobCooldown.reset();
-        } else if(_currentJob.isDone()) {
+            return;
+        }
+        if(_currentJob.isDone()) {
             _currentJob.complete();
             _currentJob = null;
         }

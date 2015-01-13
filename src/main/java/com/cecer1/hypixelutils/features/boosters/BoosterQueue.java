@@ -4,7 +4,6 @@ import com.cecer1.modframework.common.utils.ChatUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
@@ -85,59 +84,54 @@ public class BoosterQueue {
         return true;
     }
     
-    private static final IChatComponent[] outputComponents = new IChatComponent[] {
-        new ChatComponentText("-----------------------------------------------------").setChatStyle(ChatUtilities.ChatPresets.WHITE),
-        new ChatComponentText("                          ").setChatStyle(ChatUtilities.ChatPresets.WHITE)
-            .appendSibling(new ChatComponentText("Network Booster Queue").setChatStyle(ChatUtilities.ChatPresets.AQUA)),
-        new ChatComponentText("").setChatStyle(ChatUtilities.ChatPresets.WHITE),
-        new ChatComponentText(" - ").setChatStyle(ChatUtilities.ChatPresets.YELLOW)
+    private static final IChatComponent[] staticOutputComponents = new IChatComponent[] {
+            new ChatComponentText("-----------------------------------------------------").setChatStyle(ChatUtilities.ChatPresets.WHITE),
+            new ChatComponentText("                          ").setChatStyle(ChatUtilities.ChatPresets.WHITE).appendSibling(new ChatComponentText("Network Booster Queue").setChatStyle(ChatUtilities.ChatPresets.AQUA)),
+            new ChatComponentText("").setChatStyle(ChatUtilities.ChatPresets.WHITE),
+            new ChatComponentText(", ").setChatStyle(ChatUtilities.ChatPresets.GRAY),
+            new ChatComponentText(" and ").setChatStyle(ChatUtilities.ChatPresets.GRAY)
     };
     private static IChatComponent getBoosterQueueLineComponent(String game, String time, String[] names) {
-        if(names.length > 0) {
-            ChatStyle clickStyle = TipAndThankChatModifier.getClickableTipAndThankChatStyle(names[0]);
-            ChatStyle nameStyle = ChatUtilities.ChatPresets.GREEN.setParentStyle(clickStyle);
-            IChatComponent seperator = new ChatComponentText(", ").setChatStyle(ChatUtilities.ChatPresets.YELLOW.setParentStyle(clickStyle));
-            
-            IChatComponent component = new ChatComponentText(game).setChatStyle(ChatUtilities.ChatPresets.AQUA.createShallowCopy().setParentStyle(clickStyle))
-                .appendSibling(outputComponents[3].setChatStyle(outputComponents[3].getChatStyle().createShallowCopy().setParentStyle(clickStyle)))
-                .appendSibling(new ChatComponentText(time + " of Triple Coins from ").setChatStyle(ChatUtilities.ChatPresets.GREEN.setParentStyle(clickStyle)));
-            
-            if(names.length > 24) {
-                for(int i = 0; i < 23; i++) {
-                    component.appendSibling(new ChatComponentText(names[i]).setChatStyle(nameStyle)).appendSibling(seperator);
-                }
-                component.appendSibling(new ChatComponentText(names[24]).setChatStyle(nameStyle));
-                component.appendSibling(new ChatComponentText(" and ").setChatStyle(seperator.getChatStyle()));
-                component.appendSibling(new ChatComponentText(Integer.toString((names.length - 24))).setChatStyle(ChatUtilities.ChatPresets.RED.createShallowCopy().setParentStyle(clickStyle)));
-                component.appendSibling(new ChatComponentText(" others.").setChatStyle(seperator.getChatStyle()));
-            } else if(names.length > 1) {
-                for(int i = 0; i < names.length-2; i++) {
-                    component.appendSibling(new ChatComponentText(names[i]).setChatStyle(nameStyle)).appendSibling(seperator);
-                }
-                component.appendSibling(new ChatComponentText(names[names.length-2]).setChatStyle(nameStyle));
-                component.appendSibling(new ChatComponentText(" and ").setChatStyle(seperator.getChatStyle()));
-                component.appendSibling(new ChatComponentText(names[names.length-1]).setChatStyle(nameStyle));
-            } else if(names.length == 1) {
-                component.appendSibling(new ChatComponentText(names[0]).setChatStyle(nameStyle));
-            }
-            return component;
+        if(names.length == 0) {
+            return new ChatComponentText(game).setChatStyle(ChatUtilities.ChatPresets.RED)
+                    .appendSibling(new ChatComponentText(": No Network Boosters queued.").setChatStyle(ChatUtilities.ChatPresets.GRAY));
         }
-
-        return new ChatComponentText(game).setChatStyle(ChatUtilities.ChatPresets.AQUA)
-                .appendSibling(outputComponents[3])
-                .appendSibling(new ChatComponentText("No Triple Coins Boosters queued.").setChatStyle(ChatUtilities.ChatPresets.GREEN));
+        
+        IChatComponent component = new ChatComponentText(game + " (" + time + ")").setChatStyle(ChatUtilities.ChatPresets.GREEN.createShallowCopy().setParentStyle(TipAndThankChatModifier.getClickableTipAndThankChatStyle(names[0])));
+        component.appendSibling(new ChatComponentText(": ").setChatStyle(ChatUtilities.ChatPresets.GRAY));
+        component.appendSibling(new ChatComponentText(names[0]).setChatStyle(ChatUtilities.ChatPresets.GOLD));
+        
+        if(names.length > 1) {
+            if(names.length <= 24) {
+                for (int i = 1; i < names.length - 1; i++) {
+                    component.appendSibling(staticOutputComponents[3]);
+                    component.appendSibling(new ChatComponentText(names[i]).setChatStyle(ChatUtilities.ChatPresets.WHITE));
+                }
+                component.appendSibling(staticOutputComponents[4]);
+                component.appendSibling(new ChatComponentText(names[names.length - 1]).setChatStyle(ChatUtilities.ChatPresets.WHITE));
+            } else {
+                for (int i = 1; i < 24; i++) {
+                    component.appendSibling(staticOutputComponents[3]);
+                    component.appendSibling(new ChatComponentText(names[i]).setChatStyle(ChatUtilities.ChatPresets.WHITE));
+                }
+                component.appendSibling(new ChatComponentText(" and ").setChatStyle(ChatUtilities.ChatPresets.GRAY));
+                component.appendSibling(new ChatComponentText((names.length-24) + " others").setChatStyle(ChatUtilities.ChatPresets.WHITE));
+                component.appendSibling(new ChatComponentText(".").setChatStyle(ChatUtilities.ChatPresets.GRAY));
+            }
+        }
+        return component;
     }
     public void printToChat() {
         EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
-        player.addChatComponentMessage(outputComponents[0]);
-        player.addChatComponentMessage(outputComponents[1]);
-        player.addChatComponentMessage(outputComponents[2]);
+        player.addChatComponentMessage(staticOutputComponents[0]);
+        player.addChatComponentMessage(staticOutputComponents[1]);
+        player.addChatComponentMessage(staticOutputComponents[2]);
         
         for(String game : _entries.keySet()) {
             BoosterQueueEntry entry = _entries.get(game);
             player.addChatComponentMessage(getBoosterQueueLineComponent(game, entry.time, entry.names));
         }
-        player.addChatComponentMessage(outputComponents[0]);
+        player.addChatComponentMessage(staticOutputComponents[0]);
     }
 
     private class BoosterQueueEntry {

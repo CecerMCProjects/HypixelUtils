@@ -4,12 +4,13 @@ import com.cecer1.hypixelutils.commands.*;
 import com.cecer1.hypixelutils.features.general.HypixelStateUpdateType;
 import com.cecer1.hypixelutils.features.general.OnHypixelStateUpdatedEventData;
 import com.cecer1.modframework.common.events.IOnBungeeServerChangeEventHandler;
+import com.cecer1.modframework.common.events.IOnConnectEventHandler;
 import net.minecraft.client.Minecraft;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class HypixelState implements IOnBungeeServerChangeEventHandler {
+public class HypixelState implements IOnBungeeServerChangeEventHandler, IOnConnectEventHandler {
     private static final Pattern _lobbyServerNamePattern = Pattern.compile("^(.*)lobby(\\d+)$");
 
     public boolean isConnected() {
@@ -48,29 +49,29 @@ public class HypixelState implements IOnBungeeServerChangeEventHandler {
                     if(lobbyType.equals(""))
                         setCurrentMapName("Main Lobby");
                     else if(lobbyType.equals("adventure"))
-                        setCurrentMapName("");
+                        setCurrentMapName("Adventure Lobby");
                     else  if(lobbyType.equals("arcade"))
-                        setCurrentMapName("");
+                        setCurrentMapName("Arcade Lobby");
                     else  if(lobbyType.equals("arena"))
-                        setCurrentMapName("");
+                        setCurrentMapName("Arena Lobby");
                     else  if(lobbyType.equals("blitz"))
-                        setCurrentMapName("");
+                        setCurrentMapName("Blitz Lobby");
                     else  if(lobbyType.equals("paintball"))
-                        setCurrentMapName("");
+                        setCurrentMapName("Paintball Lobby");
                     else  if(lobbyType.equals("vampirez"))
-                        setCurrentMapName("");
+                        setCurrentMapName("VampireZ Lobby");
                     else  if(lobbyType.equals("mcgo"))
-                        setCurrentMapName("");
+                        setCurrentMapName("Cops and Crims Lobby");
                     else  if(lobbyType.equals("tnt"))
-                        setCurrentMapName("");
+                        setCurrentMapName("TNT Games Lobby");
                     else  if(lobbyType.equals("quake"))
-                        setCurrentMapName("");
+                        setCurrentMapName("Quakecraft Lobby");
                     else  if(lobbyType.equals("uhc"))
-                        setCurrentMapName("");
+                        setCurrentMapName("UHC Champions Lobby");
                     else  if(lobbyType.equals("walls"))
-                        setCurrentMapName("");
+                        setCurrentMapName("Walls Lobby");
                     else  if(lobbyType.equals("megawalls"))
-                        setCurrentMapName("");
+                        setCurrentMapName("MegaWalls Lobby");
                     else
                         setCurrentMapName("Unknown Lobby");
                 }
@@ -90,17 +91,18 @@ public class HypixelState implements IOnBungeeServerChangeEventHandler {
         HypixelUtilsCore.commandJobManager.queueJob(new HypixelCommandJobWtfmap(new IHypixelCommandCallbackWtfmap() {
             @Override
             public void result(String mapName) {
-                setCurrentMapName(mapName);
+                if(mapName != null)
+                    setCurrentMapName(mapName);
             }
         }));
     }
 
-    private String currentProxyName;
+    private String _currentProxyName;
     public String getCurrentProxyName() {
-        return currentProxyName;
+        return _currentProxyName;
     }
     public void setCurrentProxyName(String currentProxyName) {
-        currentProxyName = currentProxyName;
+        _currentProxyName = currentProxyName;
         HypixelUtilsCore.eventManager.fireEvent(new OnHypixelStateUpdatedEventData(HypixelStateUpdateType.PROXY_NAME));
     }
     public void updateProxyName() {
@@ -114,7 +116,16 @@ public class HypixelState implements IOnBungeeServerChangeEventHandler {
 
     @Override
     public void onBungeeServerChange(IOnBungeeServerChangeEventHandler.IOnBungeeServerChangeEventData eventData) {
-        getCurrentServerName();
-        getCurrentMapName();
+        updateServerName();
+        updateMapName();
+    }
+
+    @Override
+    public void onConnect(IOnConnectEventData event) {
+        if(isConnected()) {
+            updateProxyName();
+            updateServerName();
+            updateMapName();
+        }
     }
 }

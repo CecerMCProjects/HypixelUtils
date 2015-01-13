@@ -29,6 +29,10 @@ public class HypixelCommandJobWtfmap extends HypixelCommandJob {
             _result = locationComponent.getUnformattedText();
             _done = true;
             event.setCanceled(true);
+        } else if (firstSibling.getUnformattedText().equals("This command is not available on this server!")) {
+            _result = null;
+            _done = true;
+            event.setCanceled(true);
         }
     }
 

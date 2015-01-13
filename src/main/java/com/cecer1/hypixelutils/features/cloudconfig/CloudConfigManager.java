@@ -181,7 +181,7 @@ public class CloudConfigManager implements IConfigManager {
 
     @Override
     public String[] getImprovedLobbyCommands() {
-        return new String[] {"ilobby"};
+        return new String[] {"ilobby", "lobby", "hub", "main", "leave"};
     }
 
     @Override
@@ -207,6 +207,10 @@ public class CloudConfigManager implements IConfigManager {
     @Override
     public String[] getTipAndThankCommands() {
         return new String[] {"tipandthank"};
+    }
+    @Override
+    public String[] getRageQuitCommands() {
+        return new String[] {"ragequit"};
     }
 
     @Override

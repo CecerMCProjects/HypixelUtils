@@ -2,7 +2,6 @@ package com.cecer1.hypixelutils.features.improvedlobby;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
 import com.cecer1.modframework.common.commands.AbstractedCommand;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
@@ -27,7 +26,11 @@ public class ImprovedLobbyCommand extends AbstractedCommand {
 
         if(args.length >= 2)
         {
-            HypixelUtilsCore.improvedLobbyCommandProcessor.setDesiredLobbyNumber(Integer.parseInt(args[1]));
+            try {
+                HypixelUtilsCore.improvedLobbyCommandProcessor.setDesiredLobbyNumber(Integer.parseInt(args[1]));
+            } catch (NumberFormatException e) {
+                HypixelUtilsCore.improvedLobbyCommandProcessor.setDesiredLobbyNumber(0);
+            } // Swallow
         }
         HypixelUtilsCore.sendChatMessage("/lobby " + args[0]);
     }
