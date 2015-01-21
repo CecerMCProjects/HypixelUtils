@@ -32,6 +32,7 @@ import com.cecer1.hypixelutils.features.ragequit.RageQuitCommand;
 import com.cecer1.hypixelutils.gui.HypixelUtilsGuiManager;
 import com.cecer1.hypixelutils.gui.frames.GuiLicenseFrame;
 import com.cecer1.hypixelutils.gui.frames.HypixelUtilsLicenseFrame;
+import com.cecer1.hypixelutils.gui.frames.UnirestLicenseFrame;
 import com.cecer1.modframework.common.Scheduler;
 import com.cecer1.modframework.common.commands.ICommandRegister;
 import com.cecer1.modframework.common.events.EventManager;
@@ -47,7 +48,8 @@ import java.util.UUID;
 public class HypixelUtilsCore {
     public static final String MODID = "hypixelutils";
     public static final String VERSION = "1.2.0";
-    public static final String CONFIG_SERVER = "http://hypixelutils.cecer1.com:8014";
+    public static final String CONFIG_SERVER = "http://www.cecer1.com/hypixelutils/cloudconfig";
+    //public static final String CONFIG_SERVER = "http://hypixelutils.cecer1.com:8014";
     //public static final String CONFIG_SERVER = "http://localhost:8014";
 
     public static HypixelState currentState;
@@ -94,6 +96,7 @@ public class HypixelUtilsCore {
         userInterface = new HypixelUtilsGuiManager();
 
         HypixelUtilsCore.userInterface.initAndAddFrame(new GuiLicenseFrame());
+        HypixelUtilsCore.userInterface.initAndAddFrame(new UnirestLicenseFrame());
         HypixelUtilsCore.userInterface.initAndAddFrame(new HypixelUtilsLicenseFrame());
 
         registerEvents();

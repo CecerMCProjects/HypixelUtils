@@ -4,8 +4,14 @@ import com.cecer1.hypixelutils.HypixelUtilsCore;
 import com.cecer1.hypixelutils.chat.ChatOutputs;
 import com.cecer1.hypixelutils.config.IConfigManager;
 import com.cecer1.hypixelutils.gui.GuiConfigManagerWrapper;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.async.Callback;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.util.UUID;
+import java.util.concurrent.Future;
 
 /**
  * This class is only for testing. It does not save values nor are command aliases changeable.
@@ -35,47 +41,89 @@ public class CloudConfigManager implements IConfigManager {
 
     private boolean _disableSaving = false; // Used to prevent saving while loading (as loading triggers saving for each value).
 
-    public void load() {
+    public Future<HttpResponse<String>> load() {
         if(this.isDebugModeEnabled()) {
             ChatOutputs.printDebugLoadingCloudConfig(_configKey);
         }
 
         _disableSaving = true;
-        String jsonString = null;
-        try {
-            jsonString = CloudConfigServerGateway.getConfigJsonStringFromServer(_configServerPrefix, _configKey.toString());
-            CloudConfigServerGateway.applyJsonConfig(this, jsonString);
-            if(HypixelUtilsCore.config instanceof GuiConfigManagerWrapper)
-                ((GuiConfigManagerWrapper)HypixelUtilsCore.config).loadBackingValues();
+        final CloudConfigManager configManager = this;
 
-            if(this.isDebugModeEnabled()) {
-                ChatOutputs.printDebugLoadedCloudConfig(_configKey);
+        return CloudConfigServerGateway.getConfigJsonStringFromServer(_configServerPrefix, _configKey.toString(), new Callback<String>() {
+            @Override
+            public void completed(HttpResponse<String> httpResponse) {
+                try {
+                    CloudConfigServerGateway.applyJsonConfig(configManager, httpResponse.getBody());
+
+                    if(HypixelUtilsCore.config instanceof GuiConfigManagerWrapper)
+                        ((GuiConfigManagerWrapper)HypixelUtilsCore.config).loadBackingValues();
+
+                    if(configManager.isDebugModeEnabled()) {
+                        ChatOutputs.printDebugLoadedCloudConfig(_configKey);
+                    }
+
+                    
+                } catch (CloudConfigServerException e) {
+                    e.printToChat("Failed to load config from server!");
+                } finally {
+                    _disableSaving = false;
+                }
             }
-        } catch (CloudConfigServerException e) {
-            e.printToChat("Failed to load config from server!");
-        } finally {
-            _disableSaving = false;
-        }
+
+            @Override
+            public void failed(UnirestException e) {
+                e.printStackTrace();
+                new CloudConfigServerException("UnirestException thrown while getting the request from the server")
+                        .printToChat("Failed to load config from server!");
+                _disableSaving = false;
+            }
+
+            @Override
+            public void cancelled() {
+                new CloudConfigServerException("Unirest Request was cancelled!")
+                        .printToChat("Failed to load config from server!");
+                _disableSaving = false;
+            }
+        });
     }
 
-    public void save() {
+    public Future<HttpResponse<String>> save() {
         if(_disableSaving)
-            return;
+            return null;
 
         if(this.isDebugModeEnabled()) {
             ChatOutputs.printDebugSavingCloudConfig(_configKey);
         }
 
+        final CloudConfigManager configManager = this;
         String jsonString = CloudConfigServerGateway.getConfigStringFromConfigManager(this);
-        try {
-            CloudConfigServerGateway.storeJsonConfig(_configServerPrefix, _configKey.toString(), jsonString);
-
-            if(this.isDebugModeEnabled()) {
-                ChatOutputs.printDebugSavedCloudConfig(_configKey);
+        return CloudConfigServerGateway.storeJsonConfig(_configServerPrefix, _configKey.toString(), jsonString, new Callback<String>() {
+            @Override
+            public void completed(HttpResponse<String> httpResponse) {
+                try {
+                    if (configManager.isDebugModeEnabled()) {
+                        ChatOutputs.printDebugLoadedCloudConfig(_configKey);
+                    }
+                } finally {
+                    _disableSaving = false;
+                }
             }
-        } catch (CloudConfigServerException e) {
-            e.printToChat("Failed to save config to server!");
-        }
+
+            @Override
+            public void failed(UnirestException e) {
+                e.printStackTrace();
+                new CloudConfigServerException("UnirestException thrown while getting the request from the server")
+                        .printToChat("Failed to save config to server!");
+                _disableSaving = false;
+            }
+
+            @Override
+            public void cancelled() {
+                new CloudConfigServerException("Unirest Request was cancelled!")
+                        .printToChat("Failed to save config to server!");
+                _disableSaving = false;
+            }
+        });
     }
 
     @Override
@@ -195,11 +243,29 @@ public class CloudConfigManager implements IConfigManager {
         return new String[] {"arcade", "arena", "blitz", "cops", "main", "megawalls", "paintball", "quake", "tnt", "uhc", "vampirez", "walls", "xmas"};
     }
 
-    public void deleteRemoteConfig() {
-        try {
-            CloudConfigServerGateway.deleteConfig(_configServerPrefix, _configKey.toString());
-        } catch (CloudConfigServerException e) {
-            e.printToChat("Failed to remove old config key!");
-        }
+    public Future<HttpResponse<String>> deleteRemoteConfig() {
+        return CloudConfigServerGateway.deleteConfig(_configServerPrefix, _configKey.toString(), new Callback<String>() {
+            @Override
+            public void completed(HttpResponse<String> httpResponse) {
+                JsonObject jsonConfig = new JsonParser().parse(httpResponse.getBody()).getAsJsonObject();
+                if(!jsonConfig.get("success").getAsBoolean()) {
+                    new CloudConfigServerException(jsonConfig.get("cause").getAsString())
+                            .printToChat("Failed to remove old config key!");
+                }
+            }
+
+            @Override
+            public void failed(UnirestException e) {
+                e.printStackTrace();
+                new CloudConfigServerException("UnirestException thrown while getting the request from the server")
+                        .printToChat("Failed to remove old config key!");
+            }
+
+            @Override
+            public void cancelled() {
+                new CloudConfigServerException("Unirest Request was cancelled!")
+                        .printToChat("Failed to remove old config key!");
+            }
+        });
     }
 }

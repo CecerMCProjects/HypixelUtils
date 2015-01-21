@@ -22,6 +22,7 @@ import java.io.File;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 public class LiteModHypixelUtils implements ChatFilter, Tickable, OutboundChatFilter, JoinGameListener, PacketHandler {
     public static LiteModHypixelUtils instance;
@@ -70,7 +71,13 @@ public class LiteModHypixelUtils implements ChatFilter, Tickable, OutboundChatFi
 
         HypixelUtilsCore.initCloudConfig(Paths.get(configFile.getAbsolutePath(), "hypixelutils-configkey.txt"));
         CloudConfigManager config = new CloudConfigManager(HypixelUtilsCore.CONFIG_SERVER, HypixelUtilsCore.getSavedConfigKey());
-        config.load();
+        try {
+            config.load().get();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
 
         HypixelUtilsCore.config = config;
         HypixelUtilsCore.scheduler = new Scheduler();

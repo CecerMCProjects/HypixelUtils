@@ -35,7 +35,7 @@ public class TogglesFrame extends HypixelUtilsGuiFrame {
         _isFilterGuildChatEnabled = new BasicCheckButton("Filter Guild Chat");
         _isFilterPartyChatEnabled = new BasicCheckButton("Filter Party Chat");
         _isInstantBedEnabled = new BasicCheckButton("Instant Bed");
-        _isPartyAutoRemoveOfflineEnabled = new BasicCheckButton("Auto Remove Offline Party Members");
+        _isPartyAutoRemoveOfflineEnabled = new BasicCheckButton("Party Auto Remove");
 
         
         _isBypassLobbyProtectionEnabledButton.addSelectableComponentListener(new SelectableComponentListener() {

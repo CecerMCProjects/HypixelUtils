@@ -2,18 +2,13 @@ package com.cecer1.hypixelutils.features.cloudconfig;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
 import com.cecer1.hypixelutils.config.IConfigManager;
-import com.cecer1.modframework.common.utils.MapUtil;
-import com.cecer1.modframework.common.utils.MiscUtils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.async.Callback;
 
-import java.io.IOException;
-import java.net.ConnectException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.Future;
 
 public class CloudConfigServerGateway {
     public static String getConfigStringFromConfigManager(IConfigManager configManager) {
@@ -43,64 +38,29 @@ public class CloudConfigServerGateway {
         configManager.setBypassLobbyProtectionEnabled(enabledFeatures.get("bypassLobbyProtection").getAsBoolean());
         configManager.setDebugModeEnabled(enabledFeatures.get("debugMode").getAsBoolean());
     }
-    public static String getConfigJsonStringFromServer(String configServerPrefix, String key) throws CloudConfigServerException {
-        Map<String, String> queryMap = new HashMap<String ,String>();
-        queryMap.put("key", key.toString());
-        queryMap.put("version", HypixelUtilsCore.VERSION);
+    public static Future<HttpResponse<String>> getConfigJsonStringFromServer(String configServerPrefix, String key, Callback<String> callback) {
+        String url = configServerPrefix + "/set";
 
-        String url = configServerPrefix + "/get?" + MapUtil.queryMapToString(queryMap);
-        String response = getResponseFromServer(url);
+        return Unirest.post(url)
+                .field("key", key.toString())
+                .field("version", HypixelUtilsCore.VERSION)
+                .asStringAsync(callback);
 
-        JsonObject jsonConfig = new JsonParser().parse(response).getAsJsonObject();
-        if(!jsonConfig.get("success").getAsBoolean())
-            throw new CloudConfigServerException(jsonConfig.get("cause").getAsString());
-
-        return response;
     }
-    public static String storeJsonConfig(String configServerPrefix, String key, String configJsonString) throws CloudConfigServerException {
-        Map<String, String> queryMap = new HashMap<String ,String>();
-        queryMap.put("key", key.toString());
-        queryMap.put("version", HypixelUtilsCore.VERSION);
-        queryMap.put("config", configJsonString);
+    public static Future<HttpResponse<String>> storeJsonConfig(String configServerPrefix, String key, String configJsonString, Callback<String> callback) {
+        String url = configServerPrefix + "/set";
 
-        String url = configServerPrefix + "/set?" + MapUtil.queryMapToString(queryMap);
-        String response = getResponseFromServer(url);
-
-        JsonObject jsonConfig = new JsonParser().parse(response).getAsJsonObject();
-        if(!jsonConfig.get("success").getAsBoolean())
-            throw new CloudConfigServerException(jsonConfig.get("cause").getAsString());
-
-        return response;
+        return Unirest.post(url)
+                .field("key", key.toString())
+                .field("version", HypixelUtilsCore.VERSION)
+                .field("config", configJsonString)
+                .asStringAsync(callback);
     }
-    public static String deleteConfig(String configServerPrefix, String key) throws CloudConfigServerException {
-        Map<String, String> queryMap = new HashMap<String ,String>();
-        queryMap.put("key", key.toString());
+    public static Future<HttpResponse<String>> deleteConfig(String configServerPrefix, String key, Callback<String> callback) {
+        String url = configServerPrefix + "/del";
 
-        String url = configServerPrefix + "/del?" + MapUtil.queryMapToString(queryMap);
-        String response = getResponseFromServer(url);
-
-        JsonObject jsonConfig = new JsonParser().parse(response).getAsJsonObject();
-        if(!jsonConfig.get("success").getAsBoolean())
-            throw new CloudConfigServerException(jsonConfig.get("cause").getAsString());
-
-        return response;
-    }
-
-    private static String getResponseFromServer(String url) {
-
-        try {
-            HttpURLConnection con = (HttpURLConnection)new URL(url).openConnection();
-            String result = MiscUtils.getWholeInputStreamAsString(con.getInputStream());
-            return result;
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-            return "{\"success\":false,\"cause\":\"MalformedURLException thrown while getting the request from the server\"}";
-        } catch (ConnectException e) {
-            e.printStackTrace();
-            return "{\"success\":false,\"cause\":\"ConnectException thrown while getting the request from the server\"}";
-        } catch (IOException e) {
-            e.printStackTrace();
-            return "{\"success\":false,\"cause\":\"IOException thrown while getting the request from the server\"}";
-        }
+        return Unirest.post(url)
+                .field("key", key.toString())
+                .asStringAsync(callback);
     }
 }
