@@ -4,6 +4,6 @@
   "revision": "5",
   "author": "Cecer",
   "version": "1.2.0",
-  "description": "A collection of commands and things that make it assist playing on Hypixel.",
+  "description": "A collection of commands and things that make it assist playing on Hypixel. Run the /hypixelutils:licence command in game for license information.",
   "url": "http://www.cecer1.com/hypixelutils/"
 }
