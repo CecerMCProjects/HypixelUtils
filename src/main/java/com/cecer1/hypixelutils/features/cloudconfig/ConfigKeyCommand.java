@@ -25,7 +25,7 @@ public class ConfigKeyCommand extends AbstractedCommand {
 
         CloudConfigManager typedConfig;
         if(!(HypixelUtilsCore.config instanceof CloudConfigManager)) {
-            if(!(HypixelUtilsCore.config instanceof GuiConfigManagerWrapper)) {
+            if(HypixelUtilsCore.config instanceof GuiConfigManagerWrapper) {
                 if(((GuiConfigManagerWrapper)HypixelUtilsCore.config).getBackingConfig() instanceof CloudConfigManager) {
                     typedConfig = (CloudConfigManager) ((GuiConfigManagerWrapper) HypixelUtilsCore.config).getBackingConfig();
                 } else {

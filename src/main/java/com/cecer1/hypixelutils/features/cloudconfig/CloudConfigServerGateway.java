@@ -39,7 +39,7 @@ public class CloudConfigServerGateway {
         configManager.setDebugModeEnabled(enabledFeatures.get("debugMode").getAsBoolean());
     }
     public static Future<HttpResponse<String>> getConfigJsonStringFromServer(String configServerPrefix, String key, Callback<String> callback) {
-        String url = configServerPrefix + "/set";
+        String url = configServerPrefix + "/get";
 
         return Unirest.post(url)
                 .field("key", key.toString())

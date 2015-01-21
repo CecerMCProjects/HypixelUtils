@@ -22,7 +22,7 @@ public class UnirestLicenseFrame extends HypixelUtilsGuiFrame {
         this.add(new BasicLabel(""));
         this.add(new BasicLabel("The MIT License (MIT)"));
         this.add(new BasicLabel(""));
-        this.add(new BasicLabel("Copyright (c) 2013 Mashape (http://mashape.com)\n"));
+        this.add(new BasicLabel("Copyright (c) 2013 Mashape (http://mashape.com)"));
         this.add(new BasicLabel(""));
         this.add(new BasicLabel("Permission is hereby granted, free of charge, to any person obtaining a copy"));
         this.add(new BasicLabel("of this software and associated documentation files (the \"Software\"), to deal"));

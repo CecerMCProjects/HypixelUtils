@@ -1,14 +1,11 @@
 package com.cecer1.hypixelutils.features.cloudconfig;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
-import com.cecer1.hypixelutils.UtilityMethods;
 import com.cecer1.hypixelutils.chat.ChatOutputs;
 import com.cecer1.hypixelutils.gui.GuiConfigManagerWrapper;
 import com.cecer1.modframework.common.commands.AbstractedCommand;
-import com.cecer1.modframework.common.utils.ChatUtilities;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.IChatComponent;
 
 public class SaveConfigCommand extends AbstractedCommand {
 
@@ -19,11 +16,9 @@ public class SaveConfigCommand extends AbstractedCommand {
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
-        IChatComponent commandReply = UtilityMethods.getHypixelUtilsChatComponentPrefix();
-        
         CloudConfigManager typedConfig;
         if(!(HypixelUtilsCore.config instanceof CloudConfigManager)) {
-            if(!(HypixelUtilsCore.config instanceof GuiConfigManagerWrapper)) {
+            if(HypixelUtilsCore.config instanceof GuiConfigManagerWrapper) {
                 if(((GuiConfigManagerWrapper)HypixelUtilsCore.config).getBackingConfig() instanceof CloudConfigManager) {
                     typedConfig = (CloudConfigManager) ((GuiConfigManagerWrapper) HypixelUtilsCore.config).getBackingConfig();
                 } else {
@@ -42,7 +37,6 @@ public class SaveConfigCommand extends AbstractedCommand {
         } else {
             ChatOutputs.printErrorConfigNotSupportForcedSave();
         }
-        ChatUtilities.printChatComponent(commandReply);
     }
 
     @Override

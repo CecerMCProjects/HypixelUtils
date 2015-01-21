@@ -202,7 +202,7 @@ public class ChatOutputs {
 
     private static final IChatComponent _filterGuildChatEnabledStatusTrue = UtilityMethods.getHypixelUtilsChatComponentPrefix()
             .appendSibling(new ChatComponentText("Guild Chat is now ").setChatStyle(ChatUtilities.ChatPresets.YELLOW))
-            .appendSibling(new ChatComponentText("HIDDEN").setChatStyle(ChatUtilities.ChatPresets.GREEN))
+            .appendSibling(new ChatComponentText("HIDDEN").setChatStyle(ChatUtilities.ChatPresets.RED))
             .appendSibling(new ChatComponentText(".").setChatStyle(ChatUtilities.ChatPresets.YELLOW));
     private static final IChatComponent _filterGuildChatEnabledStatusFalse = UtilityMethods.getHypixelUtilsChatComponentPrefix()
             .appendSibling(new ChatComponentText("Guild Chat is now ").setChatStyle(ChatUtilities.ChatPresets.YELLOW))
@@ -218,7 +218,7 @@ public class ChatOutputs {
 
     private static final IChatComponent _filterPartyChatEnabledStatusTrue = UtilityMethods.getHypixelUtilsChatComponentPrefix()
             .appendSibling(new ChatComponentText("Party Chat is now ").setChatStyle(ChatUtilities.ChatPresets.YELLOW))
-            .appendSibling(new ChatComponentText("HIDDEN").setChatStyle(ChatUtilities.ChatPresets.GREEN))
+            .appendSibling(new ChatComponentText("HIDDEN").setChatStyle(ChatUtilities.ChatPresets.RED))
             .appendSibling(new ChatComponentText(".").setChatStyle(ChatUtilities.ChatPresets.YELLOW));
     private static final IChatComponent _filterPartyChatEnabledStatusFalse = UtilityMethods.getHypixelUtilsChatComponentPrefix()
             .appendSibling(new ChatComponentText("Party Chat is now ").setChatStyle(ChatUtilities.ChatPresets.YELLOW))
@@ -262,7 +262,7 @@ public class ChatOutputs {
             .appendSibling(new ChatComponentText(".").setChatStyle(ChatUtilities.ChatPresets.YELLOW));
     private static final IChatComponent _instantBedEnabledStatusFalse = UtilityMethods.getHypixelUtilsChatComponentPrefix()
             .appendSibling(new ChatComponentText("Instant Bed is now ").setChatStyle(ChatUtilities.ChatPresets.YELLOW))
-            .appendSibling(new ChatComponentText("DISABLED").setChatStyle(ChatUtilities.ChatPresets.GREEN))
+            .appendSibling(new ChatComponentText("DISABLED").setChatStyle(ChatUtilities.ChatPresets.RED))
             .appendSibling(new ChatComponentText(".").setChatStyle(ChatUtilities.ChatPresets.YELLOW));
     public static void printInstantBedEnabledStatus(boolean status) {
         if(status)
