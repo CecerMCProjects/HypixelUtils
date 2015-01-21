@@ -1,13 +1,9 @@
 package com.cecer1.hypixelutils.features.cloudconfig;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
-import com.cecer1.hypixelutils.UtilityMethods;
+import com.cecer1.hypixelutils.chat.ChatOutputs;
 import com.cecer1.hypixelutils.config.IConfigManager;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
+import com.cecer1.hypixelutils.gui.GuiConfigManagerWrapper;
 
 import java.util.UUID;
 
@@ -38,15 +34,10 @@ public class CloudConfigManager implements IConfigManager {
     }
 
     private boolean _disableSaving = false; // Used to prevent saving while loading (as loading triggers saving for each value).
-    public void load() {
-        if(this.isDebugModeEnabled() && HypixelUtilsCore.config != null) {
-            CloudConfigManager typedConfig = (CloudConfigManager) HypixelUtilsCore.config;
 
-            IChatComponent debugMessage = UtilityMethods.getHypixelUtilsChatComponentDebugPrefix()
-                    .appendSibling(new ChatComponentText("Loading config for config key ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY)))
-                    .appendSibling(new ChatComponentText(typedConfig.getConfigKey().toString()).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)))
-                    .appendSibling(new ChatComponentText("...").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY)));
-            Minecraft.getMinecraft().thePlayer.addChatComponentMessage(debugMessage);
+    public void load() {
+        if(this.isDebugModeEnabled()) {
+            ChatOutputs.printDebugLoadingCloudConfig(_configKey);
         }
 
         _disableSaving = true;
@@ -54,15 +45,11 @@ public class CloudConfigManager implements IConfigManager {
         try {
             jsonString = CloudConfigServerGateway.getConfigJsonStringFromServer(_configServerPrefix, _configKey.toString());
             CloudConfigServerGateway.applyJsonConfig(this, jsonString);
+            if(HypixelUtilsCore.config instanceof GuiConfigManagerWrapper)
+                ((GuiConfigManagerWrapper)HypixelUtilsCore.config).loadBackingValues();
 
-            if(this.isDebugModeEnabled() && HypixelUtilsCore.config != null) {
-                CloudConfigManager typedConfig = (CloudConfigManager) HypixelUtilsCore.config;
-
-                IChatComponent debugMessage = UtilityMethods.getHypixelUtilsChatComponentDebugPrefix()
-                        .appendSibling(new ChatComponentText("Loaded config for config key ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY)))
-                        .appendSibling(new ChatComponentText(typedConfig.getConfigKey().toString()).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)))
-                        .appendSibling(new ChatComponentText("!").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY)));
-                Minecraft.getMinecraft().thePlayer.addChatComponentMessage(debugMessage);
+            if(this.isDebugModeEnabled()) {
+                ChatOutputs.printDebugLoadedCloudConfig(_configKey);
             }
         } catch (CloudConfigServerException e) {
             e.printToChat("Failed to load config from server!");
@@ -70,32 +57,21 @@ public class CloudConfigManager implements IConfigManager {
             _disableSaving = false;
         }
     }
+
     public void save() {
         if(_disableSaving)
             return;
 
-        if(this.isDebugModeEnabled() && HypixelUtilsCore.config != null) {
-            CloudConfigManager typedConfig = (CloudConfigManager) HypixelUtilsCore.config;
-
-            IChatComponent debugMessage = UtilityMethods.getHypixelUtilsChatComponentDebugPrefix()
-                    .appendSibling(new ChatComponentText("Saving config for config key ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY)))
-                    .appendSibling(new ChatComponentText(typedConfig.getConfigKey().toString()).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)))
-                    .appendSibling(new ChatComponentText("...").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY)));
-            Minecraft.getMinecraft().thePlayer.addChatComponentMessage(debugMessage);
+        if(this.isDebugModeEnabled()) {
+            ChatOutputs.printDebugSavingCloudConfig(_configKey);
         }
 
         String jsonString = CloudConfigServerGateway.getConfigStringFromConfigManager(this);
         try {
             CloudConfigServerGateway.storeJsonConfig(_configServerPrefix, _configKey.toString(), jsonString);
 
-            if(this.isDebugModeEnabled() && HypixelUtilsCore.config != null) {
-                CloudConfigManager typedConfig = (CloudConfigManager) HypixelUtilsCore.config;
-
-                IChatComponent debugMessage = UtilityMethods.getHypixelUtilsChatComponentDebugPrefix()
-                        .appendSibling(new ChatComponentText("Saved config for config key ").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY)))
-                        .appendSibling(new ChatComponentText(typedConfig.getConfigKey().toString()).setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)))
-                        .appendSibling(new ChatComponentText("!").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.GRAY)));
-                Minecraft.getMinecraft().thePlayer.addChatComponentMessage(debugMessage);
+            if(this.isDebugModeEnabled()) {
+                ChatOutputs.printDebugSavedCloudConfig(_configKey);
             }
         } catch (CloudConfigServerException e) {
             e.printToChat("Failed to save config to server!");
@@ -169,6 +145,7 @@ public class CloudConfigManager implements IConfigManager {
 
     @Override
     public IConfigManager setDebugModeEnabled(boolean enabled) {
+        ChatOutputs.debugMode = enabled;
         _isDebugModeEnabled = enabled;
         save();
         return this;

@@ -11,7 +11,7 @@ public class LiteLoaderOnRenderAdapter extends EventAdapter {
     }
 
     public void trigger(Minecraft minecraft, float partialTicks, boolean inGame, boolean clock) {
-        LiteLoaderOnRenderEventData eventData = new LiteLoaderOnRenderEventData();
+        LiteLoaderOnRenderEventData eventData = new LiteLoaderOnRenderEventData(inGame);
         manager.fireEvent(eventData);
     }
 }

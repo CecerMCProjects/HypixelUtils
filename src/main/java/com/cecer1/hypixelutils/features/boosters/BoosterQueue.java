@@ -1,8 +1,6 @@
 package com.cecer1.hypixelutils.features.boosters;
 
 import com.cecer1.modframework.common.utils.ChatUtilities;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
@@ -122,16 +120,15 @@ public class BoosterQueue {
         return component;
     }
     public void printToChat() {
-        EntityPlayerSP player = Minecraft.getMinecraft().thePlayer;
-        player.addChatComponentMessage(staticOutputComponents[0]);
-        player.addChatComponentMessage(staticOutputComponents[1]);
-        player.addChatComponentMessage(staticOutputComponents[2]);
+        ChatUtilities.printChatComponent(staticOutputComponents[0]);
+        ChatUtilities.printChatComponent(staticOutputComponents[1]);
+        ChatUtilities.printChatComponent(staticOutputComponents[2]);
         
         for(String game : _entries.keySet()) {
             BoosterQueueEntry entry = _entries.get(game);
-            player.addChatComponentMessage(getBoosterQueueLineComponent(game, entry.time, entry.names));
+            ChatUtilities.printChatComponent(getBoosterQueueLineComponent(game, entry.time, entry.names));
         }
-        player.addChatComponentMessage(staticOutputComponents[0]);
+        ChatUtilities.printChatComponent(staticOutputComponents[0]);
     }
 
     private class BoosterQueueEntry {

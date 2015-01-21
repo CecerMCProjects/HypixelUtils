@@ -14,6 +14,9 @@ public class HypixelState implements IOnBungeeServerChangeEventHandler, IOnConne
     private static final Pattern _lobbyServerNamePattern = Pattern.compile("^(.*)lobby(\\d+)$");
 
     public boolean isConnected() {
+        if(Minecraft.getMinecraft().getCurrentServerData() == null)
+            return false;
+        
         String currentServer = Minecraft.getMinecraft().getCurrentServerData().serverIP;
         if(currentServer.endsWith(".hypixel.net"))
             return true;

@@ -2,7 +2,6 @@ package com.cecer1.hypixelutils.features.boosters;
 
 import com.cecer1.modframework.common.events.IOnChatEventHandler;
 import com.cecer1.modframework.common.utils.ChatUtilities;
-import net.minecraft.client.Minecraft;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentText;
@@ -23,7 +22,7 @@ public class TipAndThankChatModifier implements IOnChatEventHandler
         if(m.matches()) {
             String name = m.group(1);
             event.setCanceled(true);
-            Minecraft.getMinecraft().thePlayer.addChatComponentMessage(getClickableStartBoosterMessage(name));
+            ChatUtilities.printChatComponent(getClickableStartBoosterMessage(name));
             return;
         }
         
@@ -31,7 +30,7 @@ public class TipAndThankChatModifier implements IOnChatEventHandler
         if(m.matches()) {
             String name = m.group(1);
             event.setCanceled(true);
-            Minecraft.getMinecraft().thePlayer.addChatComponentMessage(getClickableEndBoosterMessage(name));
+            ChatUtilities.printChatComponent(getClickableEndBoosterMessage(name));
             return;
         }
     }

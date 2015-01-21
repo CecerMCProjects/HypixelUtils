@@ -66,46 +66,50 @@ public class EventManager {
     }
 
     public EventManager fireEvent(IEventData eventData) {
-        if(eventData instanceof IOnChatEventHandler.IOnChatEventData) {
-            IOnChatEventHandler.IOnChatEventData castedEventData = (IOnChatEventHandler.IOnChatEventData) eventData;
-            for(IOnChatEventHandler handler : _onChatEventHandlers) {
-                handler.onChat(castedEventData);
+        try {
+            if (eventData instanceof IOnChatEventHandler.IOnChatEventData) {
+                IOnChatEventHandler.IOnChatEventData castedEventData = (IOnChatEventHandler.IOnChatEventData) eventData;
+                for (IOnChatEventHandler handler : _onChatEventHandlers) {
+                    handler.onChat(castedEventData);
+                }
             }
-        }
 
-        if(eventData instanceof IOnBungeeServerChangeEventHandler.IOnBungeeServerChangeEventData) {
-            IOnBungeeServerChangeEventHandler.IOnBungeeServerChangeEventData castedEventData = (IOnBungeeServerChangeEventHandler.IOnBungeeServerChangeEventData) eventData;
-            for(IOnBungeeServerChangeEventHandler handler : _onBungeeServerChangeEventHandlers) {
-                handler.onBungeeServerChange(castedEventData);
+            if (eventData instanceof IOnBungeeServerChangeEventHandler.IOnBungeeServerChangeEventData) {
+                IOnBungeeServerChangeEventHandler.IOnBungeeServerChangeEventData castedEventData = (IOnBungeeServerChangeEventHandler.IOnBungeeServerChangeEventData) eventData;
+                for (IOnBungeeServerChangeEventHandler handler : _onBungeeServerChangeEventHandlers) {
+                    handler.onBungeeServerChange(castedEventData);
+                }
             }
-        }
 
-        if(eventData instanceof IOnTickEventHandler.IOnTickEventData) {
-            IOnTickEventHandler.IOnTickEventData castedEventData = (IOnTickEventHandler.IOnTickEventData) eventData;
-            for(IOnTickEventHandler handler : _onTickEventHandlers) {
-                handler.onTick(castedEventData);
+            if (eventData instanceof IOnTickEventHandler.IOnTickEventData) {
+                IOnTickEventHandler.IOnTickEventData castedEventData = (IOnTickEventHandler.IOnTickEventData) eventData;
+                for (IOnTickEventHandler handler : _onTickEventHandlers) {
+                    handler.onTick(castedEventData);
+                }
             }
-        }
 
-        if(eventData instanceof IOnRenderEventHandler.IOnRenderEventData) {
-            IOnRenderEventHandler.IOnRenderEventData castedEventData = (IOnRenderEventHandler.IOnRenderEventData) eventData;
-            for(IOnRenderEventHandler handler : _onRenderEventHandlers) {
-                handler.onRender(castedEventData);
+            if (eventData instanceof IOnRenderEventHandler.IOnRenderEventData) {
+                IOnRenderEventHandler.IOnRenderEventData castedEventData = (IOnRenderEventHandler.IOnRenderEventData) eventData;
+                for (IOnRenderEventHandler handler : _onRenderEventHandlers) {
+                    handler.onRender(castedEventData);
+                }
             }
-        }
 
-        if(eventData instanceof IOnConnectEventHandler.IOnConnectEventData) {
-            IOnConnectEventHandler.IOnConnectEventData castedEventData = (IOnConnectEventHandler.IOnConnectEventData) eventData;
-            for(IOnConnectEventHandler handler : _onConnectEventHandlers) {
-                handler.onConnect(castedEventData);
+            if (eventData instanceof IOnConnectEventHandler.IOnConnectEventData) {
+                IOnConnectEventHandler.IOnConnectEventData castedEventData = (IOnConnectEventHandler.IOnConnectEventData) eventData;
+                for (IOnConnectEventHandler handler : _onConnectEventHandlers) {
+                    handler.onConnect(castedEventData);
+                }
             }
-        }
 
-        if(eventData instanceof IOnHypixelStateUpdatedEventHandler.IOnHypixelStateUpdatedEventData) {
-            IOnHypixelStateUpdatedEventHandler.IOnHypixelStateUpdatedEventData castedEventData = (IOnHypixelStateUpdatedEventHandler.IOnHypixelStateUpdatedEventData) eventData;
-            for(IOnHypixelStateUpdatedEventHandler handler : _onHypixelStateUpdateEventHandlers) {
-                handler.onHypixelStateUpdated(castedEventData);
+            if (eventData instanceof IOnHypixelStateUpdatedEventHandler.IOnHypixelStateUpdatedEventData) {
+                IOnHypixelStateUpdatedEventHandler.IOnHypixelStateUpdatedEventData castedEventData = (IOnHypixelStateUpdatedEventHandler.IOnHypixelStateUpdatedEventData) eventData;
+                for (IOnHypixelStateUpdatedEventHandler handler : _onHypixelStateUpdateEventHandlers) {
+                    handler.onHypixelStateUpdated(castedEventData);
+                }
             }
+        } catch (Throwable e) {
+            e.printStackTrace();
         }
 
         return this;

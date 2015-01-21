@@ -1,15 +1,11 @@
 package com.cecer1.hypixelutils.features.cloudconfig;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
-import com.cecer1.hypixelutils.UtilityMethods;
+import com.cecer1.hypixelutils.chat.ChatOutputs;
+import com.cecer1.hypixelutils.gui.GuiConfigManagerWrapper;
 import com.cecer1.modframework.common.commands.AbstractedCommand;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
 
 public class LoadConfigCommand extends AbstractedCommand {
 
@@ -20,14 +16,27 @@ public class LoadConfigCommand extends AbstractedCommand {
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
-        IChatComponent commandReply = UtilityMethods.getHypixelUtilsChatComponentPrefix();
-        if(HypixelUtilsCore.config instanceof CloudConfigManager) {
-            commandReply.appendSibling(new ChatComponentText("Forcing config reload...").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW)));
-            ((CloudConfigManager)HypixelUtilsCore.config).load();
+        CloudConfigManager typedConfig;
+        if(!(HypixelUtilsCore.config instanceof CloudConfigManager)) {
+            if(!(HypixelUtilsCore.config instanceof GuiConfigManagerWrapper)) {
+                if(((GuiConfigManagerWrapper)HypixelUtilsCore.config).getBackingConfig() instanceof CloudConfigManager) {
+                    typedConfig = (CloudConfigManager) ((GuiConfigManagerWrapper) HypixelUtilsCore.config).getBackingConfig();
+                } else {
+                    typedConfig = null;
+                }
+            } else {
+                typedConfig = null;
+            }
         } else {
-            commandReply.appendSibling(new ChatComponentText("ERROR: Config backend does not support forced reloading!").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.RED)));
+            typedConfig = (CloudConfigManager) HypixelUtilsCore.config;
         }
-        Minecraft.getMinecraft().thePlayer.addChatMessage(commandReply);
+
+        if(typedConfig != null) {
+            ChatOutputs.printForcingConfigReload();
+            typedConfig.load();
+        } else {
+            ChatOutputs.printErrorConfigNotSupportForcedReload();
+        }
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.cecer1.hypixelutils;
 
 import com.cecer1.hypixelutils.features.cloudconfig.CloudConfigManager;
+import com.cecer1.hypixelutils.gui.GuiConfigManagerWrapper;
 import com.cecer1.modframework.common.Scheduler;
 import com.cecer1.modframework.common.events.EventManager;
 import com.cecer1.modframework.common.utils.WorldDimension;
@@ -77,6 +78,10 @@ public class LiteModHypixelUtils implements ChatFilter, Tickable, OutboundChatFi
 
         HypixelUtilsCore.init();
 
+        // Switch out the normal config for the wrapped one now that we have called HypixelUtilsCore.init() and the GUI system is ready.
+        GuiConfigManagerWrapper configGuiWrapper = new GuiConfigManagerWrapper(config);
+        HypixelUtilsCore.config = configGuiWrapper;
+                
         liteloaderOnBungeeServerChangeAdapter = new LiteLoaderOnBungeeServerChangeAdapter(HypixelUtilsCore.eventManager);
         liteloaderOnChatAdapter = new LiteLoaderOnChatAdapter(HypixelUtilsCore.eventManager);
         liteloaderOnTickAdapter = new LiteLoaderOnTickAdapter(HypixelUtilsCore.eventManager);

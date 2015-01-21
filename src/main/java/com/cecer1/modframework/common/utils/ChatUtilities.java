@@ -1,5 +1,6 @@
 package com.cecer1.modframework.common.utils;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
@@ -94,5 +95,19 @@ public class ChatUtilities {
       */
     public static IChatComponent convertJsonToChatComponent(String json) {
         return IChatComponent.Serializer.jsonToComponent(json);
+    }
+
+    public static void printChatComponent(IChatComponent component) {
+        if(Minecraft.getMinecraft().thePlayer == null)
+            return;
+
+        Minecraft.getMinecraft().thePlayer.addChatComponentMessage(component);
+    }
+
+    public static void sendChat(String message) {
+        if(Minecraft.getMinecraft().thePlayer == null)
+            return;
+
+        Minecraft.getMinecraft().thePlayer.sendChatMessage(message);
     }
 }

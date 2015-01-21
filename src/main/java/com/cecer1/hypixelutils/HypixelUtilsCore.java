@@ -8,6 +8,7 @@ import com.cecer1.hypixelutils.features.boosters.TipAndThankChatModifier;
 import com.cecer1.hypixelutils.features.boosters.TipAndThankCommand;
 import com.cecer1.hypixelutils.features.bypasslobbyprotection.BypassLobbyProtectionCommand;
 import com.cecer1.hypixelutils.features.bypasslobbyprotection.BypassLobbyProtectionProcessor;
+import com.cecer1.hypixelutils.features.cloudconfig.ConfigGuiCommand;
 import com.cecer1.hypixelutils.features.cloudconfig.ConfigKeyCommand;
 import com.cecer1.hypixelutils.features.cloudconfig.LoadConfigCommand;
 import com.cecer1.hypixelutils.features.cloudconfig.SaveConfigCommand;
@@ -20,6 +21,7 @@ import com.cecer1.hypixelutils.features.filterguildchat.FilterGuildChatProcessor
 import com.cecer1.hypixelutils.features.filterpartychat.FilterPartyChatCommand;
 import com.cecer1.hypixelutils.features.filterpartychat.FilterPartyChatProcessor;
 import com.cecer1.hypixelutils.features.general.HandleServerJoinInit;
+import com.cecer1.hypixelutils.features.general.LicenseCommand;
 import com.cecer1.hypixelutils.features.improvedlobby.ImprovedLobbyCommand;
 import com.cecer1.hypixelutils.features.improvedlobby.ImprovedLobbyCommandProcessor;
 import com.cecer1.hypixelutils.features.instantbed.InstantBedCommand;
@@ -27,10 +29,13 @@ import com.cecer1.hypixelutils.features.instantbed.InstantBedProcessor;
 import com.cecer1.hypixelutils.features.partyautoremove.PartyAutoRemoveProcessor;
 import com.cecer1.hypixelutils.features.partyautoremove.PartyAutoRemoveToggleCommand;
 import com.cecer1.hypixelutils.features.ragequit.RageQuitCommand;
+import com.cecer1.hypixelutils.gui.HypixelUtilsGuiManager;
+import com.cecer1.hypixelutils.gui.frames.GuiLicenseFrame;
+import com.cecer1.hypixelutils.gui.frames.HypixelUtilsLicenseFrame;
 import com.cecer1.modframework.common.Scheduler;
 import com.cecer1.modframework.common.commands.ICommandRegister;
 import com.cecer1.modframework.common.events.EventManager;
-import net.minecraft.client.Minecraft;
+import com.cecer1.modframework.common.utils.ChatUtilities;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -66,6 +71,7 @@ public class HypixelUtilsCore {
     public static BoosterQueueChatModifier boosterQueueChatModifier;
 
     public static ICommandRegister commandRegister;
+    public static HypixelUtilsGuiManager userInterface;
 
     public static void init() {
         currentState = new HypixelState();
@@ -81,10 +87,14 @@ public class HypixelUtilsCore {
         partyAutoRemoveOfflineProcessor = new PartyAutoRemoveProcessor();
         tipAndThankChatModifier = new TipAndThankChatModifier();
         boosterQueueChatModifier = new BoosterQueueChatModifier();
-
-
+        
         chatManager = new ChatManager();
         commandJobManager = new HypixelCommandJobManager();
+
+        userInterface = new HypixelUtilsGuiManager();
+
+        HypixelUtilsCore.userInterface.initAndAddFrame(new GuiLicenseFrame());
+        HypixelUtilsCore.userInterface.initAndAddFrame(new HypixelUtilsLicenseFrame());
 
         registerEvents();
         registerCommands();
@@ -118,7 +128,7 @@ public class HypixelUtilsCore {
         if(skipEventProcessing) {
             skipEventProcessingChatMessages.add(message);
         }
-        Minecraft.getMinecraft().thePlayer.sendChatMessage(message);
+        ChatUtilities.sendChat(message);
     }
 
     private static void registerCommands() {
@@ -162,11 +172,19 @@ public class HypixelUtilsCore {
             commandRegister.registerCommand(new RageQuitCommand("hypixelutils:" + commandName));
         }
 
+        commandRegister.registerCommand(new ConfigGuiCommand("config"));
+        commandRegister.registerCommand(new ConfigGuiCommand("hypixelutils:config"));
+
         commandRegister.registerCommand(new LoadConfigCommand("hypixelutils:loadconfig"));
         commandRegister.registerCommand(new SaveConfigCommand("hypixelutils:saveconfig"));
         commandRegister.registerCommand(new ConfigKeyCommand("hypixelutils:configkey"));
         commandRegister.registerCommand(new DebugCommand("hypixelutils:debug"));
         commandRegister.registerCommand(new ResetJobsCommand("hypixelutils:resetjobs"));
+        
+        commandRegister.registerCommand(new LicenseCommand("hypixelutils"));
+        commandRegister.registerCommand(new LicenseCommand("hypixelutils:about"));
+        commandRegister.registerCommand(new LicenseCommand("hypixelutils:legal"));
+        commandRegister.registerCommand(new LicenseCommand("hypixelutils:license"));
     }
 
     private static void registerEvents() {
@@ -190,6 +208,8 @@ public class HypixelUtilsCore {
 
         eventManager.registerEventHandlers(chatManager);
         eventManager.registerEventHandlers(currentState);
+        
+        eventManager.registerEventHandlers(userInterface);
 
     }
 

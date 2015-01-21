@@ -1,8 +1,8 @@
 package com.cecer1.hypixelutils.chat;
 
+import com.cecer1.modframework.common.utils.ChatUtilities;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
 public class PlayerName {
@@ -19,7 +19,7 @@ public class PlayerName {
         _fullName = tag.createCopy().appendText(" ").appendSibling(_name);
     }
     public PlayerName(String name) {
-        this(new ChatStyle().setColor(EnumChatFormatting.GRAY), name);
+        this(ChatUtilities.ChatPresets.GRAY, name);
     }
     public PlayerName(ChatStyle nameStyle, String name) {
         _tag = null;

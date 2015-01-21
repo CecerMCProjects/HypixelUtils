@@ -2,6 +2,7 @@ package com.cecer1.hypixelutils.features.ragequit;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
 import com.cecer1.modframework.common.commands.AbstractedCommand;
+import com.cecer1.modframework.common.utils.ChatUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -15,7 +16,7 @@ public class RageQuitCommand extends AbstractedCommand {
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
-        HypixelUtilsCore.sendChatMessage("*RAGEQUIT!*");
+        ChatUtilities.sendChat("*RAGEQUIT!*");
         HypixelUtilsCore.scheduler.scheduleTask(new Runnable() {
             @Override
             public void run() {

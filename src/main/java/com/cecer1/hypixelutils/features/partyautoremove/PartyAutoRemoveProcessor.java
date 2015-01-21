@@ -1,13 +1,9 @@
 package com.cecer1.hypixelutils.features.partyautoremove;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
-import com.cecer1.hypixelutils.UtilityMethods;
+import com.cecer1.hypixelutils.chat.ChatOutputs;
 import com.cecer1.modframework.common.events.IOnChatEventHandler;
 import com.cecer1.modframework.common.utils.ChatUtilities;
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatStyle;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
 import java.util.regex.Matcher;
@@ -31,7 +27,7 @@ public class PartyAutoRemoveProcessor implements IOnChatEventHandler {
             String offlinePlayerName = matcher.group(3);
 
             HypixelUtilsCore.sendChatMessage("/party remove " + offlinePlayerName);
-            Minecraft.getMinecraft().thePlayer.addChatMessage(UtilityMethods.getHypixelUtilsChatComponentPrefix().appendSibling(new ChatComponentText(offlinePlayerName + " has been automatically removed from the party because they were offline!").setChatStyle(new ChatStyle().setColor(EnumChatFormatting.YELLOW))));
+            ChatOutputs.printPartyAutoRemovedNotice(offlinePlayerName);
         }
     }
 }

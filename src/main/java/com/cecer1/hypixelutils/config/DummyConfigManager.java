@@ -1,5 +1,7 @@
 package com.cecer1.hypixelutils.config;
 
+import com.cecer1.hypixelutils.chat.ChatOutputs;
+
 /**
  * This class is only for testing. It does not save values nor are command aliases changeable.
  */
@@ -73,6 +75,7 @@ public class DummyConfigManager implements IConfigManager {
 
     @Override
     public IConfigManager setDebugModeEnabled(boolean enabled) {
+        ChatOutputs.debugMode = enabled;
         _isDebugModeEnabled = enabled;
         return this;
     }
