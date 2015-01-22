@@ -4,9 +4,9 @@ import com.cecer1.hypixelutils.HypixelUtilsCore;
 import com.cecer1.hypixelutils.config.IConfigManager;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.async.Callback;
+import com.cecer1.hypixelutils.jarjar.com.mashape.unirest.http.HttpResponse;
+import com.cecer1.hypixelutils.jarjar.com.mashape.unirest.http.Unirest;
+import com.cecer1.hypixelutils.jarjar.com.mashape.unirest.http.async.Callback;
 
 import java.util.concurrent.Future;
 

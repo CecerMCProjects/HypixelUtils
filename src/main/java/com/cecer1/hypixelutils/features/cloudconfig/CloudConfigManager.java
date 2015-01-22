@@ -6,9 +6,9 @@ import com.cecer1.hypixelutils.config.IConfigManager;
 import com.cecer1.hypixelutils.gui.GuiConfigManagerWrapper;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.async.Callback;
-import com.mashape.unirest.http.exceptions.UnirestException;
+import com.cecer1.hypixelutils.jarjar.com.mashape.unirest.http.HttpResponse;
+import com.cecer1.hypixelutils.jarjar.com.mashape.unirest.http.async.Callback;
+import com.cecer1.hypixelutils.jarjar.com.mashape.unirest.http.exceptions.UnirestException;
 
 import java.util.UUID;
 import java.util.concurrent.Future;

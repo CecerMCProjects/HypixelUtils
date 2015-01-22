@@ -122,23 +122,8 @@ public class LiteModHypixelUtils implements ChatFilter, Tickable, OutboundChatFi
         
         File libFile;
         
-        libFile = Paths.get(libsDirPath.toString(), "httpasyncclient-4.0.2.jar").toFile();
-        ensureLib(libFile, "3c0145d6ab072b8e755699c246b224a3", "http://www.cecer1.com/hypixelutils/libs/httpasyncclient-4.0.2.jar");
-
-        libFile = Paths.get(libsDirPath.toString(), "httpclient-4.3.6.jar").toFile();
-        ensureLib(libFile, "98ac3eaa1d681c3adc962d756ebed5a0", "http://www.cecer1.com/hypixelutils/libs/httpclient-4.3.6.jar");
-
-        libFile = Paths.get(libsDirPath.toString(), "httpcore-nio-4.3.2.jar").toFile();
-        ensureLib(libFile, "2523ba09110e521a02c54e271c06a93d", "http://www.cecer1.com/hypixelutils/libs/httpcore-nio-4.3.2.jar");
-
-        libFile = Paths.get(libsDirPath.toString(), "httpmime-4.3.6.jar").toFile();
-        ensureLib(libFile, "ec661ad97a37cca0a91186625cf1fcba", "http://www.cecer1.com/hypixelutils/libs/httpmime-4.3.6.jar");
-
-        libFile = Paths.get(libsDirPath.toString(), "json-20090211.jar").toFile();
-        ensureLib(libFile, "333139fffc6c9d4bc3d2495d9613f092", "http://www.cecer1.com/hypixelutils/libs/json-20090211.jar");
-
-        libFile = Paths.get(libsDirPath.toString(), "unirest-java-1.3.27.jar").toFile();
-        ensureLib(libFile, "ec4cdf09634f33c15d7c2972a83cd286", "http://www.cecer1.com/hypixelutils/libs/unirest-java-1.3.27.jar");
+        libFile = Paths.get(libsDirPath.toString(), "hypixelutils-unirest.jar").toFile();
+        ensureLib(libFile, "f835f52940a14123da516c21367be7cf", "http://www.cecer1.com/hypixelutils/libs/hypixelutils-unirest.jar");
     }
     
     private void ensureLib(File file, String expectedChecksum, String downloadUrl) {
