@@ -24,7 +24,30 @@ public class ChatManager implements IOnChatEventHandler {
     public void unsubscribe(IChatMessageSubscriber subscriber) {
         _subscribers.remove(subscriber);
     }
+    
+    private boolean _guildType = false; // Aqua
+    private boolean _partyType = false; // Gold
+    private boolean _questType = false; // Green
+    private boolean _friendMode = false; // Blue
+    private boolean _boosterMode = false; /// White
+    // ??? // Yellow
 
+    public boolean isGuildTypeActive() {
+        return _guildType;
+    }
+    public boolean isPartyTypeActive() {
+        return _partyType;
+    }
+    public boolean isQuestTypeActive() {
+        return _questType;
+    }
+    public boolean isFriendTypeActive() {
+        return _friendMode;
+    }
+    public boolean isBoosterTypeActive() {
+        return _boosterMode;
+    }
+    
     @Override
     public void onChat(IOnChatEventData event) {
         try {
@@ -33,6 +56,28 @@ public class ChatManager implements IOnChatEventHandler {
                 for(IChatMessageSubscriber subscriber : _subscribers) {
                     if(!subscriber.processChatMessage(message)) {
                         event.setCanceled(true);
+                    }
+                }
+            } else {
+                if(event.getMessage().getUnformattedText().equals("-----------------------------------------------------")) {
+                    if(event.getMessage().getChatStyle().getColor() == EnumChatFormatting.AQUA) {
+                        _guildType = !_guildType;
+                    }
+
+                    if(event.getMessage().getChatStyle().getColor() == EnumChatFormatting.GOLD) {
+                        _partyType = !_partyType;
+                    }
+
+                    if(event.getMessage().getChatStyle().getColor() == EnumChatFormatting.GREEN) {
+                        _questType = !_questType;
+                    }
+
+                    if(event.getMessage().getChatStyle().getColor() == EnumChatFormatting.BLUE) {
+                        _friendMode = !_friendMode;
+                    }
+
+                    if(event.getMessage().getChatStyle().getColor() == EnumChatFormatting.WHITE) {
+                        _boosterMode = !_boosterMode;
                     }
                 }
             }
