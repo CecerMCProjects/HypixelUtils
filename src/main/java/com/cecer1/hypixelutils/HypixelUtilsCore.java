@@ -29,6 +29,7 @@ import com.cecer1.hypixelutils.features.instantbed.InstantBedProcessor;
 import com.cecer1.hypixelutils.features.partyautoremove.PartyAutoRemoveProcessor;
 import com.cecer1.hypixelutils.features.partyautoremove.PartyAutoRemoveToggleCommand;
 import com.cecer1.hypixelutils.features.ragequit.RageQuitCommand;
+import com.cecer1.hypixelutils.features.soundfx.SoundEffectsChatProcessor;
 import com.cecer1.hypixelutils.gui.HypixelUtilsGuiManager;
 import com.cecer1.hypixelutils.gui.frames.GuiLicenseFrame;
 import com.cecer1.hypixelutils.gui.frames.HypixelUtilsLicenseFrame;
@@ -47,7 +48,7 @@ import java.util.UUID;
 
 public class HypixelUtilsCore {
     public static final String MODID = "hypixelutils";
-    public static final String VERSION = "1.2.1";
+    public static final String VERSION = "1.2.2";
     public static final String CONFIG_SERVER = "http://www.cecer1.com/hypixelutils/cloudconfig";
     //public static final String CONFIG_SERVER = "http://hypixelutils.cecer1.com:8014";
     //public static final String CONFIG_SERVER = "http://localhost:8014";
@@ -201,6 +202,7 @@ public class HypixelUtilsCore {
         eventManager.registerEventHandlers(tipAndThankChatModifier);
         eventManager.registerEventHandlers(boosterQueueChatModifier);
         eventManager.registerEventHandlers(new HandleServerJoinInit());
+        eventManager.registerEventHandlers(new SoundEffectsChatProcessor());
 
         chatManager.subscribe(filterGuildChatProcessor);
         chatManager.subscribe(filterPartyChatProcessor);
