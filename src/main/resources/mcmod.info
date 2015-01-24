@@ -3,7 +3,7 @@
   "modid": "hypixelutils",
   "name": "HypixelUtils",
   "description": "A collection of commands and things that make it assist playing on Hypixel. Run the /hypixelutils:licence command in game for license information.",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "mcversion": "1.8",
   "url": "http://www.cecer1.com/hypixelutils/",
   "updateUrl": "",

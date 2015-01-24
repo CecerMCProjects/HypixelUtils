@@ -18,7 +18,7 @@ public class ImprovedLobbyCommand extends AbstractedCommand {
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
-        if(args.length == 0)
+        if(args.length == 0 || args[0] == null)
         {
             HypixelUtilsCore.sendChatMessage("/lobby");
             return;

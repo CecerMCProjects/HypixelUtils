@@ -17,7 +17,7 @@ buildscript {
 
 apply plugin: 'liteloader'
 
-version = "1.2.2"
+version = "1.2.3"
 group= "com.cecer1.hypixelutils" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "hypixelutils"
 
