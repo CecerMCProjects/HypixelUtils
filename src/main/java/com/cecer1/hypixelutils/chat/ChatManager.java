@@ -291,8 +291,9 @@ public class ChatManager implements IOnChatEventHandler {
         return ChatUtilities.compareChatComponent(component, partyChatComponent);
     }
 
-    private static final IChatComponent guildChatComponent = new ChatComponentText("Guild \u003e ").setChatStyle(ChatUtilities.ChatPresets.GREEN);
+    private static final IChatComponent guildChatComponent = new ChatComponentText("Guild \u003e ").setChatStyle(ChatUtilities.ChatPresets.DARK_GREEN);
     public boolean isGuildChatComponent(IChatComponent component) {
+        System.out.println(ChatUtilities.convertChatComponentToJson(component));
         return ChatUtilities.compareChatComponent(component, guildChatComponent);
     }
 
