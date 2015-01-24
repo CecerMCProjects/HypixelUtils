@@ -286,10 +286,10 @@ public class ChatOutputs {
         else
             ChatUtilities.printChatComponent(_partyAutoRemoveEnabledStatusFalse);
     }
-    private static final IChatComponent _partyAutoRemovedNotice = UtilityMethods.getHypixelUtilsChatComponentPrefix()
-            .appendSibling(new ChatComponentText(" has been automatically removed from the party because they were offline!").setChatStyle(ChatUtilities.ChatPresets.YELLOW));
+    private static final IChatComponent _partyAutoRemovedNotice = new ChatComponentText(" has been automatically removed from the party because they were offline!").setChatStyle(ChatUtilities.ChatPresets.YELLOW);
     public static void printPartyAutoRemovedNotice(String offlinePlayerName) {
-        IChatComponent message = new ChatComponentText(offlinePlayerName).setChatStyle(ChatUtilities.ChatPresets.YELLOW)
+        IChatComponent message = UtilityMethods.getHypixelUtilsChatComponentPrefix()
+                .appendSibling(new ChatComponentText(offlinePlayerName).setChatStyle(ChatUtilities.ChatPresets.YELLOW))
                 .appendSibling(_partyAutoRemovedNotice);
         ChatUtilities.printChatComponent(message);
     }
