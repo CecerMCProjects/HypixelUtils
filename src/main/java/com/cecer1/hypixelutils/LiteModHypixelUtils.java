@@ -26,13 +26,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.BufferUnderflowException;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class LiteModHypixelUtils implements ChatFilter, Tickable, OutboundChatFilter, JoinGameListener, PacketHandler {
     public static LiteModHypixelUtils instance;
@@ -76,36 +76,64 @@ public class LiteModHypixelUtils implements ChatFilter, Tickable, OutboundChatFi
 
     @Override
     public void init(File configFile) {
-        prepareLibs();
-        
-        liteloaderCommandRegister = new LiteLoaderCommandRegister();
-        HypixelUtilsCore.commandRegister = liteloaderCommandRegister;
-
-        HypixelUtilsCore.initCloudConfig(Paths.get(configFile.getAbsolutePath(), "hypixelutils-configkey.txt"));
-        CloudConfigManager config = new CloudConfigManager(HypixelUtilsCore.CONFIG_SERVER, HypixelUtilsCore.getSavedConfigKey());
         try {
-            config.load().get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+            prepareLibs();
+
+            liteloaderCommandRegister = new LiteLoaderCommandRegister();
+            HypixelUtilsCore.commandRegister = liteloaderCommandRegister;
+
+            HypixelUtilsCore.initCloudConfig(Paths.get(configFile.getAbsolutePath(), "hypixelutils-configkey.txt"));
+            CloudConfigManager config = new CloudConfigManager(HypixelUtilsCore.CONFIG_SERVER, HypixelUtilsCore.getSavedConfigKey());
+
+            for (int i = 0; i < 5; i++) {
+                try {
+                    config.load().get();
+                    break;
+                } catch (BufferUnderflowException e) {
+                    if (i == 4)
+                        throw e;
+                    System.out.println("###################################################################");
+                    System.out.println("###################################################################");
+                    System.out.println("###################################################################");
+                    System.out.println("###################################################################");
+                    System.out.println("###################################################################");
+                    System.out.println("###################################################################");
+                    System.out.println("###################################################################");
+                    System.out.println("###################################################################");
+                    System.out.println("###################################################################");
+                    System.out.println("###################################################################");
+                    System.out.println("###################################################################");
+                    System.out.println("###################################################################");
+                    System.out.println("");
+                    System.out.println("");
+                    System.out.println("");
+                    System.out.println("");
+                    System.out.println("");
+                    System.out.println("");
+                    System.out.println("");
+                    System.out.println("BufferUnderflowException when loading config. Retrying! (This is a workaround and not a proper fix! I will fix it in the future!)"); // TODO: Fix this!
+                    continue;
+                }
+            }
+
+            HypixelUtilsCore.config = config;
+            HypixelUtilsCore.scheduler = new Scheduler();
+            HypixelUtilsCore.eventManager = new EventManager();
+
+            HypixelUtilsCore.init();
+
+            // Switch out the normal config for the wrapped one now that we have called HypixelUtilsCore.init() and the GUI system is ready.
+            GuiConfigManagerWrapper configGuiWrapper = new GuiConfigManagerWrapper(config);
+            HypixelUtilsCore.config = configGuiWrapper;
+
+            liteloaderOnBungeeServerChangeAdapter = new LiteLoaderOnBungeeServerChangeAdapter(HypixelUtilsCore.eventManager);
+            liteloaderOnChatAdapter = new LiteLoaderOnChatAdapter(HypixelUtilsCore.eventManager);
+            liteloaderOnTickAdapter = new LiteLoaderOnTickAdapter(HypixelUtilsCore.eventManager);
+            liteLoaderOnRenderAdapter = new LiteLoaderOnRenderAdapter(HypixelUtilsCore.eventManager);
+            liteLoaderOnConnectAdapter = new LiteLoaderOnConnectAdapter(HypixelUtilsCore.eventManager);
+        } catch (Throwable e) {
+            new RuntimeException(e);
         }
-
-        HypixelUtilsCore.config = config;
-        HypixelUtilsCore.scheduler = new Scheduler();
-        HypixelUtilsCore.eventManager = new EventManager();
-
-        HypixelUtilsCore.init();
-
-        // Switch out the normal config for the wrapped one now that we have called HypixelUtilsCore.init() and the GUI system is ready.
-        GuiConfigManagerWrapper configGuiWrapper = new GuiConfigManagerWrapper(config);
-        HypixelUtilsCore.config = configGuiWrapper;
-                
-        liteloaderOnBungeeServerChangeAdapter = new LiteLoaderOnBungeeServerChangeAdapter(HypixelUtilsCore.eventManager);
-        liteloaderOnChatAdapter = new LiteLoaderOnChatAdapter(HypixelUtilsCore.eventManager);
-        liteloaderOnTickAdapter = new LiteLoaderOnTickAdapter(HypixelUtilsCore.eventManager);
-        liteLoaderOnRenderAdapter = new LiteLoaderOnRenderAdapter(HypixelUtilsCore.eventManager);
-        liteLoaderOnConnectAdapter = new LiteLoaderOnConnectAdapter(HypixelUtilsCore.eventManager);
     }
 
 
