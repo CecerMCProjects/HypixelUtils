@@ -1,13 +1,10 @@
 package com.cecer1.hypixelutils;
 
-import com.cecer1.hypixelutils.features.cloudconfig.CloudConfigManager;
-import com.cecer1.hypixelutils.gui.GuiConfigManagerWrapper;
-import com.cecer1.modframework.common.Scheduler;
-import com.cecer1.modframework.common.events.EventManager;
-import com.cecer1.modframework.common.utils.MD5Checksum;
-import com.cecer1.modframework.common.utils.WorldDimension;
-import com.cecer1.modframework.liteloader.commands.LiteLoaderCommandRegister;
-import com.cecer1.modframework.liteloader.events.adapters.*;
+import com.cecer1.hypixelutils.clientcommands.LiteLoaderCommandRegister;
+import com.cecer1.hypixelutils.events.EventManager;
+import com.cecer1.hypixelutils.events.adapters.*;
+import com.cecer1.hypixelutils.utils.MD5Checksum;
+import com.cecer1.hypixelutils.utils.WorldDimension;
 import com.mojang.realmsclient.dto.RealmsServer;
 import com.mumfrey.liteloader.*;
 import com.mumfrey.liteloader.core.LiteLoader;
@@ -26,7 +23,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.BufferUnderflowException;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.file.Path;
@@ -65,8 +61,11 @@ public class LiteModHypixelUtils implements ChatFilter, Tickable, OutboundChatFi
 
     @Override
     public void onTick(Minecraft minecraft, float partialTicks, boolean inGame, boolean clock) {
-        liteloaderOnTickAdapter.trigger(minecraft, partialTicks, inGame, clock);
-        liteLoaderOnRenderAdapter.trigger(minecraft, partialTicks, inGame, clock);
+        if(liteloaderOnTickAdapter != null)
+            liteloaderOnTickAdapter.trigger(minecraft, partialTicks, inGame, clock);
+        
+        if(liteLoaderOnRenderAdapter != null)
+            liteLoaderOnRenderAdapter.trigger(minecraft, partialTicks, inGame, clock);
     }
 
     @Override
@@ -82,49 +81,12 @@ public class LiteModHypixelUtils implements ChatFilter, Tickable, OutboundChatFi
             liteloaderCommandRegister = new LiteLoaderCommandRegister();
             HypixelUtilsCore.commandRegister = liteloaderCommandRegister;
 
-            HypixelUtilsCore.initCloudConfig(Paths.get(configFile.getAbsolutePath(), "hypixelutils-configkey.txt"));
-            CloudConfigManager config = new CloudConfigManager(HypixelUtilsCore.CONFIG_SERVER, HypixelUtilsCore.getSavedConfigKey());
-
-            for (int i = 0; i < 5; i++) {
-                try {
-                    config.load().get();
-                    break;
-                } catch (BufferUnderflowException e) {
-                    if (i == 4)
-                        throw e;
-                    System.out.println("###################################################################");
-                    System.out.println("###################################################################");
-                    System.out.println("###################################################################");
-                    System.out.println("###################################################################");
-                    System.out.println("###################################################################");
-                    System.out.println("###################################################################");
-                    System.out.println("###################################################################");
-                    System.out.println("###################################################################");
-                    System.out.println("###################################################################");
-                    System.out.println("###################################################################");
-                    System.out.println("###################################################################");
-                    System.out.println("###################################################################");
-                    System.out.println("");
-                    System.out.println("");
-                    System.out.println("");
-                    System.out.println("");
-                    System.out.println("");
-                    System.out.println("");
-                    System.out.println("");
-                    System.out.println("BufferUnderflowException when loading config. Retrying! (This is a workaround and not a proper fix! I will fix it in the future!)"); // TODO: Fix this!
-                    continue;
-                }
-            }
-
-            HypixelUtilsCore.config = config;
-            HypixelUtilsCore.scheduler = new Scheduler();
             HypixelUtilsCore.eventManager = new EventManager();
+            HypixelUtilsCore.initCloudConfig(Paths.get(configFile.getAbsolutePath(), "hypixelutils-configkey.txt"));
+            
+            HypixelUtilsCore.scheduler = new Scheduler();
 
             HypixelUtilsCore.init();
-
-            // Switch out the normal config for the wrapped one now that we have called HypixelUtilsCore.init() and the GUI system is ready.
-            GuiConfigManagerWrapper configGuiWrapper = new GuiConfigManagerWrapper(config);
-            HypixelUtilsCore.config = configGuiWrapper;
 
             liteloaderOnBungeeServerChangeAdapter = new LiteLoaderOnBungeeServerChangeAdapter(HypixelUtilsCore.eventManager);
             liteloaderOnChatAdapter = new LiteLoaderOnChatAdapter(HypixelUtilsCore.eventManager);
@@ -132,11 +94,12 @@ public class LiteModHypixelUtils implements ChatFilter, Tickable, OutboundChatFi
             liteLoaderOnRenderAdapter = new LiteLoaderOnRenderAdapter(HypixelUtilsCore.eventManager);
             liteLoaderOnConnectAdapter = new LiteLoaderOnConnectAdapter(HypixelUtilsCore.eventManager);
         } catch (Throwable e) {
+            e.printStackTrace();
+            
             new RuntimeException(e);
         }
     }
-
-
+    
     private void prepareLibs() {
         Path libsDirPath = Paths.get(LiteLoader.getModsFolder().getAbsolutePath(), "libs");
         File libsDirFile = libsDirPath.toFile();

@@ -1,10 +1,13 @@
 package com.cecer1.hypixelutils.features.improvedlobby;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
+import com.cecer1.hypixelutils.events.eventdata.IEventData;
+import com.cecer1.hypixelutils.events.eventdata.OnChatEventData;
+import com.cecer1.hypixelutils.events.eventdata.OnHypixelStateUpdatedEventData;
+import com.cecer1.hypixelutils.events.handlers.IOnChatEventHandler;
+import com.cecer1.hypixelutils.events.handlers.IOnHypixelStateUpdatedEventHandler;
 import com.cecer1.hypixelutils.features.general.HypixelStateUpdateType;
-import com.cecer1.hypixelutils.features.general.IOnHypixelStateUpdatedEventHandler;
-import com.cecer1.modframework.common.events.IOnChatEventHandler;
-import com.cecer1.modframework.common.utils.ChatUtilities;
+import com.cecer1.hypixelutils.utils.ChatUtilities;
 
 public class ImprovedLobbyCommandProcessor implements IOnHypixelStateUpdatedEventHandler, IOnChatEventHandler
 {
@@ -17,8 +20,16 @@ public class ImprovedLobbyCommandProcessor implements IOnHypixelStateUpdatedEven
     }
 
     @Override
-    public void onHypixelStateUpdated(IOnHypixelStateUpdatedEventData eventData) {
-        if(eventData.getUpdateType() == HypixelStateUpdateType.SERVER_NAME) {
+    public void onEvent(IEventData data) {
+        if(data instanceof OnHypixelStateUpdatedEventData)
+            onEvent((OnHypixelStateUpdatedEventData)data);
+        if(data instanceof OnChatEventData)
+            onEvent((OnChatEventData)data);
+    }
+
+    @Override
+    public void onEvent(OnHypixelStateUpdatedEventData data) {
+        if(data.getUpdateType() == HypixelStateUpdateType.SERVER_NAME) {
             if(_desiredLobbyNumber > 0) {
                 String location = HypixelUtilsCore.currentState.getCurrentServerName();
 
@@ -44,10 +55,10 @@ public class ImprovedLobbyCommandProcessor implements IOnHypixelStateUpdatedEven
     }
 
     @Override
-    public void onChat(IOnChatEventData event) {
+    public void onEvent(OnChatEventData data) {
         if(_desiredLobbyNumber != 0) {
-            if(ChatUtilities.compareChatComponent(event.getMessage(), "{\"color\":\"red\",\"text\":\"You are already connected to this server\"}")) {
-                event.setCanceled(true);
+            if(ChatUtilities.compareChatComponent(data.getMessage(), "{\"color\":\"red\",\"text\":\"You are already connected to this server\"}")) {
+                data.setCanceled(true);
                 HypixelUtilsCore.currentState.updateServerName();
             }
         }

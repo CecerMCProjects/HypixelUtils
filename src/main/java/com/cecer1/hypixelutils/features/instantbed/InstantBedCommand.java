@@ -1,7 +1,7 @@
 package com.cecer1.hypixelutils.features.instantbed;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
-import com.cecer1.modframework.common.commands.AbstractedCommand;
+import com.cecer1.hypixelutils.clientcommands.AbstractedCommand;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 
@@ -14,19 +14,13 @@ public class InstantBedCommand extends AbstractedCommand {
     @Override
     public void processCommand(ICommandSender iCommandSender, String[] strings) throws CommandException
     {
-        if(HypixelUtilsCore.config.isInstantBedEnabled())
+        if(HypixelUtilsCore.configHelper.instantBedEnabled.getValue(false))
         {
-			HypixelUtilsCore.config.setInstantBedEnabled(false);
-
-            // ChatOutput disabled because the GUI does it for us.
-            // ChatOutputs.printInstantBedEnabledStatus(false);
+			HypixelUtilsCore.configHelper.instantBedEnabled.setValue(false);
         }
         else
         {
-            HypixelUtilsCore.config.setInstantBedEnabled(true);
-
-            // ChatOutput disabled because the GUI does it for us.
-            // ChatOutputs.printInstantBedEnabledStatus(true);
+            HypixelUtilsCore.configHelper.instantBedEnabled.setValue(true);
         }
     }
 

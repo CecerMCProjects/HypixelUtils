@@ -1,29 +1,21 @@
 package com.cecer1.hypixelutils.chat;
 
-import com.cecer1.modframework.common.events.IOnChatEventHandler;
-import com.cecer1.modframework.common.utils.ChatUtilities;
+import com.cecer1.hypixelutils.HypixelUtilsCore;
+import com.cecer1.hypixelutils.events.eventdata.IEventData;
+import com.cecer1.hypixelutils.events.eventdata.OnChatEventData;
+import com.cecer1.hypixelutils.events.eventdata.OnChatMessageEventData;
+import com.cecer1.hypixelutils.events.handlers.IOnChatEventHandler;
+import com.cecer1.hypixelutils.utils.ChatUtilities;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
 import java.util.EnumSet;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
+
+import static com.cecer1.hypixelutils.utils.ChatUtilities.QuickFormatting.*;
 
 public class ChatManager implements IOnChatEventHandler {
-
-    private Set<IChatMessageSubscriber> _subscribers;
-    public ChatManager() {
-        _subscribers = new HashSet<IChatMessageSubscriber>();
-    }
-
-    public void subscribe(IChatMessageSubscriber subscriber) {
-        _subscribers.add(subscriber);
-    }
-    public void unsubscribe(IChatMessageSubscriber subscriber) {
-        _subscribers.remove(subscriber);
-    }
     
     private boolean _guildType = false; // Aqua
     private boolean _partyType = false; // Gold
@@ -47,17 +39,23 @@ public class ChatManager implements IOnChatEventHandler {
     public boolean isBoosterTypeActive() {
         return _boosterMode;
     }
+
+
+    @Override
+    public void onEvent(IEventData data) {
+        if(data instanceof OnChatEventData) {
+            onEvent((OnChatEventData)data);
+        }
+    }
     
     @Override
-    public void onChat(IOnChatEventData event) {
+    public void onEvent(OnChatEventData event) {
         try {
-            ChatMessage message = tryParseChatComponent(event.getMessage());
+            OnChatMessageEventData message = tryParseChatComponent(event.getMessage());
             if(message != null) {
-                for(IChatMessageSubscriber subscriber : _subscribers) {
-                    if(!subscriber.processChatMessage(message)) {
-                        event.setCanceled(true);
-                    }
-                }
+                HypixelUtilsCore.eventManager.fireEvent(message);
+                if(message.isCanceled())
+                    event.setCanceled(true);
             } else {
                 if(event.getMessage().getUnformattedText().equals("-----------------------------------------------------")) {
                     if(event.getMessage().getChatStyle().getColor() == EnumChatFormatting.AQUA) {
@@ -86,7 +84,7 @@ public class ChatManager implements IOnChatEventHandler {
         }
     }
 
-    public ChatMessage tryParseChatComponent(IChatComponent message) {
+    public OnChatMessageEventData tryParseChatComponent(IChatComponent message) {
         List<IChatComponent> components = ChatUtilities.getFlattenedChatComponent(message, true);
 
         EnumSet<ChatType> chatTypes = EnumSet.noneOf(ChatType.class);
@@ -203,7 +201,7 @@ public class ChatManager implements IOnChatEventHandler {
             matchFailed = true;
         }
 
-        ChatMessage chatMessage = tryParsePureChatMessage(components);
+        OnChatMessageEventData chatMessage = tryParsePureChatMessage(components);
 
         if(chatMessage != null) {
             chatMessage.chatTypes.addAll(chatTypes);
@@ -212,7 +210,7 @@ public class ChatManager implements IOnChatEventHandler {
         return chatMessage;
     }
 
-    private ChatMessage tryParsePureChatMessage(List<IChatComponent> remainingComponents) {
+    private OnChatMessageEventData tryParsePureChatMessage(List<IChatComponent> remainingComponents) {
         if(remainingComponents.size() == 0)
             return null;
 
@@ -282,91 +280,91 @@ public class ChatManager implements IOnChatEventHandler {
             return null;
 
         if(tagComponent != null)
-            return new ChatMessage(new PlayerName(tagComponent, name), lastComponent.getChatStyle(), message);
-        return new ChatMessage(new PlayerName(name), lastComponent.getChatStyle(), message);
+            return new OnChatMessageEventData(new PlayerName(tagComponent, name), lastComponent.getChatStyle(), message);
+        return new OnChatMessageEventData(new PlayerName(name), lastComponent.getChatStyle(), message);
     }
 
-    private static final IChatComponent partyChatComponent = new ChatComponentText("Party \u003e ").setChatStyle(ChatUtilities.ChatPresets.BLUE);
+    private static final IChatComponent partyChatComponent = blue(new ChatComponentText("Party \u003e "));
     public boolean isPartyChatComponent(IChatComponent component) {
         return ChatUtilities.compareChatComponent(component, partyChatComponent);
     }
 
-    private static final IChatComponent guildChatComponent = new ChatComponentText("Guild \u003e ").setChatStyle(ChatUtilities.ChatPresets.DARK_GREEN);
+    private static final IChatComponent guildChatComponent = darkGreen(new ChatComponentText("Guild \u003e "));
     public boolean isGuildChatComponent(IChatComponent component) {
         return ChatUtilities.compareChatComponent(component, guildChatComponent);
     }
 
-    private static final IChatComponent shoutChatComponent = new ChatComponentText("[SHOUT] ").setChatStyle(ChatUtilities.ChatPresets.GOLD);
+    private static final IChatComponent shoutChatComponent = gold(new ChatComponentText("[SHOUT] "));
     public boolean isShoutChatComponent(IChatComponent component) {
         return ChatUtilities.compareChatComponent(component, shoutChatComponent);
     }
 
-    private static final IChatComponent teamCopsChatComponent = new ChatComponentText("[銐]").setChatStyle(ChatUtilities.ChatPresets.DARK_AQUA);
+    private static final IChatComponent teamCopsChatComponent = darkAqua(new ChatComponentText("[銐]"));
     public boolean isTeamCopsChatComponent(IChatComponent component) {
         return ChatUtilities.compareChatComponent(component, teamCopsChatComponent);
     }
 
-    private static final IChatComponent teamCrimsChatComponent = new ChatComponentText("[銑]").setChatStyle(ChatUtilities.ChatPresets.DARK_RED);
+    private static final IChatComponent teamCrimsChatComponent = darkRed(new ChatComponentText("[銑]"));
     public boolean isTeamCrimsChatComponent(IChatComponent component) {
         return ChatUtilities.compareChatComponent(component, teamCrimsChatComponent);
     }
 
-    private static final IChatComponent teamUhcChatComponent = new ChatComponentText("[TEAM] ").setChatStyle(ChatUtilities.ChatPresets.GREEN);
+    private static final IChatComponent teamUhcChatComponent = green(new ChatComponentText("[TEAM] "));
     public boolean isTeamUhcChatComponent(IChatComponent component) {
         return ChatUtilities.compareChatComponent(component, teamUhcChatComponent);
     }
 
-    private static final IChatComponent teamSpectatorChatComponent = new ChatComponentText("[SPECTATOR] ").setChatStyle(ChatUtilities.ChatPresets.GRAY);
+    private static final IChatComponent teamSpectatorChatComponent = gray(new ChatComponentText("[SPECTATOR] "));
     public boolean isTeamSpectatorChatComponent(IChatComponent component) {
         return ChatUtilities.compareChatComponent(component, teamSpectatorChatComponent);
     }
 
-    private static final IChatComponent teamRedChatComponent = new ChatComponentText("[RED] ").setChatStyle(ChatUtilities.ChatPresets.RED);
+    private static final IChatComponent teamRedChatComponent = red(new ChatComponentText("[RED] "));
     public boolean isTeamRedChatComponent(IChatComponent component) {
         return ChatUtilities.compareChatComponent(component, teamRedChatComponent);
     }
 
-    private static final IChatComponent teamGreenChatComponent = new ChatComponentText("[GREEN] ").setChatStyle(ChatUtilities.ChatPresets.GREEN);
+    private static final IChatComponent teamGreenChatComponent = green(new ChatComponentText("[GREEN] "));
     public boolean isTeamGreenChatComponent(IChatComponent component) {
         return ChatUtilities.compareChatComponent(component, teamGreenChatComponent);
     }
 
-    private static final IChatComponent teamBlueChatComponent = new ChatComponentText("[BLUE] ").setChatStyle(ChatUtilities.ChatPresets.BLUE);
+    private static final IChatComponent teamBlueChatComponent = blue(new ChatComponentText("[BLUE] "));
     public boolean isTeamBlueChatComponent(IChatComponent component) {
         return ChatUtilities.compareChatComponent(component, teamBlueChatComponent);
     }
 
-    private static final IChatComponent teamYellowChatComponent = new ChatComponentText("[YELLOW] ").setChatStyle(ChatUtilities.ChatPresets.YELLOW);
+    private static final IChatComponent teamYellowChatComponent = yellow(new ChatComponentText("[YELLOW] "));
     public boolean isTeamYellowChatComponent(IChatComponent component) {
         return ChatUtilities.compareChatComponent(component, teamYellowChatComponent);
     }
 
-    private static final IChatComponent teamVampiresChatComponent = new ChatComponentText("[V] ").setChatStyle(ChatUtilities.ChatPresets.RED);
+    private static final IChatComponent teamVampiresChatComponent = red(new ChatComponentText("[V] "));
     public boolean isTeamVampiresChatComponent(IChatComponent component) {
         return ChatUtilities.compareChatComponent(component, teamVampiresChatComponent);
     }
 
-    private static final IChatComponent teamSurvivorsChatComponent = new ChatComponentText("[S] ").setChatStyle(ChatUtilities.ChatPresets.BLUE);
+    private static final IChatComponent teamSurvivorsChatComponent = blue(new ChatComponentText("[S] "));
     public boolean isTeamSurvivorsChatComponent(IChatComponent component) {
         return ChatUtilities.compareChatComponent(component, teamSurvivorsChatComponent);
     }
 
-    private static final IChatComponent teamHuntersChatComponent = new ChatComponentText("[H]").setChatStyle(ChatUtilities.ChatPresets.GOLD);
+    private static final IChatComponent teamHuntersChatComponent = gold(new ChatComponentText("[H]"));
     public boolean isTeamHuntersChatComponent(IChatComponent component) {
         return ChatUtilities.compareChatComponent(component, teamHuntersChatComponent);
     }
 
-    private static final IChatComponent teamAnimalsChatComponent = new ChatComponentText("[A]").setChatStyle(ChatUtilities.ChatPresets.AQUA);
+    private static final IChatComponent teamAnimalsChatComponent = aqua(new ChatComponentText("[A]"));
     public boolean isTeamAnimalsChatComponent(IChatComponent component) {
         return ChatUtilities.compareChatComponent(component, teamAnimalsChatComponent);
     }
 
-    private static final IChatComponent msgFromChatComponent = new ChatComponentText("From ").setChatStyle(ChatUtilities.ChatPresets.LIGHT_PURPLE);
+    private static final IChatComponent msgFromChatComponent = lightPurple(new ChatComponentText("From "));
     public boolean isMsgFromChatComponent(IChatComponent component) {
         return ChatUtilities.compareChatComponent(component, msgFromChatComponent);
     }
 
-    private static final IChatComponent msgToChatComponent = new ChatComponentText("To ").setChatStyle(ChatUtilities.ChatPresets.LIGHT_PURPLE);
+    private static final IChatComponent msgToChatComponent = lightPurple(new ChatComponentText("To "));
     public boolean isMsgToChatComponent(IChatComponent component) {
         return ChatUtilities.compareChatComponent(component, msgToChatComponent);
     }

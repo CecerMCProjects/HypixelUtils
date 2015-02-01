@@ -1,10 +1,18 @@
 package com.cecer1.hypixelutils;
 
-import com.cecer1.hypixelutils.commands.*;
+import com.cecer1.hypixelutils.backgroundcommands.HypixelCommandJobProxy;
+import com.cecer1.hypixelutils.backgroundcommands.HypixelCommandJobWhereami;
+import com.cecer1.hypixelutils.backgroundcommands.HypixelCommandJobWtfmap;
+import com.cecer1.hypixelutils.backgroundcommands.callbacks.IHypixelCommandCallbackProxy;
+import com.cecer1.hypixelutils.backgroundcommands.callbacks.IHypixelCommandCallbackWhereami;
+import com.cecer1.hypixelutils.backgroundcommands.callbacks.IHypixelCommandCallbackWtfmap;
+import com.cecer1.hypixelutils.events.eventdata.IEventData;
+import com.cecer1.hypixelutils.events.eventdata.OnBungeeServerChangeEventData;
+import com.cecer1.hypixelutils.events.eventdata.OnConnectEventData;
+import com.cecer1.hypixelutils.events.eventdata.OnHypixelStateUpdatedEventData;
+import com.cecer1.hypixelutils.events.handlers.IOnBungeeServerChangeEventHandler;
+import com.cecer1.hypixelutils.events.handlers.IOnConnectEventHandler;
 import com.cecer1.hypixelutils.features.general.HypixelStateUpdateType;
-import com.cecer1.hypixelutils.features.general.OnHypixelStateUpdatedEventData;
-import com.cecer1.modframework.common.events.IOnBungeeServerChangeEventHandler;
-import com.cecer1.modframework.common.events.IOnConnectEventHandler;
 import net.minecraft.client.Minecraft;
 
 import java.util.regex.Matcher;
@@ -96,6 +104,8 @@ public class HypixelState implements IOnBungeeServerChangeEventHandler, IOnConne
             public void result(String mapName) {
                 if(mapName != null)
                     setCurrentMapName(mapName);
+                else
+                    setCurrentMapName("Limbo");
             }
         }));
     }
@@ -116,15 +126,23 @@ public class HypixelState implements IOnBungeeServerChangeEventHandler, IOnConne
             }
         }));
     }
+    
+    @Override
+    public void onEvent(IEventData data) {
+        if(data instanceof OnBungeeServerChangeEventData)
+            onEvent((OnBungeeServerChangeEventData)data);
+        if(data instanceof OnConnectEventData)
+            onEvent((OnConnectEventData)data);
+    }
 
     @Override
-    public void onBungeeServerChange(IOnBungeeServerChangeEventHandler.IOnBungeeServerChangeEventData eventData) {
+    public void onEvent(OnBungeeServerChangeEventData data) {
         updateServerName();
         updateMapName();
     }
 
     @Override
-    public void onConnect(IOnConnectEventData event) {
+    public void onEvent(OnConnectEventData data) {
         if(isConnected()) {
             updateProxyName();
             updateServerName();

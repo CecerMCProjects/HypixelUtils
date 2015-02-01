@@ -1,7 +1,7 @@
 package com.cecer1.hypixelutils.features.partyautoremove;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
-import com.cecer1.modframework.common.commands.AbstractedCommand;
+import com.cecer1.hypixelutils.clientcommands.AbstractedCommand;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 
@@ -14,19 +14,13 @@ public class PartyAutoRemoveToggleCommand extends AbstractedCommand {
     @Override
     public void processCommand(ICommandSender iCommandSender, String[] strings) throws CommandException
     {
-        if(HypixelUtilsCore.config.isPartyAutoRemoveOfflineEnabled())
+        if(HypixelUtilsCore.configHelper.partyAutoRemoveOfflineEnabled.getValue(false))
         {
-            HypixelUtilsCore.config.setPartyAutoRemoveOfflineEnabled(false);
-            
-            // ChatOutput disabled because the GUI does it for us.
-            // ChatOutputs.printPartyAutoRemoveEnabledStatus(false);
+            HypixelUtilsCore.configHelper.partyAutoRemoveOfflineEnabled.setValue(false);
         }
         else
         {
-            HypixelUtilsCore.config.setPartyAutoRemoveOfflineEnabled(true);
-            
-            // ChatOutput disabled because the GUI does it for us.
-            // ChatOutputs.printPartyAutoRemoveEnabledStatus(true);
+            HypixelUtilsCore.configHelper.partyAutoRemoveOfflineEnabled.setValue(true);
         }
     }
 

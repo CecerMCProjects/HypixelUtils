@@ -1,10 +1,10 @@
 package com.cecer1.hypixelutils.features.boosters;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
+import com.cecer1.hypixelutils.backgroundcommands.HypixelCommandJobThank;
+import com.cecer1.hypixelutils.backgroundcommands.HypixelCommandJobTip;
 import com.cecer1.hypixelutils.chat.ChatOutputs;
-import com.cecer1.hypixelutils.commands.HypixelCommandJobThank;
-import com.cecer1.hypixelutils.commands.HypixelCommandJobTip;
-import com.cecer1.modframework.common.commands.AbstractedCommand;
+import com.cecer1.hypixelutils.clientcommands.AbstractedCommand;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 
@@ -23,7 +23,22 @@ public class TipAndThankCommand extends AbstractedCommand {
             return;
         }
         String playerName = args[0];
-
+        
+        if(playerName.equalsIgnoreCase("all")) {
+            ChatOutputs.printErrorTipAndThankAllCommandDisabled();
+            BoosterQueue latestQueue = HypixelUtilsCore.boosterQueueChatModifier.latestQueue;
+            if(latestQueue != null) {
+                String[] playerNames = latestQueue.getActiveBoosterPlayerName();
+                for(String name : playerNames) {
+                    queueTipAndThank(name);
+                }
+            }
+        } else {
+            queueTipAndThank(playerName);
+        }
+    }
+    
+    private void queueTipAndThank(String playerName) {
         HypixelUtilsCore.commandJobManager.queueJob(new HypixelCommandJobTip(playerName));
         HypixelUtilsCore.commandJobManager.queueJob(new HypixelCommandJobThank(playerName));
     }

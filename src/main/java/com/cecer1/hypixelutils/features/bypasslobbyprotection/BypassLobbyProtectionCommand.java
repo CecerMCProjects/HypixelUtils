@@ -1,7 +1,7 @@
 package com.cecer1.hypixelutils.features.bypasslobbyprotection;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
-import com.cecer1.modframework.common.commands.AbstractedCommand;
+import com.cecer1.hypixelutils.clientcommands.AbstractedCommand;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 
@@ -14,19 +14,13 @@ public class BypassLobbyProtectionCommand extends AbstractedCommand {
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
-        if(HypixelUtilsCore.config.isBypassLobbyProtectionEnabled())
+        if(HypixelUtilsCore.configHelper.bypassLobbyProtectionEnabled.getValue(false))
         {
-            HypixelUtilsCore.config.setBypassLobbyProtectionEnabled(false);
-
-            // ChatOutput disabled because the GUI does it for us.
-            // ChatOutputs.printBypassLobbyProtectionEnabledStatus(false);
+            HypixelUtilsCore.configHelper.bypassLobbyProtectionEnabled.setValue(false);
         }
         else
         {
-            HypixelUtilsCore.config.setBypassLobbyProtectionEnabled(true);
-
-            // ChatOutput disabled because the GUI does it for us.
-            // ChatOutputs.printBypassLobbyProtectionEnabledStatus(true);
+            HypixelUtilsCore.configHelper.bypassLobbyProtectionEnabled.setValue(true);
         }
     }
 

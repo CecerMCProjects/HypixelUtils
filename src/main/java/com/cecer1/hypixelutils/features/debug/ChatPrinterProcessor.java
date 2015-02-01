@@ -1,13 +1,19 @@
 package com.cecer1.hypixelutils.features.debug;
 
-import com.cecer1.hypixelutils.chat.ChatMessage;
-import com.cecer1.hypixelutils.chat.IChatMessageSubscriber;
+import com.cecer1.hypixelutils.events.eventdata.IEventData;
+import com.cecer1.hypixelutils.events.eventdata.OnChatMessageEventData;
+import com.cecer1.hypixelutils.events.handlers.IOnChatMessageEventHandler;
 
-public class ChatPrinterProcessor implements IChatMessageSubscriber
+public class ChatPrinterProcessor implements IOnChatMessageEventHandler
 {
     @Override
-    public boolean processChatMessage(ChatMessage message) {
-        System.out.println("                 " + message.getPlayerName().getFullName().getUnformattedText() + ": " + message.getMessage().getUnformattedText());
-        return true;
+    public void onEvent(IEventData data) {
+        if(data instanceof OnChatMessageEventData)
+            onEvent((OnChatMessageEventData)data);
+    }
+
+    @Override
+    public void onEvent(OnChatMessageEventData data) {
+        System.out.println("                 " + data.getPlayerName().getFullName().getUnformattedText() + ": " + data.getMessage().getUnformattedText());
     }
 }

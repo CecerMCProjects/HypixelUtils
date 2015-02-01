@@ -2,36 +2,24 @@ package com.cecer1.hypixelutils.features.general;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
 import com.cecer1.hypixelutils.chat.ChatOutputs;
-import com.cecer1.hypixelutils.features.cloudconfig.CloudConfigManager;
-import com.cecer1.hypixelutils.gui.GuiConfigManagerWrapper;
-import com.cecer1.modframework.common.events.IOnConnectEventHandler;
+import com.cecer1.hypixelutils.events.eventdata.IEventData;
+import com.cecer1.hypixelutils.events.eventdata.OnConnectEventData;
+import com.cecer1.hypixelutils.events.handlers.IOnConnectEventHandler;
 
 public class HandleServerJoinInit implements IOnConnectEventHandler {
+    
+    @Override
+    public void onEvent(IEventData data) {
+        if(data instanceof OnConnectEventData)
+            onEvent((OnConnectEventData)data);
+    }
 
     @Override
-    public void onConnect(IOnConnectEventData event) {
+    public void onEvent(OnConnectEventData data) {
         if(HypixelUtilsCore.currentState.isConnected()) {
             ChatOutputs.printHypixelDetected(HypixelUtilsCore.VERSION);
 
-            if(HypixelUtilsCore.config.isDebugModeEnabled()) {
-                CloudConfigManager typedConfig;
-                
-                if(!(HypixelUtilsCore.config instanceof CloudConfigManager)) {
-                    if(!(HypixelUtilsCore.config instanceof GuiConfigManagerWrapper)) {
-                        if(((GuiConfigManagerWrapper)HypixelUtilsCore.config).getBackingConfig() instanceof CloudConfigManager) {
-                            typedConfig = (CloudConfigManager) ((GuiConfigManagerWrapper) HypixelUtilsCore.config).getBackingConfig();
-                        } else {
-                            typedConfig = null;
-                        }
-                    } else {
-                        typedConfig = null;
-                    }
-                } else {
-                    typedConfig = (CloudConfigManager) HypixelUtilsCore.config;
-                }
-                if(typedConfig == null)
-                    return;
-
+            if(HypixelUtilsCore.configHelper.debugModeEnabled.getValue(false)) {
                 ChatOutputs.printDebugCurrentSavedConfigKey(HypixelUtilsCore.getSavedConfigKey());
             }
         }

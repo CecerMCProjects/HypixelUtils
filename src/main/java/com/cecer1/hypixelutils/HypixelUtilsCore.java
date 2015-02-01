@@ -1,17 +1,18 @@
 package com.cecer1.hypixelutils;
 
+import com.cecer1.hypixelutils.backgroundcommands.HypixelCommandJobManager;
 import com.cecer1.hypixelutils.chat.ChatManager;
-import com.cecer1.hypixelutils.commands.HypixelCommandJobManager;
-import com.cecer1.hypixelutils.config.IConfigManager;
+import com.cecer1.hypixelutils.clientcommands.ICommandRegister;
+import com.cecer1.hypixelutils.data.config.ConfigHelper;
+import com.cecer1.hypixelutils.data.config.ConfigManager;
+import com.cecer1.hypixelutils.data.config.ConfigStore;
+import com.cecer1.hypixelutils.events.EventManager;
 import com.cecer1.hypixelutils.features.boosters.BoosterQueueChatModifier;
 import com.cecer1.hypixelutils.features.boosters.TipAndThankChatModifier;
 import com.cecer1.hypixelutils.features.boosters.TipAndThankCommand;
 import com.cecer1.hypixelutils.features.bypasslobbyprotection.BypassLobbyProtectionCommand;
 import com.cecer1.hypixelutils.features.bypasslobbyprotection.BypassLobbyProtectionProcessor;
-import com.cecer1.hypixelutils.features.cloudconfig.ConfigGuiCommand;
-import com.cecer1.hypixelutils.features.cloudconfig.ConfigKeyCommand;
-import com.cecer1.hypixelutils.features.cloudconfig.LoadConfigCommand;
-import com.cecer1.hypixelutils.features.cloudconfig.SaveConfigCommand;
+import com.cecer1.hypixelutils.features.cloudconfig.*;
 import com.cecer1.hypixelutils.features.debug.ChatPrinterProcessor;
 import com.cecer1.hypixelutils.features.debug.DebugCommand;
 import com.cecer1.hypixelutils.features.debug.DebugProcessor;
@@ -21,25 +22,20 @@ import com.cecer1.hypixelutils.features.filterguildchat.FilterGuildChatProcessor
 import com.cecer1.hypixelutils.features.filterpartychat.FilterPartyChatCommand;
 import com.cecer1.hypixelutils.features.filterpartychat.FilterPartyChatProcessor;
 import com.cecer1.hypixelutils.features.general.HandleServerJoinInit;
-import com.cecer1.hypixelutils.features.general.LicenseCommand;
 import com.cecer1.hypixelutils.features.improvedlobby.ImprovedLobbyCommand;
 import com.cecer1.hypixelutils.features.improvedlobby.ImprovedLobbyCommandProcessor;
 import com.cecer1.hypixelutils.features.instantbed.InstantBedCommand;
 import com.cecer1.hypixelutils.features.instantbed.InstantBedProcessor;
+import com.cecer1.hypixelutils.features.license.LicenseCommand;
 import com.cecer1.hypixelutils.features.partyautoremove.PartyAutoRemoveProcessor;
 import com.cecer1.hypixelutils.features.partyautoremove.PartyAutoRemoveToggleCommand;
 import com.cecer1.hypixelutils.features.ragequit.RageQuitCommand;
 import com.cecer1.hypixelutils.features.soundfx.SoundEffectsChatProcessor;
 import com.cecer1.hypixelutils.gui.HypixelUtilsGuiManager;
-import com.cecer1.hypixelutils.gui.frames.GuiLicenseFrame;
-import com.cecer1.hypixelutils.gui.frames.HypixelUtilsLicenseFrame;
-import com.cecer1.hypixelutils.gui.frames.UnirestLicenseFrame;
-import com.cecer1.modframework.common.Scheduler;
-import com.cecer1.modframework.common.commands.ICommandRegister;
-import com.cecer1.modframework.common.events.EventManager;
-import com.cecer1.modframework.common.utils.ChatUtilities;
+import com.cecer1.hypixelutils.utils.ChatUtilities;
 
 import java.io.IOException;
+import java.nio.BufferUnderflowException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -55,7 +51,9 @@ public class HypixelUtilsCore {
 
     public static HypixelState currentState;
 
-    public static IConfigManager config;
+    public static ConfigManager internalConfig;
+    public static ConfigHelper configHelper;
+    public static CloudConfigServerGateway cloudConfigServerGateway;
     private static Path _configKeyPath;
 
     public static Scheduler scheduler;
@@ -93,15 +91,13 @@ public class HypixelUtilsCore {
         
         chatManager = new ChatManager();
         commandJobManager = new HypixelCommandJobManager();
-
+        
         userInterface = new HypixelUtilsGuiManager();
-
-        HypixelUtilsCore.userInterface.initAndAddFrame(new GuiLicenseFrame());
-        HypixelUtilsCore.userInterface.initAndAddFrame(new UnirestLicenseFrame());
-        HypixelUtilsCore.userInterface.initAndAddFrame(new HypixelUtilsLicenseFrame());
 
         registerEvents();
         registerCommands();
+        
+        configHelper.forceLoad();
     }
 
     public static void setSavedConfigKey(UUID key) {
@@ -136,42 +132,42 @@ public class HypixelUtilsCore {
     }
 
     private static void registerCommands() {
-        for(String commandName : config.getGuildChatToggleCommands()) {
+        for(String commandName : configHelper.guildChatToggleCommands.getValue()) {
             commandRegister.registerCommand(new FilterGuildChatCommand(commandName));
             commandRegister.registerCommand(new FilterGuildChatCommand("hypixelutils:" + commandName));
         }
 
-        for(String commandName : config.getImprovedLobbyCommands()) {
+        for(String commandName : configHelper.improvedLobbyCommands.getValue()) {
             commandRegister.registerCommand(new ImprovedLobbyCommand(commandName));
             commandRegister.registerCommand(new ImprovedLobbyCommand("hypixelutils:" + commandName));
         }
 
-        for(String commandName : config.getInstantBedCommands()) {
+        for(String commandName : configHelper.instantBedToggleCommands.getValue()) {
             commandRegister.registerCommand(new InstantBedCommand(commandName));
             commandRegister.registerCommand(new InstantBedCommand("hypixelutils:" + commandName));
         }
 
-        for(String commandName : config.getLobbyProtectionCommands()) {
+        for(String commandName : configHelper.bypassLobbyProtectionToggleCommands.getValue()) {
             commandRegister.registerCommand(new BypassLobbyProtectionCommand(commandName));
             commandRegister.registerCommand(new BypassLobbyProtectionCommand("hypixelutils:" + commandName));
         }
 
-        for(String commandName : config.getPartyAutoRemoveCommands()) {
+        for(String commandName : configHelper.partyAutoRemoveToggleCommands.getValue()) {
             commandRegister.registerCommand(new PartyAutoRemoveToggleCommand(commandName));
             commandRegister.registerCommand(new PartyAutoRemoveToggleCommand("hypixelutils:" + commandName));
         }
 
-        for(String commandName : config.getPartyChatToggleCommands()) {
+        for(String commandName : configHelper.partyChatToggleCommands.getValue()) {
             commandRegister.registerCommand(new FilterPartyChatCommand(commandName));
             commandRegister.registerCommand(new FilterPartyChatCommand("hypixelutils:" + commandName));
         }
 
-        for(String commandName : config.getTipAndThankCommands()) {
+        for(String commandName : configHelper.tipAndThankCommands.getValue()) {
             commandRegister.registerCommand(new TipAndThankCommand(commandName));
             commandRegister.registerCommand(new TipAndThankCommand("hypixelutils:" + commandName));
         }
 
-        for(String commandName : config.getRageQuitCommands()) {
+        for(String commandName : configHelper.ragequitCommands.getValue()) {
             commandRegister.registerCommand(new RageQuitCommand(commandName));
             commandRegister.registerCommand(new RageQuitCommand("hypixelutils:" + commandName));
         }
@@ -181,6 +177,7 @@ public class HypixelUtilsCore {
 
         commandRegister.registerCommand(new LoadConfigCommand("hypixelutils:loadconfig"));
         commandRegister.registerCommand(new SaveConfigCommand("hypixelutils:saveconfig"));
+        commandRegister.registerCommand(new SaveConfigCommand("hypixelutils:deleteconfig"));
         commandRegister.registerCommand(new ConfigKeyCommand("hypixelutils:configkey"));
         commandRegister.registerCommand(new DebugCommand("hypixelutils:debug"));
         commandRegister.registerCommand(new ResetJobsCommand("hypixelutils:resetjobs"));
@@ -189,42 +186,74 @@ public class HypixelUtilsCore {
         commandRegister.registerCommand(new LicenseCommand("hypixelutils:about"));
         commandRegister.registerCommand(new LicenseCommand("hypixelutils:legal"));
         commandRegister.registerCommand(new LicenseCommand("hypixelutils:license"));
+        commandRegister.registerCommand(new LicenseCommand("hypixelutils:credits"));
     }
 
     private static void registerEvents() {
         eventManager.registerEventHandlers(scheduler);
-
-        eventManager.registerEventHandlers(bypassLobbyCommandProtectionProcessor);
-        eventManager.registerEventHandlers(debugProcessor);
-        eventManager.registerEventHandlers(instantBedProcessor);
-        eventManager.registerEventHandlers(improvedLobbyCommandProcessor);
-        eventManager.registerEventHandlers(partyAutoRemoveOfflineProcessor);
-        eventManager.registerEventHandlers(tipAndThankChatModifier);
-        eventManager.registerEventHandlers(boosterQueueChatModifier);
-        eventManager.registerEventHandlers(new HandleServerJoinInit());
-        eventManager.registerEventHandlers(new SoundEffectsChatProcessor());
-
-        chatManager.subscribe(filterGuildChatProcessor);
-        chatManager.subscribe(filterPartyChatProcessor);
-        chatManager.subscribe(new ChatPrinterProcessor());
-
-        eventManager.registerEventHandlers(commandJobManager);
-        chatManager.subscribe(commandJobManager);
+        eventManager.registerEventHandlers(currentState);
 
         eventManager.registerEventHandlers(chatManager);
-        eventManager.registerEventHandlers(currentState);
-        
-        eventManager.registerEventHandlers(userInterface);
 
+        eventManager.registerEventHandlers(commandJobManager);
+        
+        eventManager.registerEventHandlers(boosterQueueChatModifier);
+        eventManager.registerEventHandlers(tipAndThankChatModifier);
+        eventManager.registerEventHandlers(bypassLobbyCommandProtectionProcessor);
+        eventManager.registerEventHandlers(new ChatPrinterProcessor());
+        eventManager.registerEventHandlers(debugProcessor);
+        eventManager.registerEventHandlers(filterGuildChatProcessor);
+        eventManager.registerEventHandlers(filterPartyChatProcessor);
+        eventManager.registerEventHandlers(new HandleServerJoinInit());
+        eventManager.registerEventHandlers(improvedLobbyCommandProcessor);
+        eventManager.registerEventHandlers(new SoundEffectsChatProcessor());
+        eventManager.registerEventHandlers(instantBedProcessor);
+        eventManager.registerEventHandlers(partyAutoRemoveOfflineProcessor);
+        eventManager.registerEventHandlers(userInterface);
     }
 
-    public static void initCloudConfig(Path path) {
-        _configKeyPath = path;
+    private static void initConfig() {
+        for (int i = 0; i < 5; i++) {
+            try {
+                configHelper = new ConfigHelper();
+                break;
+            } catch (BufferUnderflowException e) {
+                if (i == 4)
+                    throw e;
+                System.out.println("###################################################################");
+                System.out.println("###################################################################");
+                System.out.println("###################################################################");
+                System.out.println("###################################################################");
+                System.out.println("###################################################################");
+                System.out.println("###################################################################");
+                System.out.println("###################################################################");
+                System.out.println("###################################################################");
+                System.out.println("###################################################################");
+                System.out.println("###################################################################");
+                System.out.println("###################################################################");
+                System.out.println("###################################################################");
+                System.out.println("");
+                System.out.println("");
+                System.out.println("");
+                System.out.println("");
+                System.out.println("");
+                System.out.println("");
+                System.out.println("");
+                System.out.println("BufferUnderflowException when loading config. Retrying! (This is a workaround and not a proper fix! I will fix it in the future!)"); // TODO: Fix this!
+                continue;
+            }
+        }
+    }
 
+    public static void initCloudConfig(Path path) throws CloudConfigServerGateway.CloudConfigServerException {
+        _configKeyPath = path;
         UUID configKey = HypixelUtilsCore.getSavedConfigKey();
         if(configKey == null) {
             configKey = UUID.randomUUID();
             HypixelUtilsCore.setSavedConfigKey(configKey);
         }
+        cloudConfigServerGateway = new CloudConfigServerGateway(getSavedConfigKey());
+        internalConfig = new ConfigManager(new ConfigStore(cloudConfigServerGateway.getConfigMapFromServerSync()));
+        initConfig();
     }
 }

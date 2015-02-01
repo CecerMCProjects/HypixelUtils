@@ -1,8 +1,8 @@
 package com.cecer1.hypixelutils.features.ragequit;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
-import com.cecer1.modframework.common.commands.AbstractedCommand;
-import com.cecer1.modframework.common.utils.ChatUtilities;
+import com.cecer1.hypixelutils.clientcommands.AbstractedCommand;
+import com.cecer1.hypixelutils.utils.ChatUtilities;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;

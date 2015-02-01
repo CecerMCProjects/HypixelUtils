@@ -1,7 +1,9 @@
 package com.cecer1.hypixelutils.features.boosters;
 
-import com.cecer1.modframework.common.events.IOnChatEventHandler;
-import com.cecer1.modframework.common.utils.ChatUtilities;
+import com.cecer1.hypixelutils.events.eventdata.IEventData;
+import com.cecer1.hypixelutils.events.eventdata.OnChatEventData;
+import com.cecer1.hypixelutils.events.handlers.IOnChatEventHandler;
+import com.cecer1.hypixelutils.utils.ChatUtilities;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IChatComponent;
 
@@ -15,26 +17,32 @@ public class BoosterQueueChatModifier implements IOnChatEventHandler
         latestQueue = null;
         _queue = new BoosterQueue();
     }
-
+    
     @Override
-    public void onChat(IOnChatEventData event) {
-        if(!_queue.tryParseChat(event.getMessage())) {
+    public void onEvent(IEventData data) {
+        if(data instanceof OnChatEventData)
+            onEvent((OnChatEventData)data);
+    }
+    
+    @Override
+    public void onEvent(OnChatEventData data) {
+        if(!_queue.tryParseChat(data.getMessage())) {
             return;
         }
-        event.setCanceled(true);
-        
+        data.setCanceled(true);
+
         if(_queue.state == BoosterQueue.BoosterQueueParseProgress.Done) {
             latestQueue = _queue;
             _queue.printToChat();
             _queue = new BoosterQueue();
         }
     }
-
+    
     private IChatComponent[] _hoverEventChatComponents = new IChatComponent[] {
-            new ChatComponentText("Click to ").setChatStyle(ChatUtilities.ChatPresets.YELLOW),
-            new ChatComponentText("tip").setChatStyle(ChatUtilities.ChatPresets.GREEN),
-            new ChatComponentText(" and ").setChatStyle(ChatUtilities.ChatPresets.YELLOW),
-            new ChatComponentText("thank ").setChatStyle(ChatUtilities.ChatPresets.AQUA),
-            new ChatComponentText(" for their booster!").setChatStyle(ChatUtilities.ChatPresets.YELLOW)
+            ChatUtilities.QuickFormatting.yellow(new ChatComponentText("Click to ")),
+            ChatUtilities.QuickFormatting.green(new ChatComponentText("tip")),
+            ChatUtilities.QuickFormatting.yellow(new ChatComponentText(" and ")),
+            ChatUtilities.QuickFormatting.aqua(new ChatComponentText("thank ")),
+            ChatUtilities.QuickFormatting.yellow(new ChatComponentText(" for their booster!"))
     };
 }

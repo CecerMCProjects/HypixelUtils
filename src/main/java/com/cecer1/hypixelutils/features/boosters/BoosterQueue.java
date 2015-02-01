@@ -1,23 +1,26 @@
 package com.cecer1.hypixelutils.features.boosters;
 
-import com.cecer1.modframework.common.utils.ChatUtilities;
+import com.cecer1.hypixelutils.utils.ChatUtilities;
+import net.minecraft.event.ClickEvent;
+import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.cecer1.hypixelutils.utils.ChatUtilities.QuickFormatting.*;
 
 public class BoosterQueue {
     public BoosterQueueParseProgress state = BoosterQueueParseProgress.None;
     
     private Map<String,BoosterQueueEntry> _entries = new HashMap<String, BoosterQueueEntry>();
-    private static final Pattern _pattern = Pattern.compile("^(\\S+) of Triple Coins from (.*)$");
+    private static final Pattern _startPattern = Pattern.compile("^Triple Coins from (.*)$");
+    private static final Pattern _endPattern = Pattern.compile("^([A-Za-z_]{1,16}) and (\\d+) more$");
     
-    public boolean tryParseChat(IChatComponent component) {
+    public boolean  tryParseChat(IChatComponent component) {
         if(state == BoosterQueueParseProgress.Done) {
             return false;
         }
@@ -68,81 +71,124 @@ public class BoosterQueue {
         if(variableComponent.getChatStyle().getColor() != EnumChatFormatting.GREEN)
             return false;
 
-        Matcher m = _pattern.matcher(variableComponent.getUnformattedText());
+        Matcher m = _startPattern.matcher(variableComponent.getUnformattedText());
         if(!m.matches()) {
             if(variableComponent.getUnformattedText().equals("No Triple Coins Boosters queued")) {
-                _entries.put(rootComponent.getUnformattedText(), new BoosterQueueEntry("", new String[0]));
+                _entries.put(rootComponent.getUnformattedText(), new BoosterQueueEntry(new String[0], 0));
                 return true;
             }
             return false;
         }
         
-        String[] names = m.group(2).split(", ");
-        _entries.put(rootComponent.getUnformattedText(), new BoosterQueueEntry(m.group(1), names));
+        String[] names = m.group(1).split(", ");
+        String lastName = names[names.length-1];
+        
+        m = _endPattern.matcher(lastName); // If it contains " and ### more"
+        int more = 0;
+        if(m.matches()) { // Then remove it and store it elsewhere.
+            more = Integer.parseInt(m.group(2));
+            names[names.length-1] = m.group(1);
+        }
+        _entries.put(rootComponent.getUnformattedText(), new BoosterQueueEntry(names, more));
         return true;
     }
-    
-    private static final IChatComponent[] staticOutputComponents = new IChatComponent[] {
-            new ChatComponentText("-----------------------------------------------------").setChatStyle(ChatUtilities.ChatPresets.WHITE),
-            new ChatComponentText("                          ").setChatStyle(ChatUtilities.ChatPresets.WHITE).appendSibling(new ChatComponentText("Network Booster Queue").setChatStyle(ChatUtilities.ChatPresets.AQUA)),
-            new ChatComponentText("").setChatStyle(ChatUtilities.ChatPresets.WHITE),
-            new ChatComponentText(", ").setChatStyle(ChatUtilities.ChatPresets.GRAY),
-            new ChatComponentText(" and ").setChatStyle(ChatUtilities.ChatPresets.GRAY)
+    private static final IChatComponent[] staticOutputComponents = new IChatComponent[]{
+            white(new ChatComponentText("-----------------------------------------------------")),
+            aqua(new ChatComponentText("                          Network Booster Queue")),
+            white(new ChatComponentText("")),
+            gray(new ChatComponentText(", ")),
+            gray(new ChatComponentText(" and ")),
+            gray(new ChatComponentText(".")),
+            new ChatComponentText("                        ")
     };
-    private static IChatComponent getBoosterQueueLineComponent(String game, String time, String[] names) {
+    static {
+        IChatComponent buttonChatComponent = white(new ChatComponentText(""));
+        buttonChatComponent
+                .getChatStyle()
+                .setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/tipandthank all"))
+                .setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+                        new ChatComponentText("")
+                                .appendSibling(yellow(new ChatComponentText("Click to ")))
+                                .appendSibling(green(new ChatComponentText("tip")))
+                                .appendSibling(yellow(new ChatComponentText(" and ")))
+                                .appendSibling(aqua(new ChatComponentText("thank ")))
+                                .appendSibling(gold(new ChatComponentText("EVERYONE")))
+                                .appendSibling(yellow(new ChatComponentText(" for their booster!")))));
+        buttonChatComponent.appendSibling(new ChatComponentText("["));
+        buttonChatComponent.appendSibling(gold(new ChatComponentText("Tip and Thank Everyone")));
+        buttonChatComponent.appendSibling(new ChatComponentText("]"));
+        staticOutputComponents[6].appendSibling(buttonChatComponent);
+    }
+    
+    private static IChatComponent getBoosterQueueLineComponent(String game, String[] names, int more) {
         if(names.length == 0) {
-            return new ChatComponentText(game).setChatStyle(ChatUtilities.ChatPresets.RED)
-                    .appendSibling(new ChatComponentText(": No Network Boosters queued.").setChatStyle(ChatUtilities.ChatPresets.GRAY));
+            return new ChatComponentText("")
+                    .appendSibling(red(new ChatComponentText(game)))
+                    .appendSibling(gray(new ChatComponentText(": No Network Boosters queued.")));
         }
         
-        IChatComponent component = new ChatComponentText(game + " (" + time + ")").setChatStyle(ChatUtilities.ChatPresets.GREEN.createShallowCopy().setParentStyle(TipAndThankChatModifier.getClickableTipAndThankChatStyle(names[0])));
-        component.appendSibling(new ChatComponentText(": ").setChatStyle(ChatUtilities.ChatPresets.GRAY));
-        component.appendSibling(new ChatComponentText(names[0]).setChatStyle(ChatUtilities.ChatPresets.GOLD));
+        IChatComponent component = new ChatComponentText("")
+                .setChatStyle(TipAndThankChatModifier.getClickableTipAndThankChatStyle(names[0]))
+                .appendSibling(green(new ChatComponentText(game)))
+                .appendSibling(gray(new ChatComponentText(": ")))
+                .appendSibling(gold(new ChatComponentText(names[0])));
+        
         
         if(names.length > 1) {
-            if(names.length <= 24) {
+            if(more == 0) {
                 for (int i = 1; i < names.length - 1; i++) {
                     component.appendSibling(staticOutputComponents[3]);
-                    component.appendSibling(new ChatComponentText(names[i]).setChatStyle(ChatUtilities.ChatPresets.WHITE));
+                    component.appendSibling(white(new ChatComponentText(names[i])));
                 }
                 component.appendSibling(staticOutputComponents[4]);
-                component.appendSibling(new ChatComponentText(names[names.length - 1]).setChatStyle(ChatUtilities.ChatPresets.WHITE));
+                component.appendSibling(white(new ChatComponentText(names[names.length - 1])));
             } else {
-                for (int i = 1; i < 24; i++) {
+                for (int i = 1; i < names.length; i++) {
                     component.appendSibling(staticOutputComponents[3]);
-                    component.appendSibling(new ChatComponentText(names[i]).setChatStyle(ChatUtilities.ChatPresets.WHITE));
+                    component.appendSibling(white(new ChatComponentText(names[i])));
                 }
-                component.appendSibling(new ChatComponentText(" and ").setChatStyle(ChatUtilities.ChatPresets.GRAY));
-                component.appendSibling(new ChatComponentText((names.length-24) + " others").setChatStyle(ChatUtilities.ChatPresets.WHITE));
-                component.appendSibling(new ChatComponentText(".").setChatStyle(ChatUtilities.ChatPresets.GRAY));
+                component.appendSibling(staticOutputComponents[4]);
+                component.appendSibling(white(new ChatComponentText(more + " others")));
+                component.appendSibling(staticOutputComponents[5]);
             }
         }
         return component;
     }
     public void printToChat() {
-        ChatUtilities.printChatComponent(staticOutputComponents[0]);
-        ChatUtilities.printChatComponent(staticOutputComponents[1]);
-        ChatUtilities.printChatComponent(staticOutputComponents[2]);
+        ChatUtilities.printRawChatComponent(staticOutputComponents[0]); // "-----------------------------------------------------"
+        ChatUtilities.printRawChatComponent(staticOutputComponents[1]); // "                          Network Booster Queue"
+        ChatUtilities.printRawChatComponent(staticOutputComponents[2]); // ""
         
         for(String game : _entries.keySet()) {
             BoosterQueueEntry entry = _entries.get(game);
-            ChatUtilities.printChatComponent(getBoosterQueueLineComponent(game, entry.time, entry.names));
+            ChatUtilities.printRawChatComponent(getBoosterQueueLineComponent(game, entry.names, entry.more));
         }
-        ChatUtilities.printChatComponent(staticOutputComponents[0]);
+        //ChatUtilities.printRawChatComponent(staticOutputComponents[6]); // "                        [Tip and Thank Everyone]"
+        ChatUtilities.printRawChatComponent(staticOutputComponents[0]); // "-----------------------------------------------------"
+    }
+    
+    public String[] getActiveBoosterPlayerName() {
+        Set<String> playerNames = new HashSet<String>(_entries.size());
+        for (BoosterQueueEntry entry : _entries.values()) {
+            if(entry.names.length > 0) {
+                playerNames.add(entry.names[0]);
+            }
+        }
+        String[] returnArray = new String[playerNames.size()];
+        return playerNames.toArray(returnArray);
     }
 
     private class BoosterQueueEntry {
-        public final String time;
         public final String[] names;
-        
-        public BoosterQueueEntry(String time, String[] names) {
-            this.time = time;
+        public final int more;
+
+        public BoosterQueueEntry(String[] names, int more) {
             this.names = names;
+            this.more = more;
         }
     }
 
     public enum BoosterQueueParseProgress {
         HeaderBar, HeaderTitle, HeaderSpacer, FooterBar, Done, None
-
     }
 }

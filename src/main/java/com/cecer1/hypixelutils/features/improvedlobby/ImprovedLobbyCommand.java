@@ -1,13 +1,9 @@
 package com.cecer1.hypixelutils.features.improvedlobby;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
-import com.cecer1.modframework.common.commands.AbstractedCommand;
+import com.cecer1.hypixelutils.clientcommands.AbstractedCommand;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.BlockPos;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ImprovedLobbyCommand extends AbstractedCommand {
 
@@ -41,23 +37,6 @@ public class ImprovedLobbyCommand extends AbstractedCommand {
         if(!HypixelUtilsCore.currentState.isConnected())
             return false;
         return true;
-    }
-
-    @Override
-    public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos)
-    {
-        List<String> results = new ArrayList<String>();
-        if(args.length == 1)
-        {
-            for(String lobbyType : HypixelUtilsCore.config.getLobbyTypes())
-            {
-                if(lobbyType.startsWith(args[0]))
-                    results.add(lobbyType);
-            }
-        }
-        if(results.isEmpty())
-            return null;
-        return results;
     }
 
     @Override

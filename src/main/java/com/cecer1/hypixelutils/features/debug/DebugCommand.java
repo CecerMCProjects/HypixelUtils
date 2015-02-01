@@ -1,8 +1,7 @@
 package com.cecer1.hypixelutils.features.debug;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
-import com.cecer1.hypixelutils.chat.ChatOutputs;
-import com.cecer1.modframework.common.commands.AbstractedCommand;
+import com.cecer1.hypixelutils.clientcommands.AbstractedCommand;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 
@@ -15,15 +14,13 @@ public class DebugCommand extends AbstractedCommand {
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
-        if(HypixelUtilsCore.config.isDebugModeEnabled())
+        if(HypixelUtilsCore.configHelper.debugModeEnabled.getValue(false))
         {
-            ChatOutputs.printDebugDebugModeEnabledStatus(false);
-            HypixelUtilsCore.config.setDebugModeEnabled(false);
+            HypixelUtilsCore.configHelper.debugModeEnabled.setValue(false);
         }
         else
         {
-            ChatOutputs.printDebugDebugModeEnabledStatus(true);
-            HypixelUtilsCore.config.setDebugModeEnabled(true);
+            HypixelUtilsCore.configHelper.debugModeEnabled.setValue(true);
         }
     }
 

@@ -1,7 +1,7 @@
 package com.cecer1.hypixelutils.features.filterguildchat;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
-import com.cecer1.modframework.common.commands.AbstractedCommand;
+import com.cecer1.hypixelutils.clientcommands.AbstractedCommand;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 
@@ -14,19 +14,13 @@ public class FilterGuildChatCommand extends AbstractedCommand {
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
-        if(HypixelUtilsCore.config.isFilterGuildChatEnabled())
+        if(HypixelUtilsCore.configHelper.filterGuildChatEnabled.getValue(false))
         {
-            HypixelUtilsCore.config.setFilterGuildChatEnabled(false);
-
-            // ChatOutput disabled because the GUI does it for us.
-            // ChatOutputs.printFilterGuildChatEnabledStatus(false);
+            HypixelUtilsCore.configHelper.filterGuildChatEnabled.setValue(false);
         }
         else
         {
-            HypixelUtilsCore.config.setFilterGuildChatEnabled(true);
-
-            // ChatOutput disabled because the GUI does it for us.
-            // ChatOutputs.printFilterGuildChatEnabledStatus(true);
+            HypixelUtilsCore.configHelper.filterGuildChatEnabled.setValue(true);
         }
     }
 

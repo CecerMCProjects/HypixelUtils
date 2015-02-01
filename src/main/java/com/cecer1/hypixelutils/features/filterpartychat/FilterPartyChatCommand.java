@@ -1,7 +1,7 @@
 package com.cecer1.hypixelutils.features.filterpartychat;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
-import com.cecer1.modframework.common.commands.AbstractedCommand;
+import com.cecer1.hypixelutils.clientcommands.AbstractedCommand;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 
@@ -14,19 +14,13 @@ public class FilterPartyChatCommand extends AbstractedCommand {
     @Override
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
-        if(HypixelUtilsCore.config.isFilterPartyChatEnabled())
+        if(HypixelUtilsCore.configHelper.filterPartyChatEnabled.getValue(false))
         {
-            HypixelUtilsCore.config.setFilterPartyChatEnabled(false);
-
-            // ChatOutput disabled because the GUI does it for us.
-            // ChatOutputs.printFilterPartyChatEnabledStatus(false);
+            HypixelUtilsCore.configHelper.filterPartyChatEnabled.setValue(false);
         }
         else
         {
-            HypixelUtilsCore.config.setFilterPartyChatEnabled(true);
-
-            // ChatOutput disabled because the GUI does it for us.
-            // ChatOutputs.printFilterPartyChatEnabledStatus(true);
+            HypixelUtilsCore.configHelper.filterPartyChatEnabled.setValue(true);
         }
     }
 
