@@ -31,6 +31,8 @@ public class SimpleCheckbox extends SizableComponent implements IOnConfigUpdated
 
         _dataSource = dataSource;
         
+        this.setClickThrough(false);
+        
         final SimpleCheckbox checkbox;
 
         _outerRect = new RectangleComponent(this);

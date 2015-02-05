@@ -22,6 +22,8 @@ public class LabeledCheckbox extends SizableComponent {
     public LabeledCheckbox(ComponentParent parent, DataSourceValue<Boolean> dataSource) {
         super(parent);
         
+        this.setClickThrough(false);
+        
         _checkbox = new SimpleCheckbox(this, dataSource);
         _checkbox.setVisible(true);
         
