@@ -44,7 +44,7 @@ import java.util.UUID;
 
 public class HypixelUtilsCore {
     public static final String MODID = "hypixelutils";
-    public static final String VERSION = "1.2.3";
+    public static final String VERSION = "1.2.4";
     public static final String CONFIG_SERVER = "http://www.cecer1.com/hypixelutils/cloudconfig";
     //public static final String CONFIG_SERVER = "http://hypixelutils.cecer1.com:8014";
     //public static final String CONFIG_SERVER = "http://localhost:8014";
@@ -70,6 +70,10 @@ public class HypixelUtilsCore {
     public static PartyAutoRemoveProcessor partyAutoRemoveOfflineProcessor;
     public static TipAndThankChatModifier tipAndThankChatModifier;
     public static BoosterQueueChatModifier boosterQueueChatModifier;
+    
+    public static ChatPrinterProcessor debugChatPrintProcess = new ChatPrinterProcessor();
+    public static HandleServerJoinInit serverJoinInitHandler = new HandleServerJoinInit();
+    public static SoundEffectsChatProcessor soundEffectsChatProcessor = new SoundEffectsChatProcessor();
 
     public static ICommandRegister commandRegister;
     public static HypixelUtilsGuiManager userInterface;
@@ -188,7 +192,7 @@ public class HypixelUtilsCore {
         commandRegister.registerCommand(new LicenseCommand("hypixelutils:license"));
         commandRegister.registerCommand(new LicenseCommand("hypixelutils:credits"));
     }
-
+    
     private static void registerEvents() {
         eventManager.registerEventHandlers(scheduler);
         eventManager.registerEventHandlers(currentState);
@@ -200,13 +204,13 @@ public class HypixelUtilsCore {
         eventManager.registerEventHandlers(boosterQueueChatModifier);
         eventManager.registerEventHandlers(tipAndThankChatModifier);
         eventManager.registerEventHandlers(bypassLobbyCommandProtectionProcessor);
-        eventManager.registerEventHandlers(new ChatPrinterProcessor());
+        eventManager.registerEventHandlers(debugChatPrintProcess);
         eventManager.registerEventHandlers(debugProcessor);
         eventManager.registerEventHandlers(filterGuildChatProcessor);
         eventManager.registerEventHandlers(filterPartyChatProcessor);
-        eventManager.registerEventHandlers(new HandleServerJoinInit());
+        eventManager.registerEventHandlers(serverJoinInitHandler);
         eventManager.registerEventHandlers(improvedLobbyCommandProcessor);
-        eventManager.registerEventHandlers(new SoundEffectsChatProcessor());
+        eventManager.registerEventHandlers(soundEffectsChatProcessor);
         eventManager.registerEventHandlers(instantBedProcessor);
         eventManager.registerEventHandlers(partyAutoRemoveOfflineProcessor);
         eventManager.registerEventHandlers(userInterface);
