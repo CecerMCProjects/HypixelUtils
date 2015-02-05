@@ -68,29 +68,27 @@ public class BoosterQueue {
             return false;
         
         IChatComponent variableComponent = (IChatComponent) siblings.get(1);
-        if(variableComponent.getChatStyle().getColor() != EnumChatFormatting.GREEN)
-            return false;
-
         Matcher m = _startPattern.matcher(variableComponent.getUnformattedText());
-        if(!m.matches()) {
+        if(variableComponent.getChatStyle().getColor() == EnumChatFormatting.RED) {
             if(variableComponent.getUnformattedText().equals("No Triple Coins Boosters queued")) {
                 _entries.put(rootComponent.getUnformattedText(), new BoosterQueueEntry(new String[0], 0));
                 return true;
             }
             return false;
+        } else if(variableComponent.getChatStyle().getColor() == EnumChatFormatting.GREEN && m.matches()) {
+            String[] names = m.group(1).split(", ");
+            String lastName = names[names.length - 1];
+
+            m = _endPattern.matcher(lastName); // If it contains " and ### more"
+            int more = 0;
+            if (m.matches()) { // Then remove it and store it elsewhere.
+                more = Integer.parseInt(m.group(2));
+                names[names.length - 1] = m.group(1);
+            }
+            _entries.put(rootComponent.getUnformattedText(), new BoosterQueueEntry(names, more));
+            return true;
         }
-        
-        String[] names = m.group(1).split(", ");
-        String lastName = names[names.length-1];
-        
-        m = _endPattern.matcher(lastName); // If it contains " and ### more"
-        int more = 0;
-        if(m.matches()) { // Then remove it and store it elsewhere.
-            more = Integer.parseInt(m.group(2));
-            names[names.length-1] = m.group(1);
-        }
-        _entries.put(rootComponent.getUnformattedText(), new BoosterQueueEntry(names, more));
-        return true;
+        return false;
     }
     private static final IChatComponent[] staticOutputComponents = new IChatComponent[]{
             white(new ChatComponentText("-----------------------------------------------------")),
