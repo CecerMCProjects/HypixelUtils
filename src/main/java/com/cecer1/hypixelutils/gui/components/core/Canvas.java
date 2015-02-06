@@ -73,20 +73,32 @@ public class Canvas extends ComponentParent {
         return _children;
     }
 
+    private boolean _anyRendered = false;
     @Override
     public void render(int mouseX, int mouseY) {
         if(isVisible()) {
-            boolean anyRendered = false;
             for (BaseComponent component : getChildren()) {
                 if(component.isVisible()) {
                     component.render(mouseX, mouseY);
-                    anyRendered = true;
+                    _anyRendered = true;
                 }
             }
-            if(!anyRendered)
+        }
+    }
+
+    @Override
+    public void postRender(int mouseX, int mouseY) {
+        if(isVisible()) {
+            for (BaseComponent component : getChildren()) {
+                if(component.isVisible()) {
+                    component.postRender(mouseX, mouseY);
+                }
+            }
+            if(!_anyRendered)
                 HypixelUtilsCore.userInterface.setVisible(false);
         }
     }
+
     public static BaseComponent getTopComponent(ComponentParent component, int x, int y, boolean restrictToParentBounds, boolean respectClickThrough) {
         Stack<BaseComponent> hitStack = getComponentsAt(component, x, y, restrictToParentBounds);
 

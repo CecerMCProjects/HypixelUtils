@@ -67,6 +67,17 @@ public class SimpleCheckbox extends SizableComponent implements IOnConfigUpdated
         toggleChecked();
     }
 
+    @Override
+    public void onHoverStatusChanged(int x, int y, boolean newStatus) {
+        super.onHoverStatusChanged(x, y, newStatus);
+        
+        if(newStatus) {
+            _innerRect.setColour(0xB0, 0xB0, 0xB0, 0xFF);
+        } else {
+            _innerRect.setColour(0xFF, 0xFF, 0xFF, 0xFF);
+        }
+    }
+
 
     @Override
     public void onEvent(IEventData data) {

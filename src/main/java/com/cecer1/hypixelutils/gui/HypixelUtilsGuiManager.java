@@ -51,7 +51,7 @@ public class HypixelUtilsGuiManager extends GuiScreen implements IOnRenderEventH
     @Override
     public void onEvent(OnRenderEventData data) {
         if(data.isIngame() && _permCanvas.isVisible()) {
-            _screenCanvas.render(Integer.MIN_VALUE, Integer.MIN_VALUE);
+            _permCanvas.render(Integer.MIN_VALUE, Integer.MIN_VALUE);
         }
     }
 
@@ -61,13 +61,13 @@ public class HypixelUtilsGuiManager extends GuiScreen implements IOnRenderEventH
 
         List<BaseComponent> components = Lists.reverse(Canvas.getComponentsAt(_screenCanvas, mouseX, mouseY, false));
         for(BaseComponent component : components) {
-            if(component.hoverText != null) {
-                drawHoveringText(component.hoverText, mouseX, mouseY);
-            }
+            component.onHover(mouseX, mouseY);
             if(!component.isClickThrough()) {
-                return;
+                break;
             }
         }
+        
+        _screenCanvas.postRender(mouseX, mouseY);
     }
 
     @Override
@@ -120,5 +120,9 @@ public class HypixelUtilsGuiManager extends GuiScreen implements IOnRenderEventH
                 setVisible(visible);
             }
         }, 1);
+    }
+
+    public void drawHoverText(List<String> hoverText, int x, int y) {
+        this.drawHoveringText(hoverText, x, y);
     }
 }

@@ -35,8 +35,9 @@ public abstract class ComponentParent {
     
     public abstract int getWidth();
     public abstract int getHeight();
-    
+
     public abstract void render(int mouseX, int mouseY);
+    public abstract void postRender(int mouseX, int mouseY);
     
     public abstract ComponentParent getParent();
     public List<BaseComponent> getChildren() {

@@ -1,5 +1,7 @@
 package com.cecer1.hypixelutils.gui.components.core;
 
+import com.cecer1.hypixelutils.HypixelUtilsCore;
+
 import java.util.List;
 
 public abstract class BaseComponent extends ComponentParent {
@@ -97,6 +99,8 @@ public abstract class BaseComponent extends ComponentParent {
 
     @Override
     public void render(int mouseX, int mouseY) {
+        _currentHoverStatus = false;
+        
         if(_cursorLocked) {
             if(_cursorOffsetX == Integer.MIN_VALUE) {
                 _cursorOffsetX = getAbsoluteX() - mouseX;
@@ -109,6 +113,18 @@ public abstract class BaseComponent extends ComponentParent {
         for(BaseComponent component : getChildren()) {
             if(component.isVisible())
                 component.render(mouseX, mouseY);
+        }
+    }
+    @Override
+    public void postRender(int mouseX, int mouseY) {
+        if(_currentHoverStatus != _lastHoverStatus) {
+            onHoverStatusChanged(mouseX, mouseY, _currentHoverStatus);
+            _lastHoverStatus = _currentHoverStatus;
+        }
+
+        for(BaseComponent component : getChildren()) {
+            if(component.isVisible())
+                component.postRender(mouseX, mouseY);
         }
     }
     
@@ -130,8 +146,20 @@ public abstract class BaseComponent extends ComponentParent {
         if(component != null)
             component.onMouseDown(x, y);
     }
-    
+
     public void onMouseUp(int x, int y) {
+    }
+
+    private boolean _currentHoverStatus = false;
+    private boolean _lastHoverStatus = false;
+    public void onHover(int x, int y) {
+        if(this.hoverText != null) {
+            HypixelUtilsCore.userInterface.drawHoverText(this.hoverText, x, y);
+        }
+        _currentHoverStatus = true;
+    }
+    public void onHoverStatusChanged(int x, int y, boolean newStatus) {
+        System.out.println("Ignore Me!");
     }
     
     private boolean _clickThrough;

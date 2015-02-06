@@ -40,6 +40,12 @@ public class LabeledCheckbox extends SizableComponent {
     }
 
     @Override
+    public void onHoverStatusChanged(int x, int y, boolean newStatus) {
+        super.onHoverStatusChanged(x, y, newStatus);
+        _checkbox.onHoverStatusChanged(x, y, newStatus);
+    }
+
+    @Override
     public void setSize(int width, int height) {
         super.setSize(width, height);
         
