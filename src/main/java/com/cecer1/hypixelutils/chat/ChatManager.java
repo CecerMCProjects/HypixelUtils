@@ -17,26 +17,26 @@ import static com.cecer1.hypixelutils.utils.ChatUtilities.QuickFormatting.*;
 
 public class ChatManager implements IOnChatEventHandler {
     
-    private boolean _guildType = false; // Aqua
-    private boolean _partyType = false; // Gold
-    private boolean _questType = false; // Green
+    private boolean _guildMode = false; // Aqua
+    private boolean _partyMode = false; // Gold
+    private boolean _questMode = false; // Green
     private boolean _friendMode = false; // Blue
     private boolean _boosterMode = false; /// White
     // ??? // Yellow
 
-    public boolean isGuildTypeActive() {
-        return _guildType;
+    public boolean isGuildModeActive() {
+        return _guildMode;
     }
-    public boolean isPartyTypeActive() {
-        return _partyType;
+    public boolean isPartyModeActive() {
+        return _partyMode;
     }
-    public boolean isQuestTypeActive() {
-        return _questType;
+    public boolean isQuestModeActive() {
+        return _questMode;
     }
-    public boolean isFriendTypeActive() {
+    public boolean isFriendModeActive() {
         return _friendMode;
     }
-    public boolean isBoosterTypeActive() {
+    public boolean isBoosterModeActive() {
         return _boosterMode;
     }
 
@@ -59,15 +59,15 @@ public class ChatManager implements IOnChatEventHandler {
             } else {
                 if(event.getMessage().getUnformattedText().equals("-----------------------------------------------------")) {
                     if(event.getMessage().getChatStyle().getColor() == EnumChatFormatting.AQUA) {
-                        _guildType = !_guildType;
+                        _guildMode = !_guildMode;
                     }
 
                     if(event.getMessage().getChatStyle().getColor() == EnumChatFormatting.GOLD) {
-                        _partyType = !_partyType;
+                        _partyMode = !_partyMode;
                     }
 
                     if(event.getMessage().getChatStyle().getColor() == EnumChatFormatting.GREEN) {
-                        _questType = !_questType;
+                        _questMode = !_questMode;
                     }
 
                     if(event.getMessage().getChatStyle().getColor() == EnumChatFormatting.BLUE) {

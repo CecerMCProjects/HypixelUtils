@@ -74,7 +74,7 @@ RightCentre		Done	NI		Done	NI
 RightBottom		Done	NI		Done	NI
      */
     @Override
-    public void render(int mouseX, int mouseY) {
+    public void render(int mouseX, int mouseY, boolean hasFocus) {
         if(_halign == HorizontalTextAlignment.LEFT) {
             if(_valign == VerticalTextAlignment.TOP) {
                 if(_overflow == TextOverflowMode.TRIM) {
@@ -278,7 +278,7 @@ RightBottom		Done	NI		Done	NI
             }
         }
         
-        super.render(mouseX, mouseY);
+        super.render(mouseX, mouseY, hasFocus);
     }
 
     public void setColour(int argb) {

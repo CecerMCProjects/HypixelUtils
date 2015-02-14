@@ -17,7 +17,7 @@ public class LicenseCommand extends AbstractedCommand {
         HypixelUtilsCore.userInterface.unirestLicenseWindow.setVisible(true);
         HypixelUtilsCore.userInterface.hypixelUtilsLicenseWindow.setVisible(true);
 
-        HypixelUtilsCore.userInterface.setVisibleDelayed(true);
+        HypixelUtilsCore.userInterface.setFocusedDelayed(true);
     }
 
     @Override

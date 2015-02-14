@@ -15,7 +15,7 @@ public class ConfigGuiCommand extends AbstractedCommand {
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         HypixelUtilsCore.userInterface.configWindow.setVisible(true);
-        HypixelUtilsCore.userInterface.setVisibleDelayed(true);
+        HypixelUtilsCore.userInterface.setFocusedDelayed(true);
     }
     
     @Override

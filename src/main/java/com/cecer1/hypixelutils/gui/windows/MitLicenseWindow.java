@@ -30,7 +30,7 @@ public class MitLicenseWindow extends Window {
         _line2.setColour(0xFF, 0xFF, 0xFF, 0xFF);
         _line2.setOffset(3, TextLabelComponent.getFontHeight() + 15);
         _line2.setVisible(true);
-        
+
         String[] lines = new String[] {
                 "--- --- --- --- --- --- ",
                 "",

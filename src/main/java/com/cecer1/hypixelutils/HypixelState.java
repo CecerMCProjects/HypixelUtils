@@ -8,7 +8,7 @@ import com.cecer1.hypixelutils.backgroundcommands.callbacks.IHypixelCommandCallb
 import com.cecer1.hypixelutils.backgroundcommands.callbacks.IHypixelCommandCallbackWtfmap;
 import com.cecer1.hypixelutils.events.eventdata.IEventData;
 import com.cecer1.hypixelutils.events.eventdata.OnBungeeServerChangeEventData;
-import com.cecer1.hypixelutils.events.eventdata.OnConnectEventData;
+import com.cecer1.hypixelutils.events.eventdata.OnJoinGameEventData;
 import com.cecer1.hypixelutils.events.eventdata.OnHypixelStateUpdatedEventData;
 import com.cecer1.hypixelutils.events.handlers.IOnBungeeServerChangeEventHandler;
 import com.cecer1.hypixelutils.events.handlers.IOnConnectEventHandler;
@@ -131,8 +131,8 @@ public class HypixelState implements IOnBungeeServerChangeEventHandler, IOnConne
     public void onEvent(IEventData data) {
         if(data instanceof OnBungeeServerChangeEventData)
             onEvent((OnBungeeServerChangeEventData)data);
-        if(data instanceof OnConnectEventData)
-            onEvent((OnConnectEventData)data);
+        if(data instanceof OnJoinGameEventData)
+            onEvent((OnJoinGameEventData)data);
     }
 
     @Override
@@ -142,7 +142,7 @@ public class HypixelState implements IOnBungeeServerChangeEventHandler, IOnConne
     }
 
     @Override
-    public void onEvent(OnConnectEventData data) {
+    public void onEvent(OnJoinGameEventData data) {
         if(isConnected()) {
             updateProxyName();
             updateServerName();

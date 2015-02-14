@@ -36,15 +36,15 @@ public class SimpleCheckbox extends SizableComponent implements IOnConfigUpdated
         final SimpleCheckbox checkbox;
 
         _outerRect = new RectangleComponent(this);
+        _outerRect.setVisible(true);
         _outerRect.setClickThrough(true);
         _outerRect.setColour(0x00, 0x00, 0x00, 0xFF);
-        _outerRect.setVisible(true);
 
         _innerRect = new RectangleComponent(this);
+        _innerRect.setVisible(true);
         _innerRect.setClickThrough(true);
         _innerRect.setOffset(1, 1);
         _innerRect.setColour(0xFF, 0xFF, 0xFF, 0xFF);
-        _innerRect.setVisible(true);
 
         _fillRect = new RectangleComponent(this);
         _fillRect.setClickThrough(true);
@@ -77,7 +77,6 @@ public class SimpleCheckbox extends SizableComponent implements IOnConfigUpdated
             _innerRect.setColour(0xFF, 0xFF, 0xFF, 0xFF);
         }
     }
-
 
     @Override
     public void onEvent(IEventData data) {

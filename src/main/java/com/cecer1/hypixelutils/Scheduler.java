@@ -25,7 +25,7 @@ public class Scheduler implements IOnTickEventHandler
         _tasks.add(new Task(runnable, delayInTicks, true));
         return this;
     }
-    
+
     @Override
     public void onEvent(IEventData data) {
         if(data instanceof OnTickEventData)

@@ -2,11 +2,11 @@ package com.cecer1.hypixelutils.events.eventdata;
 
 import net.minecraft.client.multiplayer.ServerData;
 
-public class OnConnectEventData implements IEventData {
+public class OnJoinGameEventData implements IEventData {
     private ServerData _serverData;
     private boolean _canceled;
 
-    public OnConnectEventData(ServerData serverData) {
+    public OnJoinGameEventData(ServerData serverData) {
         _serverData = serverData;
     }
 

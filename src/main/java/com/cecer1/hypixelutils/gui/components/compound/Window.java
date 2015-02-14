@@ -1,5 +1,6 @@
 package com.cecer1.hypixelutils.gui.components.compound;
 
+import com.cecer1.hypixelutils.gui.CanRenderValue;
 import com.cecer1.hypixelutils.gui.components.core.*;
 
 public class Window extends SizableComponent {
@@ -10,6 +11,7 @@ public class Window extends SizableComponent {
 
     public Window(ComponentParent parent) {
         super(parent);
+        setCanRenderUnfocused(CanRenderValue.FALSE);
         
         final Window window = this;
 
@@ -50,10 +52,22 @@ public class Window extends SizableComponent {
                 w.setVisible(false);
                 super.onMouseUp(x, y);
             }
+
+            @Override
+            public void onHoverStatusChanged(int x, int y, boolean newStatus) {
+                super.onHoverStatusChanged(x, y, newStatus);
+
+                if(newStatus) {
+                    this.setColour(0xFF, 0x80, 0x80, 0xFF);
+                } else {
+                    this.setColour(0xB0, 0xB0, 0xB0, 0xFF);
+                }
+            }
         };
         _closeRect.setColour(0xE0, 0xE0, 0xE0, 0xFF);
         _closeRect.setSize(9, 9);
         _closeRect.setVisible(true);
+        _closeRect.setCanRenderUnfocused(CanRenderValue.FALSE);
     }
 
     @Override
@@ -63,7 +77,7 @@ public class Window extends SizableComponent {
     }
 
     @Override
-    public void render(int mouseX, int mouseY) {
+    public void render(int mouseX, int mouseY, boolean hasFocus) {
         ComponentParent parent = getParent();
         
         int newX = getRelativeX();
@@ -88,7 +102,8 @@ public class Window extends SizableComponent {
         if(needsMoving) {
             setOffset(newX, newY);
         }
-        super.render(mouseX, mouseY);
+
+        super.render(mouseX, mouseY, hasFocus);
     }
 
     public String getTitle() {

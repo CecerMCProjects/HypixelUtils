@@ -21,7 +21,7 @@ public class RectangleComponent extends SizableComponent {
     }
 
     @Override
-    public void render(int mouseX, int mouseY) {
+    public void render(int mouseX, int mouseY, boolean hasFocus) {
         int left = getAbsoluteX();
         int top = getAbsoluteY();
         
@@ -30,6 +30,6 @@ public class RectangleComponent extends SizableComponent {
         
         Gui.drawRect(left, top, right, bottom, getColour());
         
-        super.render(mouseX, mouseY);
+        super.render(mouseX, mouseY, hasFocus);
     }
 }

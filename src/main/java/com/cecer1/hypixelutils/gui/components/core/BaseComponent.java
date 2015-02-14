@@ -89,16 +89,7 @@ public abstract class BaseComponent extends ComponentParent {
     }
 
     @Override
-    public boolean isVisible() {
-        return _isVisible;
-    }
-    @Override
-    public void setVisible(boolean visible) {
-        _isVisible = visible;
-    }
-
-    @Override
-    public void render(int mouseX, int mouseY) {
+    public void render(int mouseX, int mouseY, boolean hasFocus) {
         _currentHoverStatus = false;
         
         if(_cursorLocked) {
@@ -109,22 +100,25 @@ public abstract class BaseComponent extends ComponentParent {
             
             setOffset(mouseX + _cursorOffsetX, mouseY + _cursorOffsetY);
         }
-        
-        for(BaseComponent component : getChildren()) {
-            if(component.isVisible())
-                component.render(mouseX, mouseY);
+
+        for (BaseComponent component : getChildren()) {
+            if (component.isRenderable(hasFocus))
+                component.render(mouseX, mouseY, hasFocus);
         }
     }
     @Override
-    public void postRender(int mouseX, int mouseY) {
+    public void postRender(int mouseX, int mouseY, boolean hasFocus) {
+        updateHoverStatus(mouseX, mouseY, _currentHoverStatus);
+
+        for (BaseComponent component : getChildren()) {
+            if (component.isRenderable(hasFocus))
+                component.postRender(mouseX, mouseY, hasFocus);
+        }
+    }
+    public void updateHoverStatus(int mouseX, int mouseY, boolean newStatus) {
         if(_currentHoverStatus != _lastHoverStatus) {
             onHoverStatusChanged(mouseX, mouseY, _currentHoverStatus);
             _lastHoverStatus = _currentHoverStatus;
-        }
-
-        for(BaseComponent component : getChildren()) {
-            if(component.isVisible())
-                component.postRender(mouseX, mouseY);
         }
     }
     
@@ -142,7 +136,7 @@ public abstract class BaseComponent extends ComponentParent {
     }
 
     public void onMouseDown(int x, int y) {
-        BaseComponent component = Canvas.getTopComponent(this, x, y, Canvas.RESTRICT_CLICKS_TO_PARENT_BOUNDS, true);
+        BaseComponent component = Canvas.getTopComponent(this, x, y, Canvas.RESTRICT_CLICKS_TO_PARENT_BOUNDS, true, true);
         if(component != null)
             component.onMouseDown(x, y);
     }
@@ -159,7 +153,6 @@ public abstract class BaseComponent extends ComponentParent {
         _currentHoverStatus = true;
     }
     public void onHoverStatusChanged(int x, int y, boolean newStatus) {
-        System.out.println("Ignore Me!");
     }
     
     private boolean _clickThrough;

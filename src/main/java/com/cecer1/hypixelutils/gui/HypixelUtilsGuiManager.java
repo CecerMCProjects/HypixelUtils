@@ -2,8 +2,8 @@ package com.cecer1.hypixelutils.gui;
 
 import com.cecer1.hypixelutils.HypixelUtilsCore;
 import com.cecer1.hypixelutils.events.eventdata.IEventData;
-import com.cecer1.hypixelutils.events.eventdata.OnRenderEventData;
-import com.cecer1.hypixelutils.events.handlers.IOnRenderEventHandler;
+import com.cecer1.hypixelutils.events.eventdata.OnPostRenderHUDEventData;
+import com.cecer1.hypixelutils.events.handlers.IOnPostRenderHUDEventHandler;
 import com.cecer1.hypixelutils.gui.components.core.BaseComponent;
 import com.cecer1.hypixelutils.gui.components.core.Canvas;
 import com.cecer1.hypixelutils.gui.windows.ConfigWindow;
@@ -15,19 +15,15 @@ import net.minecraft.client.gui.GuiScreen;
 import java.io.IOException;
 import java.util.List;
 
-public class HypixelUtilsGuiManager extends GuiScreen implements IOnRenderEventHandler {
+public class HypixelUtilsGuiManager extends GuiScreen implements IOnPostRenderHUDEventHandler {
     private Canvas _screenCanvas;
-    private Canvas _permCanvas;
 
     public ConfigWindow configWindow;
     public MitLicenseWindow unirestLicenseWindow;
     public MitLicenseWindow hypixelUtilsLicenseWindow;
 
     public HypixelUtilsGuiManager() {
-        _permCanvas = new Canvas();
-
         _screenCanvas = new Canvas();
-        _screenCanvas.setVisible(true);
 
         configWindow = new ConfigWindow(_screenCanvas);
         configWindow.setVisible(true);
@@ -44,30 +40,51 @@ public class HypixelUtilsGuiManager extends GuiScreen implements IOnRenderEventH
 
     @Override
     public void onEvent(IEventData data) {
-        if(data instanceof OnRenderEventData)
-            onEvent((OnRenderEventData)data);
+        if(data instanceof OnPostRenderHUDEventData)
+            onEvent((OnPostRenderHUDEventData)data);
     }
 
+    
+    private boolean _alreadyRendered = false;
+    private int _lastMouseX = 0;
+    private int _lastMouseY = 0;
+    
     @Override
-    public void onEvent(OnRenderEventData data) {
-        if(data.isIngame() && _permCanvas.isVisible()) {
-            _permCanvas.render(Integer.MIN_VALUE, Integer.MIN_VALUE);
+    public void onEvent(OnPostRenderHUDEventData data) {
+        render(0, 0, false);
+        _alreadyRendered = false;
+    }
+    
+    private void render(int mouseX, int mouseY, boolean hasFocus) {
+        if(_alreadyRendered)
+            return;
+        _alreadyRendered = true;
+        if(hasFocus) {
+            _lastMouseX = mouseX;
+            _lastMouseY = mouseY;
+        } else {
+            mouseX = _lastMouseX;
+            mouseY = _lastMouseY;
         }
+        
+        _screenCanvas.render(mouseX, mouseY, hasFocus);
+        
+        if(hasFocus) {
+            List<BaseComponent> components = Lists.reverse(Canvas.getComponentsAt(_screenCanvas, mouseX, mouseY, false, true));
+            for (BaseComponent component : components) {
+                component.onHover(mouseX, mouseY);
+                if (!component.isClickThrough()) {
+                    break;
+                }
+            }
+        }
+
+        _screenCanvas.postRender(mouseX, mouseY, hasFocus);
     }
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        _screenCanvas.render(mouseX, mouseY);
-
-        List<BaseComponent> components = Lists.reverse(Canvas.getComponentsAt(_screenCanvas, mouseX, mouseY, false));
-        for(BaseComponent component : components) {
-            component.onHover(mouseX, mouseY);
-            if(!component.isClickThrough()) {
-                break;
-            }
-        }
-        
-        _screenCanvas.postRender(mouseX, mouseY);
+        render(mouseX, mouseY, true);
     }
 
     @Override
@@ -80,27 +97,30 @@ public class HypixelUtilsGuiManager extends GuiScreen implements IOnRenderEventH
         _screenCanvas.onMouseUp(mouseX, mouseY);
     }
 
+    @Override
+    public void onGuiClosed() {
+        // Unlock every component from the cursor.
+        for(BaseComponent component : _screenCanvas.getAllComponents()) {
+            component.setCursorLocked(false);
+        }
+    }
 
     /**
      * Toggles the display of the GuiScreen of the GuiEngine.
      * Use toggleScreenDelayed instead if doing from a command or the chat closing will close the Gui.
-     * @param visible If true then the screen will be displayed, otherwise it will be hidden.
+     * @param focused If true then the screen will be displayed, otherwise it will be hidden.
      */
-    public void setVisible(boolean visible) {
-        if(visible && Minecraft.getMinecraft().currentScreen == this)
+    public void setFocused(boolean focused) {
+        if(focused && Minecraft.getMinecraft().currentScreen == this)
             return;
-        if(!visible && Minecraft.getMinecraft().currentScreen != this)
+        if(!focused && Minecraft.getMinecraft().currentScreen != this)
             return;
 
         final GuiScreen screenToDisplay;
-        if(visible)
+        if(focused) {
             screenToDisplay = this;
-        else {
+        } else {
             screenToDisplay = null;
-
-            HypixelUtilsCore.userInterface.configWindow.setVisible(false);
-            HypixelUtilsCore.userInterface.unirestLicenseWindow.setVisible(false);
-            HypixelUtilsCore.userInterface.hypixelUtilsLicenseWindow.setVisible(false);
         }
 
         Minecraft.getMinecraft().displayGuiScreen(screenToDisplay);
@@ -112,12 +132,12 @@ public class HypixelUtilsGuiManager extends GuiScreen implements IOnRenderEventH
      * The action will be delayed by 1 tick. Use this if doing from a command or the chat closing will close the Gui.
      * @param visible If true then the screen will be displayed, otherwise it will be hidden.
      */
-    public void setVisibleDelayed(final boolean visible) {
+    public void setFocusedDelayed(final boolean visible) {
         // We wait 1 tick otherwise the chat closing will close our screen.
         HypixelUtilsCore.scheduler.scheduleTask(new Runnable() {
             @Override
             public void run() {
-                setVisible(visible);
+                setFocused(visible);
             }
         }, 1);
     }
