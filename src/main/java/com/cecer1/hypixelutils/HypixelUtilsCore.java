@@ -12,6 +12,8 @@ import com.cecer1.hypixelutils.features.boosters.TipAndThankChatModifier;
 import com.cecer1.hypixelutils.features.boosters.TipAndThankCommand;
 import com.cecer1.hypixelutils.features.bypasslobbyprotection.BypassLobbyProtectionCommand;
 import com.cecer1.hypixelutils.features.bypasslobbyprotection.BypassLobbyProtectionProcessor;
+import com.cecer1.hypixelutils.features.clickto.ClickToAcceptGuildInviteChatProcessor;
+import com.cecer1.hypixelutils.features.clickto.ClickToAcceptUHCTeamInviteChatProcessor;
 import com.cecer1.hypixelutils.features.cloudconfig.*;
 import com.cecer1.hypixelutils.features.debug.ChatPrinterProcessor;
 import com.cecer1.hypixelutils.features.debug.DebugCommand;
@@ -70,7 +72,9 @@ public class HypixelUtilsCore {
     public static PartyAutoRemoveProcessor partyAutoRemoveOfflineProcessor;
     public static TipAndThankChatModifier tipAndThankChatModifier;
     public static BoosterQueueChatModifier boosterQueueChatModifier;
-    
+    public static ClickToAcceptGuildInviteChatProcessor clickToAcceptGuildInviteChatProcessor;
+    public static ClickToAcceptUHCTeamInviteChatProcessor clickToAcceptUHCTeamInviteChatProcessor;
+
     public static ChatPrinterProcessor debugChatPrintProcess = new ChatPrinterProcessor();
     public static HandleServerJoinInit serverJoinInitHandler = new HandleServerJoinInit();
     public static SoundEffectsChatProcessor soundEffectsChatProcessor = new SoundEffectsChatProcessor();
@@ -92,7 +96,9 @@ public class HypixelUtilsCore {
         partyAutoRemoveOfflineProcessor = new PartyAutoRemoveProcessor();
         tipAndThankChatModifier = new TipAndThankChatModifier();
         boosterQueueChatModifier = new BoosterQueueChatModifier();
-        
+        clickToAcceptGuildInviteChatProcessor = new ClickToAcceptGuildInviteChatProcessor();
+        clickToAcceptUHCTeamInviteChatProcessor = new ClickToAcceptUHCTeamInviteChatProcessor();
+
         chatManager = new ChatManager();
         commandJobManager = new HypixelCommandJobManager();
         
@@ -214,6 +220,8 @@ public class HypixelUtilsCore {
         eventManager.registerEventHandlers(instantBedProcessor);
         eventManager.registerEventHandlers(partyAutoRemoveOfflineProcessor);
         eventManager.registerEventHandlers(userInterface);
+        eventManager.registerEventHandlers(clickToAcceptGuildInviteChatProcessor);
+        eventManager.registerEventHandlers(clickToAcceptUHCTeamInviteChatProcessor);
     }
 
     private static void initConfig() {

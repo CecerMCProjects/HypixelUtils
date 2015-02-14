@@ -6,6 +6,7 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatStyle;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 
 import java.util.UUID;
@@ -306,5 +307,27 @@ public class ChatOutputs {
             .appendSibling(red(new ChatComponentText("\"/tipandthank all\" is disabled because \"/tip all\" was disabled.")));
     public static void printErrorTipAndThankAllCommandDisabled() {
         ChatUtilities.printChatComponent(_errorTipAndThankAllCommandDisabled);
+    }
+    
+    public static void printClickToAcceptGuildInvite(String name) {
+        IChatComponent message = new ChatComponentText("Click here")
+                .appendSibling(yellow(new ChatComponentText(" to join! You have 5 minutes to accept.")))
+                .setChatStyle(new ChatStyle()
+                        .setColor(EnumChatFormatting.GOLD)
+                        .setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/guild accept " + name))
+                        .setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Click here to run\n/guild accept " + name))));
+        
+        ChatUtilities.printRawChatComponent(message);
+    }
+
+    public static void printClickToAcceptUHCTeamInvite(String name) {
+        IChatComponent message = new ChatComponentText("Click here")
+                .appendSibling(yellow(new ChatComponentText(" to join!")))
+                .setChatStyle(new ChatStyle()
+                        .setColor(EnumChatFormatting.GOLD)
+                        .setChatClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/team accept " + name))
+                        .setChatHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new ChatComponentText("Click here to run\n/team accept " + name))));
+
+        ChatUtilities.printRawChatComponent(message);
     }
 }
