@@ -47,12 +47,10 @@ public class LiteLoaderEventForwarder {
 
 
     public void onPreRenderChat(int screenWidth, int screenHeight, GuiNewChat chat) {
-        System.out.println("1Temp1234331568");
     }
 
 
     public void onPostRenderChat(int screenWidth, int screenHeight, GuiNewChat chat) {
-        System.out.println("2Temp1234331568");
     }
 
 
